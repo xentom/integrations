@@ -1,0 +1,17 @@
+{
+  "$schema": "https://cdn.xentom.com/schemas/integration.json",
+  "name": "stripe",
+  "organization": "xentom",
+  "displayName": "Stripe",
+  "description": "Seamlessly integrate Stripe with your workflow to securely handle payments, automate billing, and provide real-time transaction tracking.",
+  "logo": "./assets/logo.jpg",
+  "categories": ["commerce"],
+  "homepage": "https://xentom.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/xentom/integrations/tree/main/packages/stripe"
+  },
+  "bugs": {
+    "url": "https://github.com/xentom/integrations/issues"
+  }
+}

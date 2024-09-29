@@ -1,0 +1,17 @@
+{
+  "$schema": "https://cdn.xentom.com/schemas/integration.json",
+  "name": "github",
+  "organization": "xentom",
+  "displayName": "GitHub",
+  "description": "Integrate GitHub into your workflow editor to automatically trigger automations on commits or releases, streamlining your development process and ensuring seamless continuous integration.",
+  "logo": "./assets/logo.png",
+  "categories": ["dev-tools"],
+  "homepage": "https://xentom.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/xentom/integrations/tree/main/packages/github"
+  },
+  "bugs": {
+    "url": "https://github.com/xentom/integrations/issues"
+  }
+}

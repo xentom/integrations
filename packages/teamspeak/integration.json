@@ -1,0 +1,17 @@
+{
+  "$schema": "https://cdn.xentom.com/schemas/integration.json",
+  "name": "teamspeak",
+  "organization": "xentom",
+  "displayName": "TeamSpeak 3",
+  "description": "Craft your own TeamSpeak bot and automate specific processes within your community.",
+  "logo": "./assets/logo.jpg",
+  "categories": ["messaging"],
+  "homepage": "https://xentom.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/xentom/integrations/tree/main/packages/teamspeak"
+  },
+  "bugs": {
+    "url": "https://github.com/xentom/integrations/issues"
+  }
+}

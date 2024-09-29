@@ -1,0 +1,17 @@
+{
+  "$schema": "https://cdn.xentom.com/schemas/integration.json",
+  "name": "shopify",
+  "organization": "xentom",
+  "displayName": "Shopify",
+  "description": "Integrate Shopify into your workflow editor to automatically trigger automations on new orders, customer updates, and more, streamlining your e-commerce process and ensuring seamless order fulfillment.",
+  "logo": "./assets/logo.png",
+  "categories": ["commerce"],
+  "homepage": "https://xentom.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/xentom/integrations/tree/main/packages/shopify"
+  },
+  "bugs": {
+    "url": "https://github.com/xentom/integrations/issues"
+  }
+}

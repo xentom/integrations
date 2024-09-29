@@ -1,0 +1,15 @@
+{
+  "extends": "@xentom/tsconfig/base.tsconfig.json",
+  "compilerOptions": {
+    // Bundler mode
+    "outDir": "dist/types",
+
+    // Imports aliases
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    }
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}

@@ -1,0 +1,17 @@
+{
+  "$schema": "https://cdn.xentom.com/schemas/integration.json",
+  "name": "essentials",
+  "organization": "xentom",
+  "displayName": "Essentials",
+  "description": "Xentom Essentials expands your workflow with essential features, such as mathematical operations and more.",
+  "logo": "./assets/logo.png",
+  "categories": ["dev-tools", "logging"],
+  "homepage": "https://xentom.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/xentom/integrations/tree/main/packages/essentials"
+  },
+  "bugs": {
+    "url": "https://github.com/xentom/integrations/issues"
+  }
+}

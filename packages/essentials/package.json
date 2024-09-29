@@ -1,0 +1,27 @@
+{
+  "name": "@xentom/integration-essentials",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "xentom dev",
+    "build": "xentom build",
+    "publish": "xentom publish",
+    "format": "prettier --check . --ignore-path ../../.gitignore",
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@xentom/integration": "^0.0.21",
+    "@tabler/icons-react": "^3.18.0"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.1.10",
+    "@xentom/eslint-config": "*",
+    "@xentom/prettier-config": "^0.0.2",
+    "@xentom/tsconfig": "*",
+    "typescript": "^5.6.2",
+    "eslint": "^9.11.1",
+    "prettier": "^3.3.3"
+  },
+  "prettier": "@xentom/prettier-config"
+}

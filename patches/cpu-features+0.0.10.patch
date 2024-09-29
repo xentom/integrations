@@ -1,0 +1,13 @@
+diff --git a/node_modules/cpu-features/buildcheck.gypi b/node_modules/cpu-features/buildcheck.gypi
+new file mode 100644
+index 0000000..e69de29
+diff --git a/node_modules/cpu-features/lib/index.js b/node_modules/cpu-features/lib/index.js
+index bc3cff2..ad9a93a 100644
+--- a/node_modules/cpu-features/lib/index.js
++++ b/node_modules/cpu-features/lib/index.js
+@@ -1,5 +1 @@
+ 'use strict';
+-
+-const binding = require('../build/Release/cpufeatures.node');
+-
+-module.exports = binding.getCPUInfo;

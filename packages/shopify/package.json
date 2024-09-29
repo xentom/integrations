@@ -1,0 +1,30 @@
+{
+  "name": "@xentom/integration-shopify",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "xentom dev",
+    "build": "xentom build",
+    "publish": "xentom publish",
+    "format": "prettier --check . --ignore-path ../../.gitignore",
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@shopify/shopify-api": "^11.4.1",
+    "@tabler/icons-react": "^3.18.0",
+    "@xentom/integration": "^0.0.21"
+  },
+  "devDependencies": {
+    "@shopify/api-codegen-preset": "^1.1.1",
+    "@types/bun": "^1.1.10",
+    "@xentom/eslint-config": "*",
+    "@xentom/prettier-config": "^0.0.2",
+    "@xentom/tsconfig": "*",
+    "eslint": "^9.11.1",
+    "graphql-config": "^5.1.2",
+    "prettier": "^3.3.3",
+    "typescript": "^5.6.2"
+  },
+  "prettier": "@xentom/prettier-config"
+}

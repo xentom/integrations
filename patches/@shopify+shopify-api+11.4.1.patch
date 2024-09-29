@@ -1,0 +1,17 @@
+diff --git a/node_modules/@shopify/shopify-api/package.json b/node_modules/@shopify/shopify-api/package.json
+index a35b23e..df23f7b 100644
+--- a/node_modules/@shopify/shopify-api/package.json
++++ b/node_modules/@shopify/shopify-api/package.json
+@@ -18,6 +18,12 @@
+       "require": "./dist/cjs/rest/admin/*/index.js",
+       "default": "./dist/cjs/rest/admin/*/index.js"
+     },
++    "./rest/admin/2024-07/product": {
++      "types": "./dist/ts/rest/admin/2024-07/product.d.ts",
++      "import": "./dist/esm/rest/admin/2024-07/product.mjs",
++      "require": "./dist/cjs/rest/admin/2024-07/product.js",
++      "default": "./dist/cjs/rest/admin/2024-07/product.js"
++    },
+     "./runtime": {
+       "types": "./dist/ts/runtime/index.d.ts",
+       "import": "./dist/esm/runtime/index.mjs",

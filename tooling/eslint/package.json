@@ -1,0 +1,35 @@
+{
+  "name": "@xentom/eslint-config",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "clean": "rm -rf .turbo node_modules",
+    "format": "prettier --check ."
+  },
+  "dependencies": {
+    "@eslint/compat": "^1.1.1",
+    "@next/eslint-plugin-next": "^14.2.5",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-jsx-a11y": "^6.9.0",
+    "eslint-plugin-react": "^7.35.0",
+    "eslint-plugin-react-hooks": "rc",
+    "eslint-plugin-turbo": "^2.0.13",
+    "typescript-eslint": "^8.1.0"
+  },
+  "devDependencies": {
+    "@xentom/prettier-config": "^0.0.2",
+    "@xentom/tsconfig": "*",
+    "prettier": "^3.3.3",
+    "typescript": "^5.5.4"
+  },
+  "files": [
+    "*.js",
+    "*.d.ts",
+    ".gitignore"
+  ],
+  "exports": {
+    "./base": "./base.js"
+  },
+  "prettier": "@xentom/prettier-config"
+}

@@ -1,0 +1,31 @@
+{
+  "name": "@xentom/integrations",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "postinstall": "patch-package",
+    "build": "turbo build --env-mode=loose",
+    "publish": "turbo publish --env-mode=loose -- -i",
+    "typecheck": "turbo typecheck",
+    "format": "turbo format --continue -- --cache --cache-location .cache/.prettiercache",
+    "lint": "turbo lint --continue -- --cache --cache-location .cache/.eslintcache",
+    "format:fix": "turbo format --continue -- --write --cache --cache-location .cache/.prettiercache"
+  },
+  "dependencies": {
+    "@changesets/cli": "^2.27.8"
+  },
+  "devDependencies": {
+    "@xentom/eslint-config": "*",
+    "@xentom/prettier-config": "^0.0.2",
+    "eslint": "^9.11.1",
+    "patch-package": "^8.0.0",
+    "prettier": "^3.3.3",
+    "turbo": "^2.1.2"
+  },
+  "workspaces": [
+    "packages/*",
+    "tooling/*"
+  ],
+  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e",
+  "prettier": "@xentom/prettier-config"
+}
