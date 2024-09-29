@@ -13,7 +13,7 @@
   "dependencies": {
     "@shopify/shopify-api": "^11.4.1",
     "@tabler/icons-react": "^3.18.0",
-    "@xentom/integration": "^0.0.21"
+    "@xentom/integration": "^0.0.22"
   },
   "devDependencies": {
     "@shopify/api-codegen-preset": "^1.1.1",

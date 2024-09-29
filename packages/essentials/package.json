@@ -11,7 +11,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@xentom/integration": "^0.0.21",
+    "@xentom/integration": "^0.0.22",
     "@tabler/icons-react": "^3.18.0"
   },
   "devDependencies": {

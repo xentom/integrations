@@ -13,7 +13,7 @@
   "dependencies": {
     "@octokit/webhooks": "^13.3.0",
     "@tabler/icons-react": "^3.18.0",
-    "@xentom/integration": "^0.0.21",
+    "@xentom/integration": "^0.0.22",
     "octokit": "^4.0.2"
   },
   "devDependencies": {

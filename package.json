@@ -5,7 +5,7 @@
   "scripts": {
     "postinstall": "patch-package",
     "build": "turbo build --env-mode=loose",
-    "publish": "turbo publish --env-mode=loose -- -i",
+    "publish": "turbo publish --env-mode=loose",
     "typecheck": "turbo typecheck",
     "format": "turbo format --continue -- --cache --cache-location .cache/.prettiercache",
     "lint": "turbo lint --continue -- --cache --cache-location .cache/.eslintcache",
