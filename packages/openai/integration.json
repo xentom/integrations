@@ -1,0 +1,17 @@
+{
+  "$schema": "https://cdn.xentom.com/schemas/integration.json",
+  "name": "openai",
+  "organization": "xentom",
+  "displayName": "OpenAI",
+  "description": "Expand your workflows with the magic of artificial intelligence. With OpenAI, you can easily generate, translate, and enhance texts, and so much more.",
+  "logo": "./assets/logo.png",
+  "categories": ["ai"],
+  "homepage": "https://xentom.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/xentom/integrations/tree/main/packages/openai"
+  },
+  "bugs": {
+    "url": "https://github.com/xentom/integrations/issues"
+  }
+}
