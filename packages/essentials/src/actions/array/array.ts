@@ -1,11 +1,11 @@
-import { IconRepeat } from '@tabler/icons-react';
+import { IconArrowIteration } from '@tabler/icons-react';
 import { createAction, pin } from '@xentom/integration';
 
 const group = 'Array';
 
 export const forEach = createAction({
   group,
-  icon: IconRepeat,
+  icon: IconArrowIteration,
   description: 'Loop through each item in an array.',
   inputs: {
     exec: pin.exec({
@@ -18,6 +18,7 @@ export const forEach = createAction({
     }),
     list: pin.array({
       isEditable: true,
+      defaultValue: [],
     }),
   },
   outputs: {

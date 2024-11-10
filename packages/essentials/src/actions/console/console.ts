@@ -18,6 +18,7 @@ export const log = createAction({
       .string({
         label: null,
         description: 'The message to log.',
+        placeholder: 'Hello, world!',
       })
       .custom<any>(),
   },
@@ -40,6 +41,7 @@ export const warn = createAction({
     value: pin.string({
       label: null,
       description: 'The warning message to log.',
+      placeholder: 'Warning!',
     }),
   },
   outputs: {
@@ -61,6 +63,7 @@ export const error = createAction({
     value: pin.string({
       label: null,
       description: 'The error message to log.',
+      placeholder: 'Error!',
     }),
   },
   outputs: {

@@ -15,11 +15,11 @@ import {
   IconQuestionMark,
   IconTallymark2,
 } from '@tabler/icons-react';
-import { createAction, pin, type ActionPin } from '@xentom/integration';
+import { createAction, pin } from '@xentom/integration';
 
 const group = 'Operators';
 
-const inputs: Record<string, ActionPin> = {
+const inputs = {
   a: pin.unknown({
     label: null,
     description: '[a] The first value to operate on.',

@@ -1,4 +1,8 @@
-import { IconPlayerPlay, IconPlayerStop } from '@tabler/icons-react';
+import {
+  IconClockPlay,
+  IconPlayerPlay,
+  IconPlayerStop,
+} from '@tabler/icons-react';
 import { createAction, onCleanup, pin } from '@xentom/integration';
 
 const group = 'Events';
@@ -31,11 +35,12 @@ export const onWorkflowStop = createAction({
 
 export const onInterval = createAction({
   group,
-  icon: IconPlayerPlay,
+  icon: IconClockPlay,
   description: 'Triggered at a set interval.',
   inputs: {
     milliseconds: pin.number({
       description: 'The interval in milliseconds.',
+      defaultValue: 1000,
     }),
   },
   outputs: {

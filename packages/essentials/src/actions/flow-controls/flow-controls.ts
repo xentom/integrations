@@ -1,4 +1,4 @@
-import { IconArrowsSplit, IconRepeat } from '@tabler/icons-react';
+import { IconArrowIteration, IconArrowsSplit } from '@tabler/icons-react';
 import { createAction, pin } from '@xentom/integration';
 
 const group = 'Flow Controls';
@@ -31,7 +31,7 @@ export const branch = createAction({
 
 export const whileLoop = createAction({
   group,
-  icon: IconRepeat,
+  icon: IconArrowIteration,
   description: 'Loop while a condition is true.',
   inputs: {
     exec: pin.exec({
@@ -58,7 +58,7 @@ export const whileLoop = createAction({
 
 export const forLoop = createAction({
   group,
-  icon: IconRepeat,
+  icon: IconArrowIteration,
   description: 'Loop a set number of times.',
   inputs: {
     exec: pin.exec({
@@ -73,6 +73,7 @@ export const forLoop = createAction({
     }),
     count: pin.number({
       description: 'The number of times to loop.',
+      defaultValue: 1,
     }),
   },
   outputs: {

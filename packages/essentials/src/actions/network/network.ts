@@ -35,6 +35,7 @@ export const request = createAction({
     url: pin.string({
       label: 'URL',
       description: 'The URL to make the request to.',
+      placeholder: 'https://example.com',
     }),
   },
   outputs: {
