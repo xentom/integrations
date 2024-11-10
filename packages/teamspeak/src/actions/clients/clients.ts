@@ -70,23 +70,16 @@ export const getClients = createAction({
   group,
   icon: IconUsers,
   description: 'Returns all clients on the server',
-  inputs: {
-    exec: pin.exec({
-      async run({ state, next }) {
-        next('exec', {
-          clients: await state.ts.clientList({
-            clientType: 0,
-          }),
-        });
-      },
-    }),
-  },
   outputs: {
-    exec: pin.exec(),
     clients: teamspeakPin.client.custom<TeamSpeakClient[]>().extend({
       icon: IconUsers,
       description: 'Returns all clients on the server',
     }),
+  },
+  async run({ state, outputs }) {
+    outputs.clients = await state.ts.clientList({
+      clientType: 0,
+    });
   },
 });
 
@@ -109,23 +102,18 @@ export const getClientById = createAction({
   icon: IconUser,
   description: 'Returns a client by their ID',
   inputs: {
-    exec: pin.exec({
-      async run({ inputs, state, next }) {
-        next('exec', {
-          client: await state.ts.getClientById(inputs.clientId),
-        });
-      },
-    }),
     clientId: pin.number({
       description: 'The ID of the client to return',
     }),
   },
   outputs: {
-    exec: pin.exec(),
     client: teamspeakPin.client.extend({
       description: 'Returns the client with the specified ID',
       isOptional: true,
     }),
+  },
+  async run({ inputs, outputs, state }) {
+    outputs.client = await state.ts.getClientById(inputs.clientId);
   },
 });
 
@@ -134,23 +122,18 @@ export const getClientByNickname = createAction({
   icon: IconUser,
   description: 'Returns a client by their nickname',
   inputs: {
-    exec: pin.exec({
-      async run({ inputs, state, next }) {
-        next('exec', {
-          client: await state.ts.getClientByName(inputs.nickname),
-        });
-      },
-    }),
     nickname: pin.string({
       description: 'The nickname of the client to return',
     }),
   },
   outputs: {
-    exec: pin.exec(),
     client: teamspeakPin.client.extend({
       description: 'Returns the client with the specified nickname',
       isOptional: true,
     }),
+  },
+  async run({ inputs, outputs, state }) {
+    outputs.client = await state.ts.getClientByName(inputs.nickname);
   },
 });
 

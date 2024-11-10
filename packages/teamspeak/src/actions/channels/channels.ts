@@ -112,21 +112,14 @@ export const onChannelDeleted = createAction({
 export const getChannels = createAction({
   group,
   icon: IconVolume,
-  description: 'Returns a list of all channels',
-  inputs: {
-    exec: pin.exec({
-      async run({ state, next }) {
-        next('exec', {
-          channels: await state.ts.channelList(),
-        });
-      },
+  description: 'Returns a list of channels',
+  outputs: {
+    channels: teamspeakPin.channel.custom<TeamSpeakChannel[]>().extend({
+      description: 'Returns a list of channels',
     }),
   },
-  outputs: {
-    exec: pin.exec(),
-    channels: teamspeakPin.channel.custom<TeamSpeakChannel[]>().extend({
-      description: 'Returns a list of all channels',
-    }),
+  async run({ state, outputs }) {
+    outputs.channels = await state.ts.channelList();
   },
 });
 
