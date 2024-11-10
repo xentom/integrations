@@ -1,6 +1,6 @@
 {
-  "name": "@xentom/integration-essentials",
-  "version": "1.0.15",
+  "name": "@xentom/integration-openai",
+  "version": "0.0.8",
   "type": "module",
   "scripts": {
     "dev": "xentom dev",
@@ -12,18 +12,19 @@
   },
   "dependencies": {
     "@tabler/icons-react": "^3.21.0",
-    "@xentom/integration": "^0.0.27"
+    "@xentom/integration": "^0.0.27",
+    "openai": "^4.71.1"
   },
   "devDependencies": {
     "@types/bun": "^1.1.13",
     "@xentom/eslint-config": "*",
     "@xentom/prettier-config": "^0.0.2",
     "@xentom/tsconfig": "*",
-    "typescript": "^5.6.3",
     "eslint": "^9.14.0",
-    "prettier": "^3.3.3"
+    "prettier": "^3.3.3",
+    "typescript": "^5.6.3"
   },
-  "overrides": {
+  "resolutions": {
     "react": "19.0.0-rc-02c0e824-20241028",
     "react-dom": "19.0.0-rc-02c0e824-20241028"
   },

@@ -1,11 +1,9 @@
 {
-  "name": "@xentom/integration-essentials",
-  "version": "1.0.15",
+  "name": "@xentom/integration-template",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "xentom dev",
-    "build": "xentom build",
-    "publish": "xentom publish",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "lint": "eslint",
     "typecheck": "tsc --noEmit"
@@ -19,11 +17,11 @@
     "@xentom/eslint-config": "*",
     "@xentom/prettier-config": "^0.0.2",
     "@xentom/tsconfig": "*",
-    "typescript": "^5.6.3",
     "eslint": "^9.14.0",
-    "prettier": "^3.3.3"
+    "prettier": "^3.3.3",
+    "typescript": "^5.6.3"
   },
-  "overrides": {
+  "resolutions": {
     "react": "19.0.0-rc-02c0e824-20241028",
     "react-dom": "19.0.0-rc-02c0e824-20241028"
   },
