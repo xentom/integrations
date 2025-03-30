@@ -1,0 +1,22 @@
+{
+  "name": "@acme/teamspeak",
+  "version": "0.0.11",
+  "type": "module",
+  "icon": "./assets/logo.jpg",
+  "main": "./build/index.js",
+  "scripts": {
+    "pack": "acme pack",
+    "publish": "acme publish"
+  },
+  "dependencies": {
+    "@acme/integration": "link:@acme/integration",
+    "ts3-nodejs-library": "^3.5.1",
+    "valibot": "^1.0.0"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  }
+}
