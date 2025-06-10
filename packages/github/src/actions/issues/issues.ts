@@ -1,140 +1,126 @@
+import { createRepositoryWebhook } from '#src/helpers/webhooks';
+import { repositoryFullName } from '#src/pins/index';
 import {
   actions,
   pins,
-  PinType,
-  type DataPin,
-  type ExecPin,
+  generic,
+  controls,
   type InferPinRecordOutput,
-  type PinRecord,
 } from '@acme/integration';
-import * as v from 'valibot';
-import { repositoryFullName } from '../../pins';
-import { createRepositoryWebhook } from '../../helpers/webhooks';
-import { type WebhookEventDefinition } from '@octokit/webhooks/types';
-import { type EmitterWebhookEvent } from '@octokit/webhooks';
-import type { StandardSchemaV1 } from '@standard-schema/spec';
+import { type EmitterWebhookEvent } from '@octokit/webhooks/types';
 
-function generic<T>(pins: () => T) {
-  return pins();
-}
+const category = 'Issues';
 
-const result = generic(<T extends '333'>() => ({
-  test: '555' as T,
-}));
-
-export const test = {
-  inputs: {
-    // repository: repositoryFullName,
-    action: pins.data({
-      schema: v.picklist(['issues-closed', 'repository-created']),
-    }),
-  },
-
-  test: {} as typeof this.inputs,
-
-  outputs<I extends InferPinRecordOutput<typeof this.inputs>>() {
-    return {
-      payload: pins.data({
-        schema: v.custom<WebhookEventDefinition<I['action']>>(() => true),
-      }),
-    };
-  },
-
-  // outputs: {
-  //   payload: <E extends Events>() =>
-  //     pins.data({
-  //       displayName: 'Payload',
-  //       description: 'A push event from GitHub',
-  //       schema: v.custom<WebhookEventDefinition<E>>(() => true),
-  //     }),
-
-  //   v1: generic(<T extends Events>() =>
-  //     pins.data({
-  //       schema: v.custom<WebhookEventDefinition<T>>(() => true),
-  //     })
-  //   ),
-
-  //   v2: newPins.data(<T extends Events>() => ({
-  //     schema: v.custom<WebhookEventDefinition<T>>(() => true),
-  //   })),
-  // },
-
-  async subscribe({ state, inputs, webhook, next }) {
-    state.webhooks.on('check_run.completed', ({ payload }) => {
-      if (payload.repository.full_name !== inputs.repository) {
-        return;
-      }
-
-      next({ payload });
-    });
-
-    await createRepositoryWebhook({
-      repository: inputs.repository,
-      webhook,
-      state,
-    });
-  },
-};
-
-test.outputs<{
-  action: 'repository-created';
-}>().payload;
-
-type inputs = typeof test.inputs;
-
-type test1 = ReturnType<typeof test.outputs<'repository-created'>>;
-
-type test22 = test1 extends StandardSchemaV1<infer U> ? U : never;
-
-export const onRepositoryIssue = actions.trigger({
-  inputs: {
+export const onIssue = generic(<
+  I extends InferPinRecordOutput<typeof inputs>
+>() => {
+  const inputs = {
     repository: repositoryFullName,
-    action: pins.data({
-      schema: v.optional(
-        v.picklist([
-          'all',
-          'assigned',
-          'closed',
-          'deleted',
-          'demilestoned',
-          'edited',
-          'labeled',
-          'locked',
-          'milestoned',
-          'opened',
-          'pinned',
-          'reopened',
-          'transferred',
-          'typed',
-          'unassigned',
-          'unlabeled',
-          'unlocked',
-          'unpinned',
-          'untyped',
-        ]),
-        'all'
-      ),
+    actionType: pins.data({
+      control: controls.select({
+        options: [
+          {
+            label: 'Assigned',
+            value: 'assigned',
+          },
+          {
+            label: 'Closed',
+            value: 'closed',
+          },
+          {
+            label: 'Deleted',
+            value: 'deleted',
+          },
+          {
+            label: 'Demilestoned',
+            value: 'demilestoned',
+          },
+          {
+            label: 'Edited',
+            value: 'edited',
+          },
+          {
+            label: 'Labeled',
+            value: 'labeled',
+          },
+          {
+            label: 'Locked',
+            value: 'locked',
+          },
+          {
+            label: 'Milestoned',
+            value: 'milestoned',
+          },
+          {
+            label: 'Opened',
+            value: 'opened',
+          },
+          {
+            label: 'Pinned',
+            value: 'pinned',
+          },
+          {
+            label: 'Reopened',
+            value: 'reopened',
+          },
+          {
+            label: 'Transferred',
+            value: 'transferred',
+          },
+          {
+            label: 'Typed',
+            value: 'typed',
+          },
+          {
+            label: 'Unassigned',
+            value: 'unassigned',
+          },
+          {
+            label: 'Unlabeled',
+            value: 'unlabeled',
+          },
+          {
+            label: 'Unlocked',
+            value: 'unlocked',
+          },
+          {
+            label: 'Unpinned',
+            value: 'unpinned',
+          },
+          {
+            label: 'Untyped',
+            value: 'untyped',
+          },
+        ],
+      }),
     }),
-  },
+  };
 
-  outputs: {
-    payload: pins.data({
-      displayName: 'Payload',
-      description: 'A push event from GitHub',
-      schema: v.custom<EmitterWebhookEvent<'issues'>['payload']>(() => true),
-    }),
-  },
+  type IssueEvent = EmitterWebhookEvent<`issues.${I['actionType']}`>;
+  return actions.trigger({
+    category,
+    inputs,
+    outputs: {
+      id: pins.data<IssueEvent['id']>(),
+      payload: pins.data<IssueEvent['payload']>(),
+    },
+    async subscribe({ state, inputs, webhook, next }) {
+      state.webhooks.on(`issues.${inputs.actionType}`, ({ id, payload }) => {
+        if (payload.repository.full_name !== inputs.repository) {
+          return;
+        }
 
-  async subscribe({ state, inputs, webhook, next }) {
-    state.webhooks.on('issues', ({ payload }) => {
-      payload.action;
-      payload.action;
-    });
+        next({
+          id,
+          payload,
+        } as any);
+      });
 
-    await createRepositoryWebhook({
-      repository: inputs.repository,
-      webhook,
-      state,
-    });
-  },
+      await createRepositoryWebhook({
+        repository: inputs.repository,
+        webhook,
+        state,
+      });
+    },
+  });
 });

@@ -13,8 +13,8 @@ export default acme.integration({
       control: acme.controls.input({
         label: 'TeamSpeak Server IP',
         placeholder: 'Enter the IP address of your TeamSpeak server',
+        defaultValue: '127.0.0.1',
       }),
-      defaultValue: '127.0.0.1',
     }),
 
     SERVER_PORT: acme.env({
@@ -22,8 +22,8 @@ export default acme.integration({
       control: acme.controls.input({
         label: 'TeamSpeak Server Port',
         placeholder: 'Enter the port of your TeamSpeak server',
+        defaultValue: '9987',
       }),
-      defaultValue: 9987,
     }),
 
     SERVER_QUERY_PORT: acme.env({
@@ -31,8 +31,8 @@ export default acme.integration({
       control: acme.controls.input({
         label: 'TeamSpeak Server Query Port',
         placeholder: 'Enter the query port of your TeamSpeak server',
+        defaultValue: '10011',
       }),
-      defaultValue: 10011,
     }),
 
     SERVER_QUERY_USERNAME: acme.env({
@@ -40,8 +40,8 @@ export default acme.integration({
       control: acme.controls.input({
         label: 'TeamSpeak Server Query Username',
         placeholder: 'Enter the query username of your TeamSpeak server',
+        defaultValue: 'serveradmin',
       }),
-      defaultValue: 'serveradmin',
     }),
 
     SERVER_QUERY_PASSWORD: acme.env({
@@ -57,13 +57,13 @@ export default acme.integration({
       control: acme.controls.input({
         label: 'Bot Nickname',
         placeholder: 'Enter the nickname of your bot',
+        defaultValue: 'TeamSpeak Bot',
       }),
-      defaultValue: 'TeamSpeak Bot',
     }),
   },
 
-  async start({ ctx }) {
-    ctx.teamspeak = await TeamSpeak.connect({
+  async start({ state }) {
+    state.teamspeak = await TeamSpeak.connect({
       protocol: QueryProtocol.RAW,
       host: process.env.SERVER_IP,
       serverport: process.env.SERVER_PORT,
@@ -75,20 +75,20 @@ export default acme.integration({
       keepAliveTimeout: 60,
     });
 
-    ctx.teamspeak.on('ready', () => {
+    state.teamspeak.on('ready', () => {
       console.log('TeamSpeak 3 integration is ready!');
     });
 
-    ctx.teamspeak.on('error', (e) => {
+    state.teamspeak.on('error', (e) => {
       console.error('TeamSpeak 3 integration error:', e);
     });
 
-    await ctx.teamspeak.registerEvent('textprivate');
+    await state.teamspeak.registerEvent('textprivate');
 
-    ctx.whoami = await ctx.teamspeak.whoami();
+    state.whoami = await state.teamspeak.whoami();
   },
 
-  async stop({ ctx }) {
-    await ctx.teamspeak.quit();
+  async stop({ state }) {
+    await state.teamspeak.quit();
   },
 });

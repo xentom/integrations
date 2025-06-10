@@ -1,6 +1,8 @@
 {
-  "name": "@acme/github",
-  "version": "0.0.23",
+  "name": "@acme/essentials",
+  "displayName": "Essentials",
+  "description": "Essentials functionalities for the ACME platform, including reusable data types and control flow utilities (such as loops and conditions)",
+  "version": "0.0.26",
   "type": "module",
   "icon": "./assets/logo.png",
   "main": "./build/index.js",
@@ -8,14 +10,8 @@
     "pack": "acme pack",
     "publish": "acme publish"
   },
-  "imports": {
-    "#src/*": "./src/*.ts"
-  },
   "dependencies": {
     "@acme/integration": "link:@acme/integration",
-    "@octokit/webhooks": "^13.8.0",
-    "@standard-schema/spec": "^1.0.0",
-    "octokit": "^4.1.2",
     "valibot": "^1.0.0"
   },
   "devDependencies": {

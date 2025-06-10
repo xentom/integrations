@@ -26,12 +26,12 @@ export const channelId = pins.data({
   description: 'The ID of a TeamSpeak channel',
   schema: v.string(),
   control: controls.select({
-    async options({ ctx }) {
-      const channels = await ctx.teamspeak.channelList();
+    async options({ state }) {
+      const channels = await state.teamspeak.channelList();
       return channels.map((channel) => {
         return {
           value: channel.cid,
-          label: `${channel.name} (${channel.cid})`,
+          label: `${channel.cid} (${channel.name})`,
         };
       });
     },
@@ -42,8 +42,8 @@ export const channelName = pins.data({
   description: 'The name of a TeamSpeak channel',
   schema: v.string(),
   control: controls.select({
-    async options({ ctx }) {
-      const channels = await ctx.teamspeak.channelList();
+    async options({ state }) {
+      const channels = await state.teamspeak.channelList();
       return channels.map((channel) => {
         return {
           value: channel.name,

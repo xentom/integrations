@@ -12,8 +12,8 @@ export const getChannelById = actions.pure({
   outputs: {
     channel,
   },
-  run: async ({ ctx, inputs, outputs }) => {
-    const channel = await ctx.teamspeak.getChannelById(inputs.id.toString());
+  run: async ({ state, inputs, outputs }) => {
+    const channel = await state.teamspeak.getChannelById(inputs.id.toString());
     if (!channel) {
       throw new Error(`Channel with the ID "${inputs.id}" not found`);
     }
@@ -31,8 +31,8 @@ export const getChannelByName = actions.pure({
   outputs: {
     channel,
   },
-  run: async ({ ctx, inputs, outputs }) => {
-    const channel = await ctx.teamspeak.getChannelByName(inputs.name);
+  run: async ({ state, inputs, outputs }) => {
+    const channel = await state.teamspeak.getChannelByName(inputs.name);
     if (!channel) {
       throw new Error(`Channel with the name "${inputs.name}" not found`);
     }
@@ -55,8 +55,8 @@ export const createChannel = actions.callable({
   outputs: {
     channel,
   },
-  run: async ({ ctx, inputs }) => {
-    const channel = await ctx.teamspeak.channelCreate(inputs.name, {
+  run: async ({ state, inputs }) => {
+    const channel = await state.teamspeak.channelCreate(inputs.name, {
       channelDescription: inputs.description,
     });
 

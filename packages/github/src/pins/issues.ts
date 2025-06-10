@@ -1,4 +1,5 @@
 import { pins } from '@acme/integration';
+import * as v from 'valibot';
 
 export const issueAction = pins.data({
   schema: v.optional(

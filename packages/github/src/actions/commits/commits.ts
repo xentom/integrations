@@ -1,29 +1,29 @@
+import { createRepositoryWebhook } from '#src/helpers/webhooks';
+import { repositoryFullName } from '#src/pins/index';
 import { actions, pins } from '@acme/integration';
-import * as v from 'valibot';
-import { repositoryFullName } from '../../pins';
-import { createRepositoryWebhook } from '../../helpers/webhooks';
-import { type WebhookEventDefinition } from '@octokit/webhooks/types';
+import { type EmitterWebhookEvent } from '@octokit/webhooks/types';
+
+const category = 'Commits';
 
 export const onPush = actions.trigger({
+  category,
   inputs: {
     repository: repositoryFullName,
   },
-
   outputs: {
-    payload: pins.data({
-      displayName: 'Payload',
-      description: 'A push event from GitHub',
-      schema: v.custom<WebhookEventDefinition<'push'>>(() => true),
-    }),
+    id: pins.data<EmitterWebhookEvent<'push'>['id']>(),
+    payload: pins.data<EmitterWebhookEvent<'push'>['payload']>(),
   },
-
   async subscribe({ state, inputs, webhook, next }) {
-    state.webhooks.on('push', ({ payload }) => {
+    state.webhooks.on('push', ({ id, payload }) => {
       if (payload.repository.full_name !== inputs.repository) {
         return;
       }
 
-      next({ payload });
+      next({
+        id,
+        payload,
+      });
     });
 
     await createRepositoryWebhook({
