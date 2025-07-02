@@ -29,13 +29,7 @@
     "noPropertyAccessFromIndexSignature": false,
 
     // Keep TSC performant in monorepos
-    "incremental": true,
     "disableSourceOfProjectReferenceRedirect": true,
-    "tsBuildInfoFile": "${configDir}/.cache/tsbuildinfo.json",
-
-    // Path mapping
-    "paths": {
-      "@/*": ["./src/*"]
-    }
+    "tsBuildInfoFile": "${configDir}/.cache/tsbuildinfo.json"
   }
 }
