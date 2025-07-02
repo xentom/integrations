@@ -1,4 +1,6 @@
+import * as controls from '@/controls';
 import { emailId, emailIdWithControl } from '@/pins';
+import * as schemas from '@/schemas';
 import { type GetEmailResponseSuccess } from 'resend';
 import * as v from 'valibot';
 
@@ -8,16 +10,6 @@ const category = {
   path: ['Emails'],
 } satisfies i.ActionCategory;
 
-const emailSchema = v.pipe(v.string(), v.trim(), v.email());
-const emailWithNameSchema = v.pipe(
-  v.string(),
-  v.trim(),
-  v.regex(
-    /^(.+?)\s*<([^<>]+@[^<>]+)>$/,
-    'Must be in format "Display Name <email@domain.com>"',
-  ),
-);
-
 export const sendEmail = i.actions.callable({
   category,
   description: 'Send a simple email using Resend.',
@@ -26,24 +18,20 @@ export const sendEmail = i.actions.callable({
     from: i.pins.data({
       description:
         'Sender\'s email address. You can include a name using the format: "Your Name <sender@domain.com>".',
-      control: i.controls.text({
-        placeholder: 'john.doe@example.com',
-      }),
+      control: controls.email,
       schema: v.union(
-        [emailSchema, emailWithNameSchema],
+        [schemas.email, schemas.emailWithDisplayName],
         'Please enter a valid email address, with or without a display name.',
       ),
     }),
 
     to: i.pins.data({
       description: 'Recipient email addresses.',
-      control: i.controls.text({
-        placeholder: 'jane.smith@example.com',
-      }),
+      control: controls.email,
       schema: v.pipe(
         v.string(),
         v.transform((emails) => emails.split(',')),
-        v.pipe(v.array(emailSchema), v.maxLength(50)),
+        v.pipe(v.array(schemas.email), v.maxLength(50)),
       ),
     }),
 
