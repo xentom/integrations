@@ -1,7 +1,7 @@
-import { integration } from '@acme/integration';
+import * as i from '@acme/integration';
 
 import * as actions from './actions';
 
-export default integration({
+export default i.integration({
   actions,
 });

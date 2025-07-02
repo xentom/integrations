@@ -1,75 +1,61 @@
-import {
-  actions,
-  controls,
-  DefaultExecPinName,
-  InputControlLanguage,
-  pins,
-} from '@acme/integration';
 import * as v from 'valibot';
 
-const category = 'Debug';
+import * as i from '@acme/integration';
 
-export const log = actions.callable({
+const category = {
+  path: ['Debug'],
+} satisfies i.ActionCategory;
+
+export const log = i.actions.callable({
   category,
   inputs: {
-    message: pins.data({
+    message: i.pins.data({
       schema: v.any(),
-      control: controls.input({
+      control: i.controls.expression({
         placeholder: 'Enter message to log',
       }),
     }),
   },
-  run({ inputs, next }) {
-    console.log(inputs.message);
-    next();
+  run(opts) {
+    console.log(opts.inputs.message);
+    return opts.next();
   },
 });
 
-export const error = actions.callable({
+export const error = i.actions.callable({
   category,
   inputs: {
-    message: pins.data({
-      control: controls.input({
+    message: i.pins.data({
+      schema: v.string(),
+      control: i.controls.text({
         defaultValue: 'This is an error message',
       }),
-      schema: v.string(),
     }),
   },
-  run({ inputs }) {
-    throw new Error(inputs.message);
+  run(opts) {
+    throw new Error(opts.inputs.message);
   },
 });
 
-export const evaluate = actions.callable({
-  category: 'JavaScript',
+export const evaluate = i.actions.callable({
+  category,
   inputs: {
-    code: pins.data({
-      schema: v.string(),
-      isLabelVisible: false,
-      control: controls.input({
-        language: InputControlLanguage.JavaScript,
+    code: i.pins.data({
+      control: i.controls.expression({
         defaultValue:
-          '// Write the JavaScript code you want to execute\n// and return the result:\n\nreturn Math.random();',
+          '// Write the JavaScript code you want\n// to execute and return the result:\n\nMath.random();',
       }),
+      isLabelVisible: false,
     }),
   },
   outputs: {
-    output: pins.data({
+    result: i.pins.data({
       schema: v.any(),
     }),
   },
-  async run({ inputs, variables, next }) {
-    const dynamicFunction = new Function(
-      'globals',
-      `return (async () => {
-        with (globals) {
-          ${inputs.code}
-        }
-      })();`
-    );
-
-    next({
-      output: await dynamicFunction(variables),
+  async run(opts) {
+    return opts.next({
+      result: opts.inputs.code,
     });
   },
 });

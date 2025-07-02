@@ -1,47 +1,48 @@
-import {
-  actions,
-  controls,
-  InputControlLanguage,
-  pins,
-} from '@acme/integration';
 import * as v from 'valibot';
 
-export const number = actions.pure({
-  category: 'DataTypes / Primitives',
+import * as i from '@acme/integration';
+
+const category = {
+  path: ['DataTypes', 'Primitives'],
+} satisfies i.ActionCategory;
+
+export const number = i.actions.pure({
+  category,
   outputs: {
-    value: pins.data({
+    value: i.pins.data({
       schema: v.number(),
-      isLabelVisible: false,
-      control: controls.input({
-        language: InputControlLanguage.Json,
+      control: i.controls.expression({
+        placeholder: 'Enter a number',
         defaultValue: 0,
       }),
+      isLabelVisible: false,
     }),
   },
 });
 
-export const string = actions.pure({
-  category: 'DataTypes / Primitives',
+export const string = i.actions.pure({
+  category,
   outputs: {
-    value: pins.data({
+    value: i.pins.data({
       schema: v.string(),
-      isLabelVisible: false,
-      control: controls.input({
+      control: i.controls.expression({
+        placeholder: 'Enter a string',
         defaultValue: '',
       }),
+      isLabelVisible: false,
     }),
   },
 });
 
-export const boolean = actions.pure({
-  category: 'DataTypes / Primitives',
+export const boolean = i.actions.pure({
+  category,
   outputs: {
-    value: pins.data({
+    value: i.pins.data({
       schema: v.boolean(),
-      isLabelVisible: false,
-      control: controls.switch({
+      control: i.controls.switch({
         defaultValue: true,
       }),
+      isLabelVisible: false,
     }),
   },
 });

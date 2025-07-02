@@ -1,35 +1,38 @@
-import { createRepositoryWebhook } from '#src/helpers/webhooks';
-import { repositoryFullName } from '#src/pins/index';
-import { actions, pins } from '@acme/integration';
+import { createRepositoryWebhook } from '@/helpers/webhooks';
+import { repositoryFullName } from '@/pins';
 import { type EmitterWebhookEvent } from '@octokit/webhooks/types';
 
-const category = 'Commits';
+import * as i from '@acme/integration';
 
-export const onPush = actions.trigger({
+const category = {
+  path: ['Commits'],
+} satisfies i.ActionCategory;
+
+export const onPush = i.trigger({
   category,
   inputs: {
     repository: repositoryFullName,
   },
   outputs: {
-    id: pins.data<EmitterWebhookEvent<'push'>['id']>(),
-    payload: pins.data<EmitterWebhookEvent<'push'>['payload']>(),
+    id: i.pins.data<EmitterWebhookEvent<'push'>['id']>(),
+    payload: i.pins.data<EmitterWebhookEvent<'push'>['payload']>(),
   },
-  async subscribe({ state, inputs, webhook, next }) {
-    state.webhooks.on('push', ({ id, payload }) => {
-      if (payload.repository.full_name !== inputs.repository) {
+  async subscribe(opts) {
+    opts.state.webhooks.on('push', ({ id, payload }) => {
+      if (payload.repository.full_name !== opts.inputs.repository) {
         return;
       }
 
-      next({
+      void opts.next({
         id,
         payload,
       });
     });
 
     await createRepositoryWebhook({
-      repository: inputs.repository,
-      webhook,
-      state,
+      repository: opts.inputs.repository,
+      webhook: opts.webhook,
+      state: opts.state,
     });
   },
 });

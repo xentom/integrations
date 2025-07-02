@@ -1,27 +1,31 @@
 {
-  "name": "@acme/github",
-  "version": "0.0.23",
+  "name": "@acme/integrations-github",
+  "displayName": "GitHub",
+  "description": "Integrate GitHub to trigger workflows from issues, pull requests or commits and automate actions like creating issues or commenting on pull requests.",
+  "version": "0.0.5",
   "type": "module",
-  "icon": "./assets/logo.png",
+  "icon": "./images/icon.png",
   "main": "./build/index.js",
   "scripts": {
-    "pack": "acme pack",
-    "publish": "acme publish"
-  },
-  "imports": {
-    "#src/*": "./src/*.ts"
+    "lint": "eslint",
+    "format": "prettier --check .",
+    "typecheck": "tsc --noEmit",
+    "clean": "git clean -xdf .cache .turbo node_modules build dist",
+    "build": "acme build"
   },
   "dependencies": {
-    "@acme/integration": "link:@acme/integration",
+    "@acme/integration": "catalog:",
+    "valibot": "catalog:",
     "@octokit/webhooks": "^13.8.0",
-    "@standard-schema/spec": "^1.0.0",
-    "octokit": "^4.1.2",
-    "valibot": "^1.0.0"
+    "octokit": "^4.1.2"
   },
   "devDependencies": {
-    "@types/bun": "latest"
+    "@acme/integrations-eslint": "*",
+    "@acme/integrations-prettier": "*",
+    "@types/bun": "catalog:",
+    "eslint": "catalog:",
+    "prettier": "catalog:",
+    "typescript": "catalog:"
   },
-  "peerDependencies": {
-    "typescript": "^5"
-  }
+  "prettier": "@acme/integrations-prettier"
 }

@@ -1,22 +1,28 @@
 {
-  "name": "@acme/teamspeak",
-  "version": "0.0.13",
+  "name": "@acme/integrations-teamspeak",
+  "version": "0.0.0",
   "type": "module",
-  "icon": "./assets/logo.jpg",
+  "icon": "./images/icon.jpg",
   "main": "./build/index.js",
   "scripts": {
-    "pack": "acme pack",
-    "publish": "acme publish"
+    "lint": "eslint",
+    "format": "prettier --check .",
+    "typecheck": "tsc --noEmit",
+    "clean": "git clean -xdf .cache .turbo node_modules build dist"
   },
   "dependencies": {
-    "@acme/integration": "link:@acme/integration",
-    "ts3-nodejs-library": "^3.5.1",
-    "valibot": "^1.0.0"
+    "@acme/integration": "catalog:",
+    "valibot": "catalog:",
+    "ts3-nodejs-library": "^3.5.1"
   },
   "devDependencies": {
-    "@types/bun": "latest"
+    "@acme/integrations-eslint": "*",
+    "@acme/integrations-prettier": "*",
+    "@types/bun": "catalog:",
+    "@types/node": "^24.0.3",
+    "eslint": "catalog:",
+    "prettier": "catalog:",
+    "typescript": "catalog:"
   },
-  "peerDependencies": {
-    "typescript": "^5"
-  }
+  "prettier": "@acme/integrations-prettier"
 }

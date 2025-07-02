@@ -1,46 +1,46 @@
-import {
-  actions,
-  controls,
-  InputControlLanguage,
-  pins,
-} from '@acme/integration';
 import * as v from 'valibot';
 
-const category = 'Time';
+import * as i from '@acme/integration';
 
-export const onInterval = actions.trigger({
+const category = {
+  path: ['Time'],
+} satisfies i.ActionCategory;
+
+export const onInterval = i.trigger({
   category,
   inputs: {
-    ms: pins.data({
+    ms: i.pins.data({
       displayName: 'Milliseconds',
       schema: v.number(),
-      control: controls.input({
+      control: i.controls.expression({
         defaultValue: 1000,
       }),
     }),
   },
-  subscribe({ inputs, next }) {
-    const interval = setInterval(() => next(), inputs.ms);
+  subscribe(opts) {
+    const interval = setInterval(() => {
+      void opts.next();
+    }, opts.inputs.ms);
+
     return () => {
       clearInterval(interval);
     };
   },
 });
 
-export const sleep = actions.callable({
+export const sleep = i.actions.callable({
   category,
   inputs: {
-    duration: pins.data({
-      control: controls.input({
-        language: InputControlLanguage.Json,
+    duration: i.pins.data({
+      schema: v.number(),
+      control: i.controls.expression({
         defaultValue: 1000,
         description: 'Duration to sleep in milliseconds',
       }),
-      schema: v.number(),
     }),
   },
-  async run({ inputs, next }) {
-    await Bun.sleep(inputs.duration);
-    await next();
+  async run(opts) {
+    await Bun.sleep(opts.inputs.duration);
+    return opts.next();
   },
 });

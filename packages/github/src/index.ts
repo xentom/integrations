@@ -1,32 +1,71 @@
-import { controls, env, integration } from '@acme/integration';
-import { Webhooks } from '@octokit/webhooks';
-import { Octokit } from 'octokit';
 import { randomBytes } from 'node:crypto';
-
+import { Webhooks } from '@octokit/webhooks';
+import { type EmitterWebhookEvent } from '@octokit/webhooks/types';
+import { Octokit, RequestError } from 'octokit';
 import * as v from 'valibot';
+
+import * as i from '@acme/integration';
+
 import * as actions from './actions';
 
-export default integration({
+v.setGlobalConfig({
+  abortEarly: true,
+  abortPipeEarly: true,
+});
+
+export interface IntegrationState {
+  octokit: Octokit;
+  webhookSecret: string;
+  webhooks: Webhooks;
+}
+
+export default i.integration({
   actions,
 
   env: {
-    GITHUB_TOKEN: env({
-      schema: v.string(),
-      control: controls.input(),
+    GITHUB_TOKEN: i.env({
+      control: i.controls.text({
+        label: 'GitHub Token',
+        description:
+          'A personal access token with the necessary permissions to access your repositories.',
+        placeholder: 'ghp_...',
+        sensitive: true,
+      }),
+      schema: v.pipeAsync(
+        v.string(),
+        v.startsWith('ghp_'),
+        v.checkAsync(async (token) => {
+          const octokit = new Octokit({
+            auth: token,
+          });
+
+          try {
+            await octokit.rest.users.getAuthenticated();
+            return true;
+          } catch (error) {
+            console.error(
+              'GitHub token validation failed:',
+              error instanceof RequestError ? error.message : error,
+            );
+
+            return false;
+          }
+        }, 'Invalid GitHub token. Please check your token and permissions.'),
+      ),
     }),
   },
 
-  async start({ state, webhook }) {
-    state.octokit = new Octokit({
+  start(opts) {
+    opts.state.octokit = new Octokit({
       auth: process.env.GITHUB_TOKEN,
     });
 
-    state.webhookSecret = randomBytes(32).toString('hex');
-    state.webhooks = new Webhooks({
-      secret: state.webhookSecret,
+    opts.state.webhookSecret = randomBytes(32).toString('hex');
+    opts.state.webhooks = new Webhooks({
+      secret: opts.state.webhookSecret,
     });
 
-    webhook.subscribe(async (request) => {
+    opts.webhook.subscribe(async (request) => {
       console.log('{GITHUB} Webhook received', request.url);
 
       const delivery = request.headers.get('X-GitHub-Delivery');
@@ -48,16 +87,16 @@ export default integration({
       }
 
       const payload = await request.text();
-      if (!(await state.webhooks.verify(payload, signature))) {
+      if (!(await opts.state.webhooks.verify(payload, signature))) {
         console.warn('Webhook signature invalid');
         return;
       }
 
-      await state.webhooks.receive({
+      await opts.state.webhooks.receive({
         id: delivery,
-        name: event as any,
-        payload: JSON.parse(payload),
-      });
+        name: event,
+        payload: JSON.parse(payload) as unknown,
+      } as EmitterWebhookEvent);
     });
   },
 });

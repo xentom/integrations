@@ -1,5 +1,4 @@
-import { type TeamSpeak } from 'ts3-nodejs-library';
-import { type Whoami } from 'ts3-nodejs-library/lib/types/ResponseTypes';
+/* eslint-disable @typescript-eslint/no-empty-object-type */
 import type Integration from './index';
 import { type IntegrationState as CustomIntegrationState } from './index';
 
@@ -12,8 +11,5 @@ declare global {
 }
 
 declare module '@acme/integration' {
-  interface IntegrationState {
-    teamspeak: TeamSpeak;
-    whoami: Whoami;
-  }
+  interface IntegrationState extends CustomIntegrationState {}
 }

@@ -1,7 +1,8 @@
-import { pins } from '@acme/integration';
 import * as v from 'valibot';
 
-export const issueAction = pins.data({
+import * as i from '@acme/integration';
+
+export const issueAction = i.pins.data({
   schema: v.optional(
     v.picklist([
       'all',
@@ -24,6 +25,6 @@ export const issueAction = pins.data({
       'unpinned',
       'untyped',
     ]),
-    'all'
+    'all',
   ),
 });

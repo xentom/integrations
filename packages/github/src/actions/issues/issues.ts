@@ -1,23 +1,20 @@
-import { createRepositoryWebhook } from '#src/helpers/webhooks';
-import { repositoryFullName } from '#src/pins/index';
-import {
-  actions,
-  pins,
-  generic,
-  controls,
-  type InferPinRecordOutput,
-} from '@acme/integration';
+import { createRepositoryWebhook } from '@/helpers/webhooks';
+import { repositoryFullName } from '@/pins';
 import { type EmitterWebhookEvent } from '@octokit/webhooks/types';
 
-const category = 'Issues';
+import * as i from '@acme/integration';
 
-export const onIssue = generic(<
-  I extends InferPinRecordOutput<typeof inputs>
+const category = {
+  path: ['Issues'],
+} satisfies i.ActionCategory;
+
+export const onIssue = i.generic(<
+  I extends i.InferPinRecordOutput<typeof inputs>,
 >() => {
   const inputs = {
     repository: repositoryFullName,
-    actionType: pins.data({
-      control: controls.select({
+    actionType: i.pins.data({
+      control: i.controls.select({
         options: [
           {
             label: 'Assigned',
@@ -97,29 +94,34 @@ export const onIssue = generic(<
   };
 
   type IssueEvent = EmitterWebhookEvent<`issues.${I['actionType']}`>;
-  return actions.trigger({
+  return i.trigger({
     category,
     inputs,
     outputs: {
-      id: pins.data<IssueEvent['id']>(),
-      payload: pins.data<IssueEvent['payload']>(),
+      id: i.pins.data<IssueEvent['id']>(),
+      payload: i.pins.data<IssueEvent['payload']>(),
     },
-    async subscribe({ state, inputs, webhook, next }) {
-      state.webhooks.on(`issues.${inputs.actionType}`, ({ id, payload }) => {
-        if (payload.repository.full_name !== inputs.repository) {
-          return;
-        }
+    async subscribe(opts) {
+      opts.state.webhooks.on(
+        `issues.${opts.inputs.actionType}`,
+        ({ id, payload }) => {
+          if (payload.repository.full_name !== opts.inputs.repository) {
+            return;
+          }
 
-        next({
-          id,
-          payload,
-        } as any);
-      });
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+          void opts.next({
+            id,
+            payload,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          } as any);
+        },
+      );
 
       await createRepositoryWebhook({
-        repository: inputs.repository,
-        webhook,
-        state,
+        repository: opts.inputs.repository,
+        webhook: opts.webhook,
+        state: opts.state,
       });
     },
   });

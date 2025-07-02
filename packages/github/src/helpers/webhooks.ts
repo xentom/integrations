@@ -1,16 +1,20 @@
-import type { IntegrationState, Webhook } from '@acme/integration';
+import type * as i from '@acme/integration';
 
 interface CreateRepositoryWebhookOptions {
   repository: string;
-  state: IntegrationState;
-  webhook: Webhook;
+  state: i.IntegrationState;
+  webhook: i.Webhook;
 }
 
 export async function createRepositoryWebhook(
-  options: CreateRepositoryWebhookOptions
+  options: CreateRepositoryWebhookOptions,
 ) {
   try {
-    const [owner, repository] = options.repository.split('/');
+    const [owner, repository] = options.repository.split('/') as [
+      string,
+      string,
+    ];
+
     await options.state.octokit.rest.repos.createWebhook({
       owner: owner,
       repo: repository,

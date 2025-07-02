@@ -1,9 +1,11 @@
-import { actions, pins } from '@acme/integration';
-import { channel, channelId, channelName } from '../../pins';
+import { type ChannelEntry } from 'ts3-nodejs-library/lib/types/ResponseTypes';
 import * as v from 'valibot';
-import type { ChannelEntry } from 'ts3-nodejs-library/lib/types/ResponseTypes';
 
-export const getChannelById = actions.pure({
+import * as i from '@acme/integration';
+
+import { channel, channelId, channelName } from '../../pins';
+
+export const getChannelById = i.actions.pure({
   displayName: 'Get Channel By ID',
   description: 'Get a TeamSpeak channel by its ID',
   inputs: {
@@ -12,17 +14,20 @@ export const getChannelById = actions.pure({
   outputs: {
     channel,
   },
-  run: async ({ state, inputs, outputs }) => {
-    const channel = await state.teamspeak.getChannelById(inputs.id.toString());
+  async run(opts) {
+    const channel = await opts.state.teamspeak.getChannelById(
+      opts.inputs.id.toString(),
+    );
+
     if (!channel) {
-      throw new Error(`Channel with the ID "${inputs.id}" not found`);
+      throw new Error(`Channel with the ID "${opts.inputs.id}" not found`);
     }
 
-    outputs.channel = channel.toJSON() as ChannelEntry;
+    opts.outputs.channel = channel.toJSON() as ChannelEntry;
   },
 });
 
-export const getChannelByName = actions.pure({
+export const getChannelByName = i.actions.pure({
   displayName: 'Get Channel By Name',
   description: 'Get a TeamSpeak channel by its name',
   inputs: {
@@ -31,23 +36,26 @@ export const getChannelByName = actions.pure({
   outputs: {
     channel,
   },
-  run: async ({ state, inputs, outputs }) => {
-    const channel = await state.teamspeak.getChannelByName(inputs.name);
+  async run(opts) {
+    const channel = await opts.state.teamspeak.getChannelByName(
+      opts.inputs.name,
+    );
+
     if (!channel) {
-      throw new Error(`Channel with the name "${inputs.name}" not found`);
+      throw new Error(`Channel with the name "${opts.inputs.name}" not found`);
     }
 
-    outputs.channel = channel.toJSON() as ChannelEntry;
+    opts.outputs.channel = channel.toJSON() as ChannelEntry;
   },
 });
 
-export const createChannel = actions.callable({
+export const createChannel = i.actions.callable({
   inputs: {
-    name: pins.data({
+    name: i.pins.data({
       schema: v.string(),
       description: 'The name of the channel',
     }),
-    description: pins.data({
+    description: i.pins.data({
       schema: v.optional(v.string()),
       description: 'The description of the channel',
     }),
@@ -55,13 +63,13 @@ export const createChannel = actions.callable({
   outputs: {
     channel,
   },
-  run: async ({ state, inputs }) => {
-    const channel = await state.teamspeak.channelCreate(inputs.name, {
-      channelDescription: inputs.description,
+  async run(opts) {
+    const channel = await opts.state.teamspeak.channelCreate(opts.inputs.name, {
+      channelDescription: opts.inputs.description,
     });
 
-    return {
+    return opts.next({
       channel: channel.toJSON() as ChannelEntry,
-    };
+    });
   },
 });

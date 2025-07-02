@@ -1,8 +1,15 @@
 import { QueryProtocol, TeamSpeak } from 'ts3-nodejs-library';
+import { type Whoami } from 'ts3-nodejs-library/lib/types/ResponseTypes';
 import * as v from 'valibot';
 
 import * as acme from '@acme/integration';
+
 import * as actions from './actions';
+
+export interface IntegrationState {
+  teamspeak: TeamSpeak;
+  whoami: Whoami;
+}
 
 export default acme.integration({
   actions,
@@ -10,7 +17,7 @@ export default acme.integration({
   env: {
     SERVER_IP: acme.env({
       schema: v.pipe(v.string(), v.ip()),
-      control: acme.controls.input({
+      control: acme.controls.text({
         label: 'TeamSpeak Server IP',
         placeholder: 'Enter the IP address of your TeamSpeak server',
         defaultValue: '127.0.0.1',
@@ -19,7 +26,7 @@ export default acme.integration({
 
     SERVER_PORT: acme.env({
       schema: v.pipe(v.string(), v.transform(Number), v.integer()),
-      control: acme.controls.input({
+      control: acme.controls.text({
         label: 'TeamSpeak Server Port',
         placeholder: 'Enter the port of your TeamSpeak server',
         defaultValue: '9987',
@@ -28,7 +35,7 @@ export default acme.integration({
 
     SERVER_QUERY_PORT: acme.env({
       schema: v.pipe(v.string(), v.transform(Number), v.integer()),
-      control: acme.controls.input({
+      control: acme.controls.text({
         label: 'TeamSpeak Server Query Port',
         placeholder: 'Enter the query port of your TeamSpeak server',
         defaultValue: '10011',
@@ -37,7 +44,7 @@ export default acme.integration({
 
     SERVER_QUERY_USERNAME: acme.env({
       schema: v.string(),
-      control: acme.controls.input({
+      control: acme.controls.text({
         label: 'TeamSpeak Server Query Username',
         placeholder: 'Enter the query username of your TeamSpeak server',
         defaultValue: 'serveradmin',
@@ -46,7 +53,7 @@ export default acme.integration({
 
     SERVER_QUERY_PASSWORD: acme.env({
       schema: v.string(),
-      control: acme.controls.input({
+      control: acme.controls.text({
         label: 'TeamSpeak Server Query Password',
         placeholder: 'Enter the query password of your TeamSpeak server',
       }),
@@ -54,7 +61,7 @@ export default acme.integration({
 
     NICKNAME: acme.env({
       schema: v.string(),
-      control: acme.controls.input({
+      control: acme.controls.text({
         label: 'Bot Nickname',
         placeholder: 'Enter the nickname of your bot',
         defaultValue: 'TeamSpeak Bot',
@@ -62,8 +69,8 @@ export default acme.integration({
     }),
   },
 
-  async start({ state }) {
-    state.teamspeak = await TeamSpeak.connect({
+  async start(opts) {
+    opts.state.teamspeak = await TeamSpeak.connect({
       protocol: QueryProtocol.RAW,
       host: process.env.SERVER_IP,
       serverport: process.env.SERVER_PORT,
@@ -75,20 +82,20 @@ export default acme.integration({
       keepAliveTimeout: 60,
     });
 
-    state.teamspeak.on('ready', () => {
+    opts.state.teamspeak.on('ready', () => {
       console.log('TeamSpeak 3 integration is ready!');
     });
 
-    state.teamspeak.on('error', (e) => {
+    opts.state.teamspeak.on('error', (e) => {
       console.error('TeamSpeak 3 integration error:', e);
     });
 
-    await state.teamspeak.registerEvent('textprivate');
+    await opts.state.teamspeak.registerEvent('textprivate');
 
-    state.whoami = await state.teamspeak.whoami();
+    opts.state.whoami = await opts.state.teamspeak.whoami();
   },
 
-  async stop({ state }) {
-    await state.teamspeak.quit();
+  async stop(opts) {
+    await opts.state.teamspeak.quit();
   },
 });

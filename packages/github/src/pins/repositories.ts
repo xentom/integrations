@@ -1,16 +1,16 @@
-import { controls, pins } from '@acme/integration';
 import * as v from 'valibot';
 
-export const repositoryFullName = pins.data({
+import * as i from '@acme/integration';
+
+export const repositoryFullName = i.pins.data({
   description: 'The full name of the repository (e.g., octocat/Hello-World)',
   schema: v.pipe(v.string(), v.nonEmpty()),
-  control: controls.select({
-    async options({ state }) {
+  control: i.controls.select({
+    async options(opts) {
       const repositories =
-        await state.octokit.rest.repos.listForAuthenticatedUser();
+        await opts.state.octokit.rest.repos.listForAuthenticatedUser();
 
       return repositories.data.map((repo) => ({
-        label: repo.full_name,
         value: repo.full_name,
       }));
     },

@@ -1,43 +1,24 @@
-import { createRepositoryWebhook } from '#src/helpers/webhooks';
-import { repositoryFullName } from '#src/pins/index';
-import {
-  actions,
-  pins,
-  generic,
-  controls,
-  type InferPinRecordOutput,
-  type DataPin,
-} from '@acme/integration';
+import { createRepositoryWebhook } from '@/helpers/webhooks';
+import { repositoryFullName } from '@/pins';
 import { type EmitterWebhookEvent } from '@octokit/webhooks/types';
 
-const category = 'Repositories';
+import * as i from '@acme/integration';
 
-type RepositoryActionType =
-  | 'archived'
-  | 'created'
-  | 'deleted'
-  | 'edited'
-  | 'privatized'
-  | 'publicized'
-  | 'renamed'
-  | 'transferred'
-  | 'unarchived';
+const category = {
+  path: ['Repositories'],
+} satisfies i.ActionCategory;
 
-export const onRepository = generic(<
-  I extends InferPinRecordOutput<typeof inputs>
+export const onRepository = i.generic(<
+  I extends i.InferPinRecordOutput<typeof inputs>,
 >() => {
   const inputs = {
     repository: repositoryFullName,
-    actionType: pins.data({
-      control: controls.select<RepositoryActionType>({
+    actionType: i.pins.data({
+      control: i.controls.select({
         options: [
           {
             label: 'Archived',
             value: 'archived',
-          },
-          {
-            label: 'Created',
-            value: 'created',
           },
           {
             label: 'Deleted',
@@ -70,38 +51,37 @@ export const onRepository = generic(<
         ],
       }),
     }),
-  } as {
-    repository: DataPin<string, string>;
-    actionType: DataPin<RepositoryActionType, RepositoryActionType>;
   };
 
   type RepositoryEvent = EmitterWebhookEvent<`repository.${I['actionType']}`>;
-  return actions.trigger({
+  return i.trigger({
     category,
-    inputs: inputs,
+    inputs,
     outputs: {
-      id: pins.data<RepositoryEvent['id']>(),
-      payload: pins.data<RepositoryEvent['payload']>(),
+      id: i.pins.data<RepositoryEvent['id']>(),
+      payload: i.pins.data<RepositoryEvent['payload']>(),
     },
-    async subscribe({ state, inputs, webhook, next }) {
-      state.webhooks.on(
-        `repository.${inputs.actionType}`,
+    async subscribe(opts) {
+      opts.state.webhooks.on(
+        `repository.${opts.inputs.actionType}`,
         ({ id, payload }) => {
-          if (payload.repository.full_name !== inputs.repository) {
+          if (payload.repository.full_name !== opts.inputs.repository) {
             return;
           }
 
-          next({
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+          void opts.next({
             id,
             payload,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
           } as any);
-        }
+        },
       );
 
       await createRepositoryWebhook({
-        repository: inputs.repository,
-        webhook,
-        state,
+        repository: opts.inputs.repository,
+        webhook: opts.webhook,
+        state: opts.state,
       });
     },
   });

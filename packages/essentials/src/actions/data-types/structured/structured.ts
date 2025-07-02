@@ -1,81 +1,36 @@
-import {
-  actions,
-  controls,
-  InputControlLanguage,
-  pins,
-} from '@acme/integration';
 import * as v from 'valibot';
 
-export const html = actions.pure({
-  category: 'DataTypes / Structured',
+import * as i from '@acme/integration';
+
+const category = {
+  path: ['DataTypes', 'Structured'],
+} satisfies i.ActionCategory;
+
+export const html = i.actions.pure({
+  category,
   displayName: 'HTML',
   outputs: {
-    value: pins.data({
-      isLabelVisible: false,
+    value: i.pins.data({
       schema: v.string(),
-      control: controls.input({
-        language: InputControlLanguage.Html,
+      control: i.controls.text({
+        language: i.TextControlLanguage.Html,
         defaultValue: '<h1>HTML</h1>',
       }),
+      isLabelVisible: false,
     }),
   },
 });
 
-export const json = actions.pure({
-  category: 'DataTypes / Structured',
-  displayName: 'JSON',
+export const markdown = i.actions.pure({
+  category,
   outputs: {
-    value: pins.data({
-      isLabelVisible: false,
-      schema: v.any(),
-      control: controls.input({
-        language: InputControlLanguage.Json,
-        defaultValue: '{}',
-      }),
-    }),
-  },
-});
-
-export const markdown = actions.pure({
-  category: 'DataTypes / Structured',
-  outputs: {
-    value: pins.data({
-      isLabelVisible: false,
+    value: i.pins.data({
       schema: v.string(),
-      control: controls.input({
-        language: InputControlLanguage.Markdown,
+      control: i.controls.text({
+        language: i.TextControlLanguage.Markdown,
         defaultValue: '# Markdown',
       }),
-    }),
-  },
-});
-
-export const javascript = actions.pure({
-  category: 'DataTypes / Structured',
-  displayName: 'JavaScript',
-  outputs: {
-    value: pins.data({
       isLabelVisible: false,
-      schema: v.string(),
-      control: controls.input({
-        language: InputControlLanguage.JavaScript,
-        defaultValue: 'return { id: 1, name: "John Doe" }',
-      }),
-    }),
-  },
-});
-
-export const typescript = actions.pure({
-  category: 'DataTypes / Structured',
-  displayName: 'TypeScript',
-  outputs: {
-    value: pins.data({
-      isLabelVisible: false,
-      schema: v.string(),
-      control: controls.input({
-        language: InputControlLanguage.TypeScript,
-        defaultValue: 'return { id: 1, name: "John Doe" }',
-      }),
     }),
   },
 });

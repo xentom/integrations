@@ -1,10 +1,14 @@
-import { controls, pins } from '@acme/integration';
+import { type ChannelEntry } from 'ts3-nodejs-library/lib/types/ResponseTypes';
 import * as v from 'valibot';
 
-export const channel = pins.data({
+import * as i from '@acme/integration';
+
+type test = ChannelEntry;
+
+export const channel = i.pins.data({
   displayName: 'Channel',
   description: 'The details of a TeamSpeak channel',
-  schema: v.custom<any>(() => true),
+  schema: v.custom<test>(() => true),
 
   // // Runs before the run function
   // deserialize(channel: AcmeChannel) {
@@ -21,13 +25,13 @@ export const channel = pins.data({
   // },
 });
 
-export const channelId = pins.data({
+export const channelId = i.pins.data({
   displayName: 'Channel ID',
   description: 'The ID of a TeamSpeak channel',
   schema: v.string(),
-  control: controls.select({
-    async options({ state }) {
-      const channels = await state.teamspeak.channelList();
+  control: i.controls.select({
+    async options(opts) {
+      const channels = await opts.state.teamspeak.channelList();
       return channels.map((channel) => {
         return {
           value: channel.cid,
@@ -38,12 +42,12 @@ export const channelId = pins.data({
   }),
 });
 
-export const channelName = pins.data({
+export const channelName = i.pins.data({
   description: 'The name of a TeamSpeak channel',
   schema: v.string(),
-  control: controls.select({
-    async options({ state }) {
-      const channels = await state.teamspeak.channelList();
+  control: i.controls.select({
+    async options(opts) {
+      const channels = await opts.state.teamspeak.channelList();
       return channels.map((channel) => {
         return {
           value: channel.name,

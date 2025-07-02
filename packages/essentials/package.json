@@ -1,23 +1,30 @@
 {
-  "name": "@acme/essentials",
+  "name": "@acme/integrations-essentials",
   "displayName": "Essentials",
-  "description": "Essentials functionalities for the ACME platform, including reusable data types and control flow utilities (such as loops and conditions)",
-  "version": "0.0.26",
+  "description": "Add essentials to trigger workflows on schedules or manual runs and perform core actions like sending emails, making HTTP requests, or manipulating data.",
+  "version": "0.0.28",
   "type": "module",
-  "icon": "./assets/logo.png",
+  "icon": "./images/icon.png",
   "main": "./build/index.js",
   "scripts": {
-    "pack": "acme pack",
-    "publish": "acme publish"
+    "lint": "eslint",
+    "format": "prettier --check .",
+    "typecheck": "tsc --noEmit",
+    "clean": "git clean -xdf .cache .turbo node_modules build dist",
+    "build": "acme build"
   },
   "dependencies": {
-    "@acme/integration": "link:@acme/integration",
-    "valibot": "^1.0.0"
+    "@acme/integration": "catalog:",
+    "mime": "^4.0.7",
+    "valibot": "catalog:"
   },
   "devDependencies": {
-    "@types/bun": "latest"
+    "@acme/integrations-eslint": "*",
+    "@acme/integrations-prettier": "*",
+    "@types/bun": "catalog:",
+    "eslint": "catalog:",
+    "prettier": "catalog:",
+    "typescript": "catalog:"
   },
-  "peerDependencies": {
-    "typescript": "^5"
-  }
+  "prettier": "@acme/integrations-prettier"
 }

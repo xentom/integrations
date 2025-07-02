@@ -1,0 +1,109 @@
+{
+  "Import Integration Package": {
+    "prefix": ["ii"],
+    "scope": "javascript,typescript",
+    "body": ["import * as i from '@acme/integration';"]
+  },
+
+  "Add Trigger": {
+    "prefix": ["it", "at"],
+    "scope": "javascript,typescript",
+    "body": [
+      "export const ${1:triggerName} = i.trigger({",
+      "  subscribe(opts) {",
+      "    ${2:// Implementation}",
+      "  },",
+      "});"
+    ]
+  },
+
+  "Add Callable Action": {
+    "prefix": ["iac", "aca"],
+    "scope": "javascript,typescript",
+    "body": [
+      "export const ${1:actionName} = i.actions.callable({",
+      "  inputs: {",
+      "    ${2:// Define inputs}",
+      "  },",
+      "  run(opts) {",
+      "    ${3:// Implementation}",
+      "  },",
+      "});"
+    ]
+  },
+
+  "Add Pure Action": {
+    "prefix": ["iap", "apa"],
+    "scope": "javascript,typescript",
+    "body": [
+      "export const ${1:actionName} = i.actions.pure({",
+      "  outputs: {",
+      "    ${2:// Define outputs}",
+      "  },",
+      "});"
+    ]
+  },
+
+  "Add Exec Pin": {
+    "prefix": ["ipe", "aep"],
+    "scope": "javascript,typescript",
+    "body": [
+      "${1:pinName}: i.pins.exec({",
+      "  description: '${2:Short Description}',",
+      "}),"
+    ]
+  },
+
+  "Add Data Pin": {
+    "prefix": ["ipd", "adp"],
+    "scope": "javascript,typescript",
+    "body": [
+      "${1:pinName}: i.pins.data({",
+      "  description: '${2:Short Description}',",
+      "}),"
+    ]
+  },
+
+  "Add Expression Control": {
+    "prefix": ["ice", "aec"],
+    "scope": "javascript,typescript",
+    "body": [
+      "i.controls.expression({",
+      "  description: '${1:Short Description}',",
+      "}),"
+    ]
+  },
+
+  "Add Select Control": {
+    "prefix": ["icse", "asec"],
+    "scope": "javascript,typescript",
+    "body": [
+      "i.controls.select({",
+      "  description: '${1:Short Description}',",
+      "  options: [",
+      "    ${2:// Define options}",
+      "  ],",
+      "}),"
+    ]
+  },
+
+  "Add Switch Control": {
+    "prefix": ["icsw", "aswc"],
+    "scope": "javascript,typescript",
+    "body": [
+      "i.controls.switch({",
+      "  description: '${1:Short Description}',",
+      "}),"
+    ]
+  },
+
+  "Add Text Control": {
+    "prefix": ["ict", "atc"],
+    "scope": "javascript,typescript",
+    "body": [
+      "i.controls.text({",
+      "  description: '${1:Short Description}',",
+      "}),"
+    ]
+  }
+}
