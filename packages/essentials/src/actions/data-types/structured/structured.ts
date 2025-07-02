@@ -11,12 +11,12 @@ export const html = i.actions.pure({
   displayName: 'HTML',
   outputs: {
     value: i.pins.data({
+      displayName: false,
       schema: v.string(),
       control: i.controls.text({
         language: i.TextControlLanguage.Html,
         defaultValue: '<h1>HTML</h1>',
       }),
-      isLabelVisible: false,
     }),
   },
 });
@@ -25,12 +25,12 @@ export const markdown = i.actions.pure({
   category,
   outputs: {
     value: i.pins.data({
+      displayName: false,
       schema: v.string(),
       control: i.controls.text({
         language: i.TextControlLanguage.Markdown,
         defaultValue: '# Markdown',
       }),
-      isLabelVisible: false,
     }),
   },
 });

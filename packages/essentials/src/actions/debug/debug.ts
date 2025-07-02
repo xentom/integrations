@@ -41,11 +41,11 @@ export const evaluate = i.actions.callable({
   category,
   inputs: {
     code: i.pins.data({
+      displayName: false,
       control: i.controls.expression({
         defaultValue:
           '// Write the JavaScript code you want\n// to execute and return the result:\n\nMath.random();',
       }),
-      isLabelVisible: false,
     }),
   },
   outputs: {
