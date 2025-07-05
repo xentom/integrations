@@ -1,0 +1,33 @@
+{
+  "name": "@acme/integrations-openai",
+  "displayName": "OpenAI",
+  "description": "Integrate OpenAI to trigger workflows from prompts or data inputs and generate text, summaries, or code using AI-powered actions.",
+  "version": "0.0.1",
+  "type": "module",
+  "icon": "./images/icon.png",
+  "main": "./build/index.js",
+  "scripts": {
+    "lint": "eslint",
+    "format": "prettier --check .",
+    "typecheck": "tsc --noEmit",
+    "clean": "git clean -xdf .cache .turbo node_modules build dist",
+    "dev": "acme dev",
+    "build": "acme build",
+    "publish": "acme publish"
+  },
+  "dependencies": {
+    "@acme/integration-framework": "catalog:",
+    "mime": "^4.0.7",
+    "openai": "^5.6.0",
+    "valibot": "catalog:",
+    "zod": "^3.25.67"
+  },
+  "devDependencies": {
+    "@acme/style-guide": "catalog:",
+    "@types/bun": "catalog:",
+    "eslint": "catalog:",
+    "prettier": "catalog:",
+    "typescript": "catalog:"
+  },
+  "prettier": "@acme/style-guide/prettier"
+}

@@ -1,0 +1,30 @@
+{
+  "name": "@acme/integrations-template",
+  "displayName": "Template",
+  "description": "This is a template for creating new integrations in the ACME ecosystem. It includes basic setup and configuration.",
+  "version": "0.0.0",
+  "type": "module",
+  "icon": "./images/icon.png",
+  "main": "./build/index.js",
+  "scripts": {
+    "lint": "eslint",
+    "format": "prettier --check .",
+    "typecheck": "tsc --noEmit",
+    "clean": "git clean -xdf .cache .turbo node_modules build dist",
+    "dev": "acme dev",
+    "build": "acme build",
+    "publish": "acme publish"
+  },
+  "dependencies": {
+    "@acme/integration-framework": "catalog:",
+    "valibot": "catalog:"
+  },
+  "devDependencies": {
+    "@acme/style-guide": "catalog:",
+    "@types/bun": "catalog:",
+    "eslint": "catalog:",
+    "prettier": "catalog:",
+    "typescript": "catalog:"
+  },
+  "prettier": "@acme/style-guide/prettier"
+}

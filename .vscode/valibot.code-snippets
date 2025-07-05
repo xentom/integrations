@@ -1,0 +1,7 @@
+{
+  "Import Valibot": {
+    "prefix": ["iv", "valibot"],
+    "scope": "javascript,typescript",
+    "body": ["import * as v from 'valibot';"],
+  },
+}

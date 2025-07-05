@@ -1,81 +1,81 @@
 {
-  "Import Integration Package": {
-    "prefix": ["ii"],
+  "Import Integration Framework": {
+    "prefix": ["iif"],
     "scope": "javascript,typescript",
-    "body": ["import * as i from '@acme/integration';"]
+    "body": ["import * as i from '@acme/integration-framework';"],
   },
 
-  "Add Trigger": {
-    "prefix": ["it", "at"],
+  "Add Trigger Node": {
+    "prefix": ["atn", "int"],
     "scope": "javascript,typescript",
     "body": [
-      "export const ${1:triggerName} = i.trigger({",
+      "export const ${1:nodeName} = i.nodes.trigger({",
       "  subscribe(opts) {",
       "    ${2:// Implementation}",
       "  },",
-      "});"
-    ]
+      "});",
+    ],
   },
 
-  "Add Callable Action": {
-    "prefix": ["iac", "aca"],
+  "Add Callable Node": {
+    "prefix": ["acn", "inc"],
     "scope": "javascript,typescript",
     "body": [
-      "export const ${1:actionName} = i.actions.callable({",
+      "export const ${1:nodeName} = i.nodes.callable({",
       "  inputs: {",
       "    ${2:// Define inputs}",
       "  },",
       "  run(opts) {",
       "    ${3:// Implementation}",
       "  },",
-      "});"
-    ]
+      "});",
+    ],
   },
 
-  "Add Pure Action": {
-    "prefix": ["iap", "apa"],
+  "Add Pure Node": {
+    "prefix": ["apn", "inp"],
     "scope": "javascript,typescript",
     "body": [
-      "export const ${1:actionName} = i.actions.pure({",
+      "export const ${1:nodeName} = i.nodes.pure({",
       "  outputs: {",
       "    ${2:// Define outputs}",
       "  },",
-      "});"
-    ]
+      "});",
+    ],
   },
 
   "Add Exec Pin": {
-    "prefix": ["ipe", "aep"],
+    "prefix": ["aep", "ipe"],
     "scope": "javascript,typescript",
     "body": [
       "${1:pinName}: i.pins.exec({",
       "  description: '${2:Short Description}',",
-      "}),"
-    ]
+      "}),",
+    ],
   },
 
   "Add Data Pin": {
-    "prefix": ["ipd", "adp"],
+    "prefix": ["adp", "ipd"],
     "scope": "javascript,typescript",
     "body": [
       "${1:pinName}: i.pins.data({",
       "  description: '${2:Short Description}',",
-      "}),"
-    ]
+      "}),",
+    ],
   },
 
   "Add Expression Control": {
-    "prefix": ["ice", "aec"],
+    "prefix": ["aec", "ice"],
     "scope": "javascript,typescript",
     "body": [
       "i.controls.expression({",
       "  description: '${1:Short Description}',",
-      "}),"
-    ]
+      "}),",
+    ],
   },
 
   "Add Select Control": {
-    "prefix": ["icse", "asec"],
+    "prefix": ["asec", "icse"],
     "scope": "javascript,typescript",
     "body": [
       "i.controls.select({",
@@ -83,27 +83,27 @@
       "  options: [",
       "    ${2:// Define options}",
       "  ],",
-      "}),"
-    ]
+      "}),",
+    ],
   },
 
   "Add Switch Control": {
-    "prefix": ["icsw", "aswc"],
+    "prefix": ["aswc", "icsw"],
     "scope": "javascript,typescript",
     "body": [
       "i.controls.switch({",
       "  description: '${1:Short Description}',",
-      "}),"
-    ]
+      "}),",
+    ],
   },
 
   "Add Text Control": {
-    "prefix": ["ict", "atc"],
+    "prefix": ["atc", "ict"],
     "scope": "javascript,typescript",
     "body": [
       "i.controls.text({",
       "  description: '${1:Short Description}',",
-      "}),"
-    ]
-  }
+      "}),",
+    ],
+  },
 }

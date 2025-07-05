@@ -18,21 +18,23 @@
     "typescript": "catalog:"
   },
   "trustedDependencies": [
-    "@acme/integration"
+    "@acme/integration-framework"
   ],
   "workspaces": {
     "packages": [
-      "packages/*",
-      "tooling/*"
+      "integrations/*"
     ],
     "catalog": {
-      "@acme/integration": "link:@acme/integration",
-      "@acme/prettier-config": "link:@acme/prettier-config",
+      "@acme/integration-framework": "link:@acme/integration-framework",
+      "@acme/style-guide": "link:@acme/style-guide",
       "@types/bun": "^1.2.15",
       "valibot": "^1.1.0",
       "eslint": "^9.29.0",
       "prettier": "^3.5.3",
       "typescript": "^5"
     }
+  },
+  "patchedDependencies": {
+    "cpu-features@0.0.10": "patches/cpu-features@0.0.10.patch"
   }
 }
