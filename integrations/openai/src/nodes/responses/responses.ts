@@ -1,3 +1,4 @@
+import * as customPins from '@/pins';
 import {
   type Response,
   type ResponseInput,
@@ -6,7 +7,6 @@ import {
 import * as z from 'zod';
 
 import * as i from '@acme/integration-framework';
-import * as customPins from '@/pins';
 
 const category = {
   path: ['AI', 'Response'],

@@ -1,7 +1,7 @@
+import { HTTP_REQUEST_METHODS } from '@/utils/web';
 import * as v from 'valibot';
 
 import * as i from '@acme/integration-framework';
-import { HTTP_REQUEST_METHODS } from '@/utils/web';
 
 const category = {
   path: ['Web'],

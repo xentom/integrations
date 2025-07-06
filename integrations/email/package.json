@@ -1,8 +1,8 @@
 {
-  "name": "@acme/integrations-template",
-  "displayName": "Template",
-  "description": "This is a template for creating new integrations in the ACME ecosystem. It includes basic setup and configuration.",
-  "version": "0.0.0",
+  "name": "@acme/integrations-email",
+  "displayName": "Email",
+  "description": "Send emails using SMTP with nodemailer. Configure your email server and send professional emails through workflows.",
+  "version": "0.0.5",
   "type": "module",
   "icon": "./images/icon.png",
   "main": "./build/index.js",
@@ -17,11 +17,13 @@
   },
   "dependencies": {
     "@acme/integration-framework": "catalog:",
+    "nodemailer": "^6.9.8",
     "valibot": "catalog:"
   },
   "devDependencies": {
     "@acme/style-guide": "catalog:",
     "@types/bun": "catalog:",
+    "@types/nodemailer": "^6.4.14",
     "eslint": "catalog:",
     "prettier": "catalog:",
     "typescript": "catalog:"

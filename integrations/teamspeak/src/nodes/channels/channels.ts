@@ -1,9 +1,8 @@
+import { channel, channelId, channelName } from '@/pins';
 import { type ChannelEntry } from 'ts3-nodejs-library/lib/types/ResponseTypes';
 import * as v from 'valibot';
 
 import * as i from '@acme/integration-framework';
-
-import { channel, channelId, channelName } from '@/pins';
 
 export const getChannelById = i.nodes.pure({
   displayName: 'Get Channel By ID',

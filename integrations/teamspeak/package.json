@@ -6,7 +6,7 @@
   "main": "./build/index.js",
   "scripts": {
     "lint": "eslint",
-    "format": "prettier --check .",
+    "format": "prettier --check . --ignore-path ../../.gitignore",
     "typecheck": "tsc --noEmit",
     "clean": "git clean -xdf .cache .turbo node_modules build dist",
     "dev": "acme dev",

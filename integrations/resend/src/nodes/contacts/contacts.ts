@@ -1,3 +1,5 @@
+import * as controls from '@/controls';
+import * as schemas from '@/schemas';
 import {
   type GetContactResponseSuccess,
   type ListContactsResponseSuccess,
@@ -5,8 +7,6 @@ import {
 import * as v from 'valibot';
 
 import * as i from '@acme/integration-framework';
-import * as controls from '@/controls';
-import * as schemas from '@/schemas';
 
 const category = {
   path: ['Contacts'],

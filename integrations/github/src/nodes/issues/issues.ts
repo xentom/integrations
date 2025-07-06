@@ -1,8 +1,8 @@
+import { createRepositoryWebhook } from '@/helpers/webhooks';
+import { repositoryFullName } from '@/pins';
 import { type EmitterWebhookEvent } from '@octokit/webhooks/types';
 
 import * as i from '@acme/integration-framework';
-import { createRepositoryWebhook } from '@/helpers/webhooks';
-import { repositoryFullName } from '@/pins';
 
 const category = {
   path: ['Issues'],

@@ -8,25 +8,18 @@
     "lint": "turbo run lint --continue -- --cache --cache-location .cache/.eslintcache",
     "format": "turbo run format --continue -- --cache --cache-location .cache/.prettiercache",
     "format:fix": "bun run format --write",
-    "typecheck": "turbo typecheck",
+    "typecheck": "turbo typecheck --continue",
     "build": "turbo run build",
     "clean": "turbo run clean && git clean -xdf node_modules"
   },
-  "devDependencies": {
-    "@types/bun": "latest",
-    "turbo": "^2.5.4",
-    "typescript": "catalog:"
-  },
-  "trustedDependencies": [
-    "@acme/integration-framework"
-  ],
   "workspaces": {
     "packages": [
-      "integrations/*"
+      "integrations/*",
+      "tooling/*"
     ],
     "catalog": {
       "@acme/integration-framework": "link:@acme/integration-framework",
-      "@acme/style-guide": "link:@acme/style-guide",
+      "@acme/style-guide": "*",
       "@types/bun": "^1.2.15",
       "valibot": "^1.1.0",
       "eslint": "^9.29.0",
@@ -34,7 +27,17 @@
       "typescript": "^5"
     }
   },
+  "devDependencies": {
+    "@acme/style-guide": "*",
+    "@types/bun": "latest",
+    "turbo": "^2.5.4",
+    "typescript": "catalog:"
+  },
+  "trustedDependencies": [
+    "@acme/integration-framework"
+  ],
   "patchedDependencies": {
     "cpu-features@0.0.10": "patches/cpu-features@0.0.10.patch"
-  }
+  },
+  "prettier": "@acme/style-guide/prettier"
 }

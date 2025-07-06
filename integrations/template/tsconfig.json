@@ -1,5 +1,5 @@
 {
-  "extends": "@acme/style-guide/typescript/integration",
+  "extends": "@acme/style-guide/typescript",
   "compilerOptions": {
     "baseUrl": "src",
     "paths": {

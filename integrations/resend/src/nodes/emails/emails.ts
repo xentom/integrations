@@ -1,10 +1,10 @@
+import * as controls from '@/controls';
+import * as pins from '@/pins';
+import * as schemas from '@/schemas';
 import { type GetEmailResponseSuccess } from 'resend';
 import * as v from 'valibot';
 
 import * as i from '@acme/integration-framework';
-import * as controls from '@/controls';
-import * as pins from '@/pins';
-import * as schemas from '@/schemas';
 
 const category = {
   path: ['Emails'],

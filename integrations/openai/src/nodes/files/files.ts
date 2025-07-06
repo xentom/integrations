@@ -1,8 +1,8 @@
+import * as customPins from '@/pins';
 import { type FilePurpose } from 'openai/resources';
 import * as z from 'zod';
 
 import * as i from '@acme/integration-framework';
-import * as customPins from '@/pins';
 
 const category = {
   path: ['AI', 'Files'],
