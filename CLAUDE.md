@@ -507,6 +507,24 @@ env: {
 
 1. **Prefer Official Node.js Clients Over Raw Requests**: When implementing new integrations, avoid manually crafting raw API requests or relying on online API references alone. Instead, search for an official or well-maintained Node.js client library on npm and use that. For existing integrations, always use the client or SDK that is already defined in the integration's entry point, rather than introducing a new one.
 
+### TypeScript Best Practices
+
+1. **Prefer Inline Type Specifiers Over Top-Level Type-Only Imports**: Use inline `type` specifiers in import statements instead of top-level type-only imports for better tree-shaking and clarity.
+
+```typescript
+// ✅ Good - Inline type specifiers
+import { type GetBroadcastResponseSuccess, type ListBroadcastsResponseSuccess } from 'resend';
+
+// ❌ Bad - Top-level type-only import
+import type { GetBroadcastResponseSuccess, ListBroadcastsResponseSuccess } from 'resend';
+```
+
+This approach:
+- Makes it clear which imports are types vs runtime values
+- Better tree-shaking for bundlers
+- More explicit and readable
+- Follows modern TypeScript best practices
+
 ### Pin Organization and Optimization
 
 1. **Prioritize Pins**: Order the input and output pins based on the priority or importance of the data they carry. Most critical pins should appear first to improve user experience.
