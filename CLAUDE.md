@@ -245,17 +245,141 @@ export const subject = i.pins.data({...});
 The category namespacing is handled automatically by the export structure:
 
 ```typescript
+// Usage in nodes
+import * as pins from '@/pins';
+
 // src/pins/index.ts
 export * as email from './email';
 export * as broadcast from './broadcast';
 export * as domain from './domain';
 
-// Usage in nodes
-import * as pins from '@/pins';
-pins.email.address     // ✅ Clear namespacing
-pins.broadcast.subject // ✅ Clear namespacing
-pins.domain.name      // ✅ Clear namespacing
+pins.email.address; // ✅ Clear namespacing
+pins.broadcast.subject; // ✅ Clear namespacing
+pins.domain.name; // ✅ Clear namespacing
 ```
+
+#### Pin Reusability Best Practices
+
+**Promote reusability by placing pins in their most logical category** and use `.with({...})` to customize them for specific use cases:
+
+```typescript
+// ✅ Good - Reusable email content pins in src/pins/email.ts
+export const html = i.pins.data({
+  description: 'The HTML content of the email.',
+  control: i.controls.text({
+    placeholder: '<h1>Hello World</h1>',
+  }),
+  schema: v.pipe(v.string(), v.minLength(1)),
+});
+
+export const text = i.pins.data({
+  description: 'The plain text content of the email.',
+  control: i.controls.text({
+    placeholder: 'Plain text content',
+  }),
+  schema: v.pipe(v.string(), v.minLength(1)),
+});
+
+export const react = i.pins.data({
+  description: 'React component as JSX string for the email content.',
+  control: i.controls.text({
+    placeholder: '<div><h1>Hello World</h1></div>',
+  }),
+  schema: v.pipe(v.string(), v.minLength(1)),
+});
+```
+
+**Reuse pins across different nodes with custom descriptions**:
+
+```typescript
+// In broadcast nodes
+inputs: {
+  html: pins.email.html.with({
+    description: 'The HTML content of the broadcast.',
+    optional: true,
+  }),
+  text: pins.email.text.with({
+    description: 'The plain text content of the broadcast.',
+    optional: true,
+  }),
+  react: pins.email.react.with({
+    description: 'React component as JSX string for the broadcast content.',
+    optional: true,
+  }),
+}
+
+// In email nodes - same pins, different context
+inputs: {
+  html: pins.email.html.with({
+    description: 'The HTML content of the email message.',
+    optional: true,
+  }),
+  text: pins.email.text.with({
+    description: 'The plain text content of the email message.',
+    optional: true,
+  }),
+}
+```
+
+#### Pin Schema Typing Best Practices
+
+**Always use proper TypeScript types instead of `v.any()` for schemas**:
+
+```typescript
+// ❌ Bad - Using v.any() schema
+export const object = i.pins.data({
+  description: 'A broadcast object containing all broadcast information.',
+  control: false,
+  schema: v.any(), // Avoid this!
+});
+
+// ✅ Good - Using proper TypeScript types
+export const object = i.pins.data<GetBroadcastResponseSuccess>({
+  description: 'A broadcast object containing all broadcast information.',
+  control: false,
+  // No schema needed - TypeScript type provides validation
+});
+
+// ✅ Alternative - If no specific type available, omit schema (same as v.any() but more performant)
+export const object = i.pins.data({
+  description: 'A custom object.',
+  control: false,
+  // No schema property - implicitly allows any type
+});
+```
+
+**Import types from the library and use them for complex response objects**:
+
+```typescript
+// src/pins/broadcast.ts
+import { type GetBroadcastResponseSuccess, type ListBroadcastsResponseSuccess, type RemoveBroadcastResponseSuccess } from 'resend';
+
+export const object = i.pins.data<GetBroadcastResponseSuccess>({
+  description: 'A broadcast object containing all broadcast information.',
+  control: false,
+});
+
+export const list = i.pins.data<ListBroadcastsResponseSuccess>({
+  description: 'A list of broadcasts.',
+  control: false,
+});
+
+// Usage in nodes
+outputs: {
+  result: i.pins.data<RemoveBroadcastResponseSuccess>({
+    description: 'The deletion result.',
+    control: false,
+  }),
+}
+```
+
+**Benefits of proper typing**:
+
+- **Better performance**: No runtime validation overhead
+- **Type safety**: Compile-time type checking
+- **Better IDE support**: Auto-completion and error detection
+- **Documentation**: Types serve as documentation
+- **Maintainability**: Changes to API types are automatically reflected
 
 #### Pin Implementation Examples
 
