@@ -1,592 +1,361 @@
-# CLAUDE.md
+# ACME Integrations Project
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+## Overview
 
-## Quick Start
+This is a workspace for building integrations using the ACME integration framework. The project uses a monorepo structure with Turbo for build orchestration and Bun as the package manager.
 
-This is a monorepo using Bun and Turborepo to manage multiple integration packages. Each integration provides nodes (actions and triggers) for workflow automation.
-
-### Development Commands
-
-**Workspace-Level Commands:**
-- `bun run build` - Build all integrations in the workspace
-- `bun run dev` - Start development mode for all integrations
-- `bun run typecheck` - Run TypeScript type checking across all packages
-- `bun run lint` - Run ESLint across all packages with caching
-- `bun run format` - Check code formatting with Prettier
-- `bun run format:fix` - Fix code formatting issues
-- `bun run clean` - Clean build artifacts and node_modules
-
-**Integration-Level Commands:**
-Within each integration directory (`integrations/*/`):
-- `acme dev` - Start development server for the specific integration
-- `acme build` - Build the integration for production
-- `acme publish` - Publish the integration to the marketplace
-
-## Architecture Overview
-
-### Monorepo Structure
+## Project Structure
 
 ```
 acme-integrations/
-├── integrations/           # Individual integration packages
-│   ├── essentials/        # Core workflow utilities
-│   ├── github/           # GitHub API integration
-│   ├── openai/           # OpenAI API integration
-│   ├── resend/           # Resend email service
-│   ├── teamspeak/        # TeamSpeak integration
-│   └── template/         # Template for new integrations
-├── tooling/              # Shared development tools
-│   └── style-guide/      # ESLint, Prettier, TypeScript configs
-└── patches/              # Package patches via patchedDependencies
+├── integrations/               # Integration packages
+│   ├── resend/                # Resend email integration
+│   ├── github/                # GitHub integration
+│   ├── openai/                # OpenAI integration
+│   ├── teamspeak/             # TeamSpeak integration
+│   ├── essentials/            # Core essential nodes
+│   ├── template/              # Template for new integrations
+│   └── .../                   # Other integrations
+├── node_modules/
+│   └── @acme/integration-framework/  # Core framework
+├── tooling/
+│   └── style-guide/           # ESLint, Prettier, TypeScript configs
+├── package.json               # Root package.json with workspaces
+└── turbo.json                 # Turbo configuration
 ```
 
-### Integration Framework
+## Integration Framework
 
-All integrations are built using the `@acme/integration-framework` package and follow a consistent pattern.
+The `@acme/integration-framework` provides the core building blocks for integrations:
 
-**Framework Schema Reference**: The complete TypeScript schema for the integration framework is located at `node_modules/@acme/integration-framework/dist/index.d.ts` and includes type definitions for integrations, nodes, pins, controls, and environment variables.
+- **Nodes**: Nodes are the building blocks of an integration.
+  - Trigger nodes: Event-driven (webhooks, polling)
+  - Callable nodes: On-demand execution
+  - Pure nodes: Stateless transformations
+- **Pins**: Data types and schema definitions for inputs/outputs
+  - Data pins: Typed data with validation schemas
+  - Execution pins: Control flow connections
+- **Controls**: UI components for user inputs
+  - **Text**: Plain text input with template expression support
+  - **Expression**: JavaScript code evaluation at runtime
+  - **Select**: Dropdown with static or dynamic options
+  - **Switch**: Boolean toggle controls
+- **Environment**: Secure configuration management
+  - API keys, tokens, connection strings
+  - Validated with valibot schemas
+- **Webhooks**: HTTP endpoints for external triggers
+  - Automatic endpoint generation
+  - Request validation and routing
 
-#### Integration Entry Point (`src/index.ts`)
+## Building Integrations
+
+### Required Files
+
+Each integration must have:
+
+- `package.json` - Package configuration with framework dependency
+- `src/index.ts` - Main integration export with nodes and environment
+- `src/nodes/` - Directory containing triggers and actions
+- `src/pins/` - Data type definitions and schemas
+- `tsconfig.json` - TypeScript configuration
+- `eslint.config.mjs` - ESLint configuration
+- `images/icon.png` - Integration icon
+
+### Integration Structure
+
+Each integration follows a standardized folder structure that organizes nodes, pins, and configuration files:
+
+```
+integrations/
+├── [integration-name]/
+│   ├── src/
+│   │   ├── index.ts                 # Integration entry point
+│   │   ├── globals.d.ts             # TypeScript global declarations
+│   │   ├── nodes/
+│   │   │   ├── [...category]/       # Node category directories
+│   │   │   │   ├── [category].ts    # Node implementations
+│   │   │   │   └── index.ts         # Category exports
+│   │   │   └── index.ts             # All nodes export
+│   │   └── pins/
+│   │       ├── [category].ts        # Pin definitions by category
+│   │       └── index.ts             # All pins export
+│   ├── images/
+│   │   └── icon.png                 # Integration icon
+│   ├── package.json                 # Package configuration
+│   ├── tsconfig.json                # TypeScript config
+│   └── eslint.config.mjs            # ESLint configuration
+```
+
+**Example: Resend Integration**
+
+```
+integrations/
+├── resend/
+│   ├── src/
+│   │   ├── index.ts                 # Main integration export
+│   │   ├── globals.d.ts             # Type declarations
+│   │   ├── nodes/
+│   │   │   ├── emails/
+│   │   │   │   ├── emails.ts        # Email operations (send, get, etc.)
+│   │   │   │   └── index.ts         # Email node exports
+│   │   │   ├── contacts/
+│   │   │   │   ├── contacts.ts      # Contact management
+│   │   │   │   └── index.ts         # Contact node exports
+│   │   │   └── index.ts             # All nodes export
+│   │   └── pins/
+│   │       ├── email.ts             # Email-related pins
+│   │       ├── contact.ts           # Contact-related pins
+│   │       ├── audience.ts          # Audience-related pins
+│   │       ├── common.ts            # Shared pins
+│   │       └── index.ts             # All pins export
+│   ├── images/
+│   │   └── icon.png                 # Resend integration icon
+│   ├── package.json
+│   ├── tsconfig.json
+│   └── eslint.config.mjs
+```
+
+### Pin Structure
+
+The `pins/` folder defines reusable data types and schemas used across nodes. All pins require:
+
+- A useful description
+- A valibot schema (required, not optional)
+- A control definition for simple data types
 
 ```typescript
-import * as v from 'valibot';
+// Example pin definition
+export const emailAddress = i.pins.data({
+  description: 'An email address.',
+  control: i.controls.text({
+    placeholder: 'john.doe@example.com',
+  }),
+  schema: v.pipe(v.string(), v.trim(), v.email()),
+});
+```
+
+### Integration Entry Point
+
+The main integration file exports nodes, environment variables, and initialization logic:
+
+```typescript
+// src/index.ts
 import * as i from '@acme/integration-framework';
 
 import * as nodes from './nodes';
 
-// Configure Valibot globally
-v.setGlobalConfig({
-  abortEarly: true,
-  abortPipeEarly: true,
-});
-
-// Define integration state interface
-export interface IntegrationState {
-  // Custom state properties (e.g., API clients)
-}
-
 export default i.integration({
   nodes,
   env: {
-    // Environment variables with validation
+    RESEND_API_KEY: i.env({
+      control: i.controls.text({
+        label: 'Resend API Key',
+        sensitive: true,
+        description: 'Your Resend API key for sending emails',
+      }),
+      schema: v.string(),
+    }),
   },
   start(opts) {
-    // Integration initialization logic
+    // Initialize shared state with API client
+    opts.state.resend = new Resend(opts.env.RESEND_API_KEY);
   },
 });
 ```
 
-#### Node Organization (`src/nodes/`)
+### Node Types
 
-Nodes are organized by functional categories and represent the core building blocks of integrations:
+- **Trigger Nodes**: Event-driven nodes that start workflows (e.g., webhooks, polling)
+- **Callable Nodes**: Functions that execute business logic and return results
+- **Pure Nodes**: Stateless transformation functions for data manipulation
 
-- **Triggers**: React to external events (webhooks, scheduled tasks)
-- **Actions**: Perform operations (API calls, data manipulation)
-- **Categories**: Grouped by functionality (e.g., `['AI', 'Prompts']`, `['Issues']`)
+### Node Implementation
 
-**Example Node Structure:**
-```
-src/nodes/
-├── index.ts              # Node exports
-├── emails/
-│   ├── index.ts         # Email-related node exports
-│   └── emails.ts        # Email action/trigger implementations
-├── contacts/
-│   ├── index.ts
-│   └── contacts.ts
-└── webhooks/
-    ├── index.ts
-    └── webhooks.ts
-```
-
-#### Reusable Component Organization
-
-For better code reusability and maintainability, organize shared components in dedicated directories:
-
-**`src/common/[domain]/index.ts`** - Domain-specific exports:
+Nodes are organized by category and use pins for inputs and outputs:
 
 ```typescript
-export * as controls from './controls';
-export * as pins from './pins';
-export * as schemas from './schemas';
-```
+// src/nodes/emails/emails.ts
+import * as pins from '@/pins';
 
-**`src/common/[domain]/schemas.ts`** - Domain validation schemas:
-
-```typescript
-import * as v from 'valibot';
-
-export const email = v.pipe(v.string(), v.trim(), v.email());
-export const uuid = v.pipe(v.string(), v.uuid());
-export const url = v.pipe(v.string(), v.url());
-```
-
-**`src/common/[domain]/controls.ts`** - Domain-specific UI controls:
-
-```typescript
 import * as i from '@acme/integration-framework';
 
-export const email = i.controls.text({
-  placeholder: 'user@example.com',
-});
+const category = {
+  path: ['Emails'],
+} satisfies i.NodeCategory;
 
-export const apiKey = i.controls.text({
-  placeholder: 'Enter API key...',
-  sensitive: true,
+export const sendEmail = i.nodes.callable({
+  category,
+  description: 'Send a simple email using Resend.',
+
+  inputs: {
+    from: pins.email.addressWithDisplayName.with({
+      description: "Sender's email address with optional display name.",
+    }),
+    to: pins.email.addresses.with({
+      description: 'Recipient email addresses.',
+    }),
+    subject: pins.email.subject,
+    body: pins.email.body,
+  },
+
+  outputs: {
+    id: pins.email.uuid.with({
+      description: 'The ID of the sent email.',
+      control: false, // No control needed for output-only pins
+    }),
+  },
+
+  async run(opts) {
+    const response = await opts.state.resend.emails.send({
+      from: opts.inputs.from,
+      to: opts.inputs.to,
+      subject: opts.inputs.subject,
+      text: opts.inputs.body,
+    });
+
+    if (response.error) {
+      throw new Error(response.error.message);
+    }
+
+    return opts.next({ id: response.data.id });
+  },
 });
 ```
 
-**`src/common/[domain]/pins.ts`** - Domain-specific pin definitions:
+### Pin Categories
+
+Pins are organized by category to promote reusability:
 
 ```typescript
-import * as v from 'valibot';
-import * as i from '@acme/integration-framework';
-
-export const id = i.pins.data({
-  displayName: 'Email ID',
-  schema: v.pipe(v.string(), v.uuid()),
-});
-
-export const idWithControl = id.with({
-  control: i.controls.text({
-    placeholder: 'xxxxxxxx-xxxx-...',
-  }),
-});
-```
-
-**Legacy Pin Organization (`src/pins/`)** - Simple pin organization:
-
-```typescript
-// src/pins/index.ts
-export * as email from './email';
-
 // src/pins/email.ts
 import * as v from 'valibot';
+
 import * as i from '@acme/integration-framework';
 
-export const id = i.pins.data({
-  displayName: 'Email ID',
-  schema: v.pipe(v.string(), v.uuid()),
+// Simple data pin with validation
+export const address = i.pins.data({
+  description: 'An email address.',
+  control: i.controls.text({
+    placeholder: 'john.doe@example.com',
+  }),
+  schema: v.pipe(v.string(), v.trim(), v.email()),
 });
-```
 
-Usage in nodes:
-
-```typescript
-import * as pins from '@/pins';
-import * as common from '@/common';
-
-// Legacy approach
-pins.email.id;
-
-// Modern approach
-common.email.pins.id;
-```
-
-#### Node Types and Patterns
-
-**Triggers** - Use `i.nodes.trigger()` with `subscribe()` method:
-
-```typescript
-export const webhookTrigger = i.nodes.trigger({
-  displayName: 'Webhook Received',
-  description: 'Triggers when a webhook is received',
-  outputs: {
-    payload: i.pins.data({
-      displayName: 'Webhook Payload',
-      schema: v.record(v.string(), v.unknown()),
-    }),
-  },
-  subscribe(opts) {
-    // Set up webhook subscription
-  },
+// Complex data pin with transformation
+export const addresses = i.pins.data({
+  description: 'A list of email addresses.',
+  control: i.controls.text({
+    placeholder: 'john.doe@example.com, jane.smith@example.com',
+  }),
+  schema: v.pipe(
+    v.string(),
+    v.transform((emails) => emails.split(',')),
+    v.pipe(v.array(v.pipe(v.string(), v.trim(), v.email())), v.maxLength(50)),
+  ),
 });
-```
 
-**Actions** - Use `i.nodes.callable()` with `run()` method:
-
-```typescript
-export const sendEmail = i.nodes.callable({
-  displayName: 'Send Email',
-  description: 'Send an email using the configured service',
-  inputs: {
-    to: i.pins.data({
-      displayName: 'To',
-      schema: v.string(),
-    }),
-  },
-  outputs: {
-    id: i.pins.data({
-      displayName: 'Email ID',
-      schema: v.string(),
-    }),
-  },
-  async run(opts) {
-    // Email sending logic
-  },
-});
-```
-
-#### State Management
-
-Integrations can define custom state interfaces for managing API clients and other stateful resources:
-
-```typescript
-export interface IntegrationState {
-  apiClient: SomeAPIClient;
-  webhookSecret: string;
-}
-
-export default i.integration({
-  nodes,
-  start(opts) {
-    // Initialize state
-    opts.state.apiClient = new SomeAPIClient(process.env.API_KEY);
-    opts.state.webhookSecret = generateSecret();
-  },
-});
-```
-
-Global state is extended via module augmentation in `src/index.ts`.
-
-### Key Patterns
-
-#### Environment Variables
-
-Define environment variables with validation and async checks:
-
-```typescript
-env: {
-  API_KEY: i.env({
-    control: i.controls.text({
-      label: 'API Key',
-      description: 'Enter your API key from the service dashboard',
-      placeholder: 'sk_...',
-      sensitive: true,
-    }),
-    schema: v.pipeAsync(
-      v.string(),
-      v.startsWith('sk_'),
-      v.checkAsync(async (token) => {
-        // Validate token with API
-        const client = new APIClient(token);
-        try {
-          await client.validateToken();
-          return true;
-        } catch {
-          return false;
-        }
-      }, 'Invalid API key. Please check your key and permissions.'),
+// Pin with regex validation
+export const addressWithDisplayName = i.pins.data({
+  description: 'An email address with a display name.',
+  control: i.controls.text({
+    placeholder: 'Your Name <sender@domain.com>',
+  }),
+  schema: v.pipe(
+    v.string(),
+    v.trim(),
+    v.regex(
+      /^(.+?)\s*<([^<>]+@[^<>]+)>$/,
+      'Must be in format "Display Name <email@domain.com>"',
     ),
-  }),
-}
-```
-
-#### Webhook Integration
-
-The GitHub integration demonstrates the webhook pattern with signature verification:
-
-```typescript
-start(opts) {
-  opts.webhook.subscribe(async (request) => {
-    const signature = request.headers.get('X-Hub-Signature-256');
-    const payload = await request.text();
-    
-    // Verify signature
-    if (!(await opts.state.webhooks.verify(payload, signature))) {
-      console.warn('Webhook signature invalid');
-      return;
-    }
-    
-    // Process webhook
-    await opts.state.webhooks.receive({
-      id: request.headers.get('X-GitHub-Delivery'),
-      name: request.headers.get('X-GitHub-Event'),
-      payload: JSON.parse(payload),
-    });
-  });
-}
-```
-
-#### Data Validation
-
-All integrations use Valibot for schema validation:
-
-```typescript
-// Global configuration (set in src/index.ts)
-v.setGlobalConfig({
-  abortEarly: true,
-  abortPipeEarly: true,
-});
-
-// Common validation patterns
-export const email = v.pipe(v.string(), v.trim(), v.email());
-export const uuid = v.pipe(v.string(), v.uuid());
-export const url = v.pipe(v.string(), v.url());
-export const isoDateTime = v.pipe(v.string(), v.isoDateTime());
-export const nonEmptyString = v.pipe(v.string(), v.minLength(1));
-```
-
-#### UI Controls and UX
-
-Rich UI controls provide better user experience:
-
-```typescript
-// Standard control patterns
-export const email = i.controls.text({
-  placeholder: 'user@example.com',
-});
-
-export const apiKey = i.controls.text({
-  placeholder: 'Enter API key...',
-  sensitive: true,
-});
-
-export const booleanSwitch = i.controls.switch({
-  defaultValue: false,
-});
-
-export const dropdown = i.controls.select({
-  options: [
-    { label: 'Option 1', value: 'option1' },
-    { label: 'Option 2', value: 'option2' },
-  ],
+  ),
 });
 ```
 
-#### Pin Patterns and Visibility
+## Development Commands
 
-**Standard Pin Patterns:**
-- **ID pins**: `entityId` (without control) and `entityIdWithControl` (with control)
-- **Reference pins**: For external resources (repositories, channels, etc.)
-- **Data pins**: For API responses and structured data
-- **Optional pins**: Using `v.optional()` for non-required fields
+### Root Level
 
-**Pin Visibility Guidelines:**
-- **Important data pins only**: Add only the most critical data pins to inputs and outputs
-- **Hidden pins for clutter reduction**: When a node has more than 5 data pins, set `hidden: true` on less critical ones to reduce visual clutter
-- **Context-specific visibility**: Ensure only context-specific pins are shown by default - users can manually add hidden pins when needed
-
-```typescript
-// Example of hiding less critical pins
-inputs: {
-  // Critical pins - always visible
-  message: i.pins.data({
-    displayName: 'Message',
-    schema: v.string(),
-  }),
-
-  // Less critical pins - hidden by default
-  metadata: i.pins.data({
-    displayName: 'Metadata',
-    schema: v.optional(v.record(v.string(), v.unknown())),
-    hidden: true,
-  }),
-
-  advancedOptions: i.pins.data({
-    displayName: 'Advanced Options',
-    schema: v.optional(v.object({ /* ... */ })),
-    hidden: true,
-  }),
-}
-```
-
-## Integration Examples
-
-### Essentials Integration
-
-Core functionality providing:
-- **Webhooks**: Generic webhook handling and response management
-- **HTTP requests**: REST API calls with authentication
-- **File operations**: File upload, download, and manipulation
-- **Data types**: Primitive and structured data transformation
-- **Time utilities**: Date/time formatting and manipulation
-- **Workflow controls**: Conditional logic and flow control
-
-### GitHub Integration
-
-External API integration featuring:
-- **OAuth token validation**: Async API key verification
-- **Webhook signature verification**: HMAC-SHA256 signature validation
-- **Repository management**: Repository creation, updates, and queries
-- **Issue management**: Issue creation, updates, and tracking
-- **Custom state**: Octokit client instance management
-
-### OpenAI Integration
-
-AI service integration with:
-- **File handling**: Document upload and processing
-- **Response management**: AI model response handling and formatting
-- **Streaming support**: Real-time response streaming
-
-### Resend Integration
-
-Email service integration providing:
-- **Contact management**: Contact creation, updates, and list management
-- **Email operations**: Email sending with templates and attachments
-- **Audience management**: Subscriber list management
-- **Broadcast support**: Bulk email sending capabilities
-
-### TeamSpeak Integration
-
-Voice communication integration with:
-- **Channel management**: Channel creation, updates, and monitoring
-- **User management**: User permissions and status tracking
-
-### Template Integration
-
-Minimal template for creating new integrations:
-- **Empty state interface**: Ready for customization
-- **Basic node structure**: Starting point for new nodes
-- **Standard configuration**: Pre-configured build and lint setup
-
-## Development Workflow
-
-### Creating New Integrations
-
-1. **Start with template**: Copy the `template` integration as a starting point
-2. **Update metadata**: Modify `package.json` with integration name and description
-3. **Design the integration**: Plan nodes, pins, and API interactions
-4. **Implement core functionality**:
-   - Define environment variables in `src/index.ts`
-   - Create state interface for API clients
-   - Implement nodes in `src/nodes/` with proper categorization
-   - Organize reusable components in `src/common/` or `src/pins/`
-5. **Add documentation**: Create README.md with setup instructions and examples
-6. **Test thoroughly**: Use `bun run typecheck` and `bun run lint` during development
-7. **Build and publish**: Use `bun run build` and `acme publish`
-
-### Code Organization Best Practices
-
-**Reusable Components:**
-- **Modern approach**: Use `src/common/[domain]/` for domain-specific schemas, controls, and pins
-- **Legacy approach**: Use `src/pins/`, `src/schemas/`, `src/controls/` for simple organization
-- **Import patterns**: Use path aliases (`@/common`, `@/pins`, `@/schemas`) for clean imports
-
-**Naming Conventions:**
-- **Descriptive names**: Use clear, descriptive names for all components
-- **Consistent patterns**: Follow established naming patterns across integrations
-- **Domain grouping**: Group related functionality by domain (e.g., email, users, files)
-
-**Documentation Requirements:**
-- **Descriptions**: Every node, pin, control, and environment variable must have a brief, clear description
-- **JSDoc comments**: Add JSDoc comments for complex validation patterns and utilities
-- **README files**: Each integration should have comprehensive setup and usage documentation
-
-### Code Quality and Testing
-
-**Type Safety:**
-- All integrations use TypeScript with strict checking
-- Global type definitions in `globals.d.ts`
-- Integration state properly typed via module augmentation
-- Comprehensive Valibot schema validation
-
-**Code Quality Tools:**
-- **ESLint**: Shared configuration from `@acme/style-guide`
-- **Prettier**: Shared formatting configuration
-- **TypeScript**: Strict type checking across all packages
-- **Catalog dependencies**: Version consistency across workspace
-
-**Development Commands:**
-- `bun run typecheck` - Run TypeScript type checking
-- `bun run lint` - Run ESLint with caching
-- `bun run format` - Check code formatting
-- `bun run format:fix` - Fix formatting issues
+- `bun run dev` - Start development mode for all integrations
 - `bun run build` - Build all integrations
-- `bun run clean` - Clean build artifacts
+- `bun run lint` - Lint all packages
+- `bun run typecheck` - Type check all packages
+- `bun run format` - Format code with Prettier
 
-### Integration Testing
+### Integration Level
 
-**Validation Testing:**
-- Test all Valibot schemas with edge cases
-- Verify environment variable validation
-- Test pin validation with various input types
+- `bun run dev` - Start development mode (`acme dev`)
+- `bun run build` - Build integration (`acme build`)
+- `bun run publish` - Publish integration (`acme publish`)
+- `bun run lint` - Lint integration code
+- `bun run typecheck` - Type check integration
+- `bun run format` - Format integration code
 
-**API Integration Testing:**
-- Test all API endpoints with valid and invalid data
-- Verify error handling and timeout scenarios
-- Test webhook signature verification
+## Dependencies
 
-**Node Testing:**
-- Test all node inputs and outputs
-- Verify proper error handling and validation
-- Test async operations and state management
+Core dependencies managed via workspace catalog:
 
-## Package Management
-
-### Bun Workspaces
-
-The monorepo uses Bun workspaces for dependency management:
-
-```json
-{
-  "workspaces": {
-    "packages": [
-      "integrations/*",
-      "tooling/*"
-    ],
-    "catalog": {
-      "@acme/integration-framework": "link:@acme/integration-framework",
-      "@acme/style-guide": "*",
-      "valibot": "^1.1.0",
-      "eslint": "^9.29.0",
-      "prettier": "^3.5.3",
-      "typescript": "^5"
-    }
-  }
-}
-```
-
-**Key Features:**
-- **Catalog dependencies**: Shared version management for common packages
-- **Linked dependencies**: Framework packages linked from workspace
-- **Patched dependencies**: Custom patches applied to third-party packages
-- **Workspace hoisting**: Shared dependencies hoisted to root `node_modules`
-
-**Key Catalog Packages:**
-- `@acme/integration-framework` - Core integration framework
-- `@acme/style-guide` - Shared ESLint, Prettier, and TypeScript configs
-- `valibot` - Schema validation library
+- `@acme/integration-framework` - Core framework
+- `@acme/style-guide` - Shared linting/formatting configs
+- `valibot` - Schema validation
+- `typescript` - TypeScript compiler
 - `eslint` - Code linting
 - `prettier` - Code formatting
-- `typescript` - TypeScript compiler
 
-### Dependency Guidelines
+## Build Process
 
-**Adding Dependencies:**
-- Use catalog versions when available
-- Add new dependencies to catalog if used by multiple integrations
-- Keep dependencies minimal and focused
-- Prefer packages with good TypeScript support
+1. **TypeScript Compilation**: Source code is compiled to JavaScript in `build/` directory
+2. **Turbo Orchestration**: Turbo manages builds with proper dependency ordering across the monorepo
+3. **Definition Generation**: Each integration exports:
+   - `definition.json` - Runtime integration metadata
+   - `types.json` - TypeScript type definitions
+4. **Schema Validation**: Framework validates all pin schemas and environment configurations
+5. **Type Generation**: Automatic generation of TypeScript types from schemas
+6. **Asset Processing**: Integration icons and other assets are processed and included
 
-**Version Management:**
-- Use catalog for shared dependencies
-- Use specific versions for integration-specific packages
-- Update catalog versions carefully to avoid breaking changes
-- Test all integrations after catalog updates
+## Environment Variables
 
-## Troubleshooting
+Integrations can define required environment variables that are:
 
-### Common Issues
+- **Validated**: Using valibot schemas during setup
+- **Secure**: Encrypted storage with sensitive flag support
+- **Accessible**: Available to all nodes through `opts.env`
+- **User-friendly**: Configured through UI controls with descriptions
+- **Type-safe**: Full TypeScript support with auto-completion
 
-**Build Failures:**
-- Run `bun run clean` to clear build cache
-- Check TypeScript errors with `bun run typecheck`
-- Verify all dependencies are installed
+```typescript
+// Environment definition example
+env: {
+  DATABASE_URL: i.env({
+    control: i.controls.text({
+      label: 'Database URL',
+      description: 'PostgreSQL connection string',
+      sensitive: true,
+    }),
+    schema: v.pipe(v.string(), v.url()),
+  }),
+  MAX_RETRIES: i.env({
+    control: i.controls.text({
+      label: 'Max Retries',
+      description: 'Maximum number of retry attempts',
+      placeholder: '3',
+    }),
+    schema: v.pipe(v.string(), v.transform(Number), v.minValue(0), v.maxValue(10)),
+  }),
+}
+```
 
-**Linting Issues:**
-- Run `bun run lint` to identify problems
-- Use `bun run format:fix` to fix formatting
-- Check ESLint configuration in `eslint.config.mjs`
+## Example: Resend Integration
 
-**Integration Framework Issues:**
-- Verify `@acme/integration-framework` is properly linked
-- Check if framework types are available in `node_modules`
-- Ensure global type definitions are in `globals.d.ts`
+The Resend integration (`integrations/resend/`) demonstrates:
 
-**Runtime Issues:**
-- Check environment variable validation
-- Verify API credentials and permissions
-- Review webhook configuration and signatures
-- Check network connectivity and rate limits
+- Email sending with the Resend API
+- Contact management functionality
+- Proper error handling and validation
+- Environment variable configuration for API keys
+- Structured pins for email addresses, UUIDs, and objects
+
+Key files:
+
+- `src/nodes/emails/emails.ts` - Email operations (send, get, update, cancel)
+- `src/nodes/contacts/contacts.ts` - Contact management (CRUD operations)
+- `src/pins/` - Data type definitions for emails, contacts, audiences
