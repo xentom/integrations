@@ -224,7 +224,40 @@ export const sendEmail = i.nodes.callable({
 
 ### Pin Categories
 
-Pins are organized by category to promote reusability:
+Pins are organized by category to promote reusability and maintain clean namespacing:
+
+#### Pin Naming Best Practices
+
+**Do NOT prefix exported variables with the category name** since they are already namespaced by the index.ts export structure:
+
+```typescript
+// ❌ Bad - Redundant prefixes
+export const emailAddress = i.pins.data({...});
+export const emailAddresses = i.pins.data({...});
+export const emailSubject = i.pins.data({...});
+
+// ✅ Good - Clean names without prefixes
+export const address = i.pins.data({...});
+export const addresses = i.pins.data({...});
+export const subject = i.pins.data({...});
+```
+
+The category namespacing is handled automatically by the export structure:
+
+```typescript
+// src/pins/index.ts
+export * as email from './email';
+export * as broadcast from './broadcast';
+export * as domain from './domain';
+
+// Usage in nodes
+import * as pins from '@/pins';
+pins.email.address     // ✅ Clear namespacing
+pins.broadcast.subject // ✅ Clear namespacing
+pins.domain.name      // ✅ Clear namespacing
+```
+
+#### Pin Implementation Examples
 
 ```typescript
 // src/pins/email.ts
@@ -342,6 +375,65 @@ env: {
     schema: v.pipe(v.string(), v.transform(Number), v.minValue(0), v.maxValue(10)),
   }),
 }
+```
+
+## Integration Development Best Practices
+
+### API and Client Management
+
+1. **Prefer Official Node.js Clients Over Raw Requests**: When implementing new integrations, avoid manually crafting raw API requests or relying on online API references alone. Instead, search for an official or well-maintained Node.js client library on npm and use that. For existing integrations, always use the client or SDK that is already defined in the integration's entry point, rather than introducing a new one.
+
+### Pin Organization and Optimization
+
+1. **Prioritize Pins**: Order the input and output pins based on the priority or importance of the data they carry. Most critical pins should appear first to improve user experience.
+
+2. **Use Optional Flags for Clarity**: Improve node readability in the UI by marking less relevant or non-essential pins with `optional: true`. This helps users focus on required parameters first.
+
+3. **Minimize Unnecessary Controls**: Set the control property to `false` for pins that do not affect the node's functionality—especially for output pins that don't need to be controlled via the UI.
+
+```typescript
+// Example demonstrating best practices
+export const processData = i.nodes.callable({
+  category,
+  description: 'Process data with optional parameters.',
+
+  inputs: {
+    // High priority - required data
+    data: pins.common.jsonData.with({
+      description: 'Primary data to process.',
+    }),
+
+    // Medium priority - commonly used
+    format: pins.common.format.with({
+      description: 'Output format for the processed data.',
+      optional: true,
+    }),
+
+    // Low priority - advanced options
+    timeout: pins.common.timeout.with({
+      description: 'Processing timeout in seconds.',
+      optional: true,
+    }),
+  },
+
+  outputs: {
+    // Output pins typically don't need controls
+    result: pins.common.jsonData.with({
+      description: 'The processed data result.',
+      control: false,
+    }),
+
+    // Status information
+    status: pins.common.status.with({
+      description: 'Processing status information.',
+      control: false,
+    }),
+  },
+
+  async run(opts) {
+    // Implementation
+  },
+});
 ```
 
 ## Example: Resend Integration
