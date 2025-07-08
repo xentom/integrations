@@ -1,0 +1,28 @@
+{
+  "folders": [
+    {
+      "name": "essentials",
+      "path": "integrations/essentials",
+    },
+    {
+      "name": "github",
+      "path": "integrations/github",
+    },
+    {
+      "name": "openai",
+      "path": "integrations/openai",
+    },
+    {
+      "name": "resend",
+      "path": "integrations/resend",
+    },
+    {
+      "name": "teamspeak",
+      "path": "integrations/teamspeak",
+    },
+    {
+      "name": "template",
+      "path": "integrations/template",
+    },
+  ],
+}

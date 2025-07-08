@@ -1,6 +1,4 @@
-import * as controls from '@/controls';
 import * as pins from '@/pins';
-import * as schemas from '@/schemas';
 import { type GetEmailResponseSuccess } from 'resend';
 import * as v from 'valibot';
 
@@ -15,48 +13,25 @@ export const sendEmail = i.nodes.callable({
   description: 'Send a simple email using Resend.',
 
   inputs: {
-    from: i.pins.data({
+    from: pins.email.addressWithDisplayName.with({
       description:
         'Sender\'s email address. You can include a name using the format: "Your Name <sender@domain.com>".',
-      control: controls.email,
-      schema: v.union(
-        [schemas.email, schemas.emailWithDisplayName],
-        'Please enter a valid email address, with or without a display name.',
-      ),
     }),
-
-    to: i.pins.data({
+    to: pins.email.addresses.with({
       description: 'Recipient email addresses.',
-      control: controls.email,
-      schema: v.pipe(
-        v.string(),
-        v.transform((emails) => emails.split(',')),
-        v.pipe(v.array(schemas.email), v.maxLength(50)),
-      ),
     }),
-
-    subject: i.pins.data({
+    subject: pins.email.subject.with({
       description: 'Email subject line.',
-      control: i.controls.text({
-        placeholder: 'Subject of the email',
-      }),
-      schema: v.string(),
     }),
-
-    body: i.pins.data({
+    body: pins.email.body.with({
       description: 'Email body content. This is a simple text message.',
-      control: i.controls.text({
-        placeholder: 'Write your email as plain text here',
-        rows: 5,
-      }),
-      schema: v.string(),
     }),
   },
 
   outputs: {
-    id: i.pins.data({
+    id: pins.email.uuid.with({
       description: 'The ID of the sent email.',
-      schema: v.string(),
+      control: false,
     }),
   },
 
@@ -72,9 +47,12 @@ export const sendEmail = i.nodes.callable({
       throw new Error(response.error.message);
     }
 
+    if (!response.data) {
+      throw new Error('Missing response data');
+    }
+
     return opts.next({
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      id: response.data!.id,
+      id: response.data.id,
     });
   },
 });
@@ -84,7 +62,9 @@ export const getEmail = i.nodes.callable({
   description: 'Retrieve details of a sent email by its ID.',
 
   inputs: {
-    id: pins.emailIdWithControl,
+    id: pins.email.uuid.with({
+      description: 'The ID of the email to retrieve.',
+    }),
   },
 
   outputs: {
@@ -97,9 +77,12 @@ export const getEmail = i.nodes.callable({
       throw new Error(response.error.message);
     }
 
+    if (!response.data) {
+      throw new Error('Missing response data');
+    }
+
     return opts.next({
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      email: response.data!,
+      email: response.data,
     });
   },
 });
@@ -109,7 +92,9 @@ export const updateEmail = i.nodes.callable({
   description: 'Update a scheduled email by its ID.',
 
   inputs: {
-    id: pins.emailIdWithControl,
+    id: pins.email.uuid.with({
+      description: 'The ID of the email to update.',
+    }),
     scheduledAt: i.pins.data({
       description: 'New scheduled time for the email in ISO 8601 format.',
       control: i.controls.text({
@@ -120,7 +105,10 @@ export const updateEmail = i.nodes.callable({
   },
 
   outputs: {
-    id: pins.emailId,
+    id: pins.email.uuid.with({
+      description: 'The ID of the updated email.',
+      control: false,
+    }),
   },
 
   async run(opts) {
@@ -133,9 +121,12 @@ export const updateEmail = i.nodes.callable({
       throw new Error(response.error.message);
     }
 
+    if (!response.data) {
+      throw new Error('Missing response data');
+    }
+
     return opts.next({
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      id: response.data!.id,
+      id: response.data.id,
     });
   },
 });
@@ -145,11 +136,16 @@ export const cancelEmail = i.nodes.callable({
   description: 'Cancel a previously sent email by its ID.',
 
   inputs: {
-    id: pins.emailIdWithControl,
+    id: pins.email.uuid.with({
+      description: 'The ID of the email to cancel.',
+    }),
   },
 
   outputs: {
-    id: pins.emailId,
+    id: pins.email.uuid.with({
+      description: 'The ID of the cancelled email.',
+      control: false,
+    }),
   },
 
   async run(opts) {
@@ -158,9 +154,12 @@ export const cancelEmail = i.nodes.callable({
       throw new Error(response.error.message);
     }
 
+    if (!response.data) {
+      throw new Error('Missing response data');
+    }
+
     return opts.next({
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      id: response.data!.id,
+      id: response.data.id,
     });
   },
 });

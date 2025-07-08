@@ -1,7 +1,11 @@
 {
   "permissions": {
     "allow": [
-      "Bash(bun install:*)"
+      "Bash(bun install:*)",
+      "Bash(find:*)",
+      "Bash(grep:*)",
+      "Bash(bun run:*)",
+      "WebFetch(domain:resend.com)"
     ],
     "deny": []
   }
