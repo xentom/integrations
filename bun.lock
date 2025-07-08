@@ -3,6 +3,9 @@
   "workspaces": {
     "": {
       "name": "@acme/integrations",
+      "dependencies": {
+        "@standard-schema/spec": "^1.0.0",
+      },
       "devDependencies": {
         "@acme/style-guide": "*",
         "@types/bun": "latest",
@@ -12,7 +15,7 @@
     },
     "integrations/essentials": {
       "name": "@acme/integrations-essentials",
-      "version": "0.0.28",
+      "version": "0.0.31",
       "dependencies": {
         "@acme/integration-framework": "catalog:",
         "mime": "^4.0.7",
@@ -288,6 +291,8 @@
     "@rtsao/scc": ["@rtsao/scc@1.1.0", "", {}, "sha512-zt6OdqaDoOnJ1ZYsCYGt9YmWzDXl4vQdKTyJev62gFhRGKdx7mcT54V9KIjg+d2wi9EXsPvAPKe7i7WjfVWB8g=="],
 
     "@selderee/plugin-htmlparser2": ["@selderee/plugin-htmlparser2@0.11.0", "", { "dependencies": { "domhandler": "^5.0.3", "selderee": "^0.11.0" } }, "sha512-P33hHGdldxGabLFjPPpaTxVolMrzrcegejx+0GxjrIb9Zv48D8yAIA/QTDR2dFl7Uz7urX8aX6+5bCZslr+gWQ=="],
+
+    "@standard-schema/spec": ["@standard-schema/spec@1.0.0", "", {}, "sha512-m2bOd0f2RT9k8QJx1JN85cZYyH1RqFBdlwtkSlf4tBDYLCiiZnv1fIIwacK6cqwXavOydf0NPToMQgpKq+dVlA=="],
 
     "@types/aws-lambda": ["@types/aws-lambda@8.10.150", "", {}, "sha512-AX+AbjH/rH5ezX1fbK8onC/a+HyQHo7QGmvoxAE42n22OsciAxvZoZNEr22tbXs8WfP1nIsBjKDpgPm3HjOZbA=="],
 
