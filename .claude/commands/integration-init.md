@@ -64,9 +64,9 @@ bun install [api-client-package]
 Thoroughly examine the API client to understand its structure:
 
 1. **Read the main module files**
-   - `/node_modules/[lib-name]/package.json` - Understanding exports and main files
-   - `/node_modules/[lib-name]/index.js` or `/node_modules/[lib-name]/dist/index.js`
-   - `/node_modules/[lib-name]/lib/` or `/node_modules/[lib-name]/src/` directories
+   - `[monorepo-root]/node_modules/[lib-name]/package.json` - Understanding exports and main files
+   - `[monorepo-root]/node_modules/[lib-name]/index.js` or `[monorepo-root]/node_modules/[lib-name]/dist/index.js`
+   - `[monorepo-root]/node_modules/[lib-name]/lib/` or `[monorepo-root]/node_modules/[lib-name]/src/` directories
 
 2. **Extract key information**
    - Client initialization process
