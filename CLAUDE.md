@@ -8,20 +8,17 @@ This is a workspace for building integrations using the ACME integration framewo
 
 ```
 acme-integrations/
-├── integrations/               # Integration packages
-│   ├── resend/                # Resend email integration
-│   ├── github/                # GitHub integration
-│   ├── openai/                # OpenAI integration
-│   ├── teamspeak/             # TeamSpeak integration
-│   ├── essentials/            # Core essential nodes
-│   ├── template/              # Template for new integrations
-│   └── .../                   # Other integrations
+├── integrations/                     # Integration packages
+│   ├── resend/                       # Resend email integration
+│   ├── template/                     # Template for new integrations
+│   └── .../                          # Other integrations
 ├── node_modules/
-│   └── @acme/integration-framework/  # Core framework
+│   └── @acme/
+│       └── integration-framework/    # Core framework
 ├── tooling/
-│   └── style-guide/           # ESLint, Prettier, TypeScript configs
-├── package.json               # Root package.json with workspaces
-└── turbo.json                 # Turbo configuration
+│   └── style-guide/                  # ESLint, Prettier, TypeScript configs
+├── package.json                      # Root package.json with workspaces
+└── turbo.json                        # Turbo configuration
 ```
 
 ## Integration Framework
@@ -53,13 +50,13 @@ The `@acme/integration-framework` provides the core building blocks for integrat
 
 Each integration must have:
 
-- `package.json` - Package configuration with framework dependency
+- `images/icon.png` - Integration icon
 - `src/index.ts` - Main integration export with nodes and environment
 - `src/nodes/` - Directory containing triggers and actions
 - `src/pins/` - Data type definitions and schemas
-- `tsconfig.json` - TypeScript configuration
 - `eslint.config.mjs` - ESLint configuration
-- `images/icon.png` - Integration icon
+- `tsconfig.json` - TypeScript configuration
+- `package.json` - Package configuration with framework dependency
 
 ### Integration Structure
 
@@ -513,13 +510,20 @@ env: {
 
 ```typescript
 // ✅ Good - Inline type specifiers
-import { type GetBroadcastResponseSuccess, type ListBroadcastsResponseSuccess } from 'resend';
+import {
+  type GetBroadcastResponseSuccess,
+  type ListBroadcastsResponseSuccess,
+} from 'resend';
 
 // ❌ Bad - Top-level type-only import
-import type { GetBroadcastResponseSuccess, ListBroadcastsResponseSuccess } from 'resend';
+import type {
+  GetBroadcastResponseSuccess,
+  ListBroadcastsResponseSuccess,
+} from 'resend';
 ```
 
 This approach:
+
 - Makes it clear which imports are types vs runtime values
 - Better tree-shaking for bundlers
 - More explicit and readable
