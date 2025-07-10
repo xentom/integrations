@@ -155,7 +155,7 @@ export default i.integration({
   },
   start(opts) {
     // Initialize shared state with API client
-    opts.state.resend = new Resend(opts.env.RESEND_API_KEY);
+    opts.state.resend = new Resend(process.env.RESEND_API_KEY);
   },
 });
 ```
@@ -580,6 +580,53 @@ export const processData = i.nodes.callable({
     // Implementation
   },
 });
+```
+
+### Node Implementation Best Practices
+
+1. **Pass Properties Directly Into Objects**: When making API calls, pass input properties directly into parameter objects instead of using conditional spread operators. This keeps the code clean and lets the API handle undefined values appropriately.
+
+```typescript
+// ✅ Good - Direct property assignment
+const orders = await opts.state.shopify.rest.Order.all({
+  session: opts.state.session,
+  limit: opts.inputs.limit,
+  status: opts.inputs.status,
+  financial_status: opts.inputs.financialStatus,
+  created_at_min: opts.inputs.createdAtMin,
+  fields: opts.inputs.fields,
+});
+
+// ❌ Bad - Conditional spread operators
+const orders = await opts.state.shopify.rest.Order.all({
+  session: opts.state.session,
+  ...(opts.inputs.limit && { limit: opts.inputs.limit }),
+  ...(opts.inputs.status && { status: opts.inputs.status }),
+  ...(opts.inputs.financialStatus && { financial_status: opts.inputs.financialStatus }),
+  ...(opts.inputs.createdAtMin && { created_at_min: opts.inputs.createdAtMin }),
+  ...(opts.inputs.fields && { fields: opts.inputs.fields }),
+});
+```
+
+**Benefits of direct assignment**:
+- **Cleaner code**: More readable and maintainable
+- **Simpler logic**: No need for conditional checks
+- **API-friendly**: Most APIs properly handle undefined/null values
+- **Consistent structure**: Object shape is always the same
+
+2. **Use Shared Session State**: Access the authenticated session through `opts.state.session` rather than creating session objects in individual nodes.
+
+```typescript
+// ✅ Good - Use shared session
+const product = await opts.state.shopify.rest.Product.find({
+  session: opts.state.session,
+  id: opts.inputs.id,
+});
+
+// ❌ Bad - Create session in node
+const session = process.env.ACCESS_TOKEN 
+  ? { accessToken: process.env.ACCESS_TOKEN, shop: process.env.SHOP_DOMAIN }
+  : null;
 ```
 
 ## Example: Resend Integration
