@@ -4,7 +4,7 @@
  */
 
 declare module 'eslint-plugin-import' {
-  import type { Linter, Rule } from 'eslint';
+  import { type Linter, type Rule } from 'eslint';
 
   export const configs: {
     recommended: { rules: Linter.RulesRecord };
@@ -13,7 +13,7 @@ declare module 'eslint-plugin-import' {
 }
 
 declare module 'eslint-plugin-react' {
-  import type { Linter, Rule } from 'eslint';
+  import { type Linter, type Rule } from 'eslint';
 
   export const configs: {
     recommended: { rules: Linter.RulesRecord };
@@ -24,7 +24,7 @@ declare module 'eslint-plugin-react' {
 }
 
 declare module 'eslint-plugin-react-hooks' {
-  import type { Linter, Rule } from 'eslint';
+  import { type Linter, type Rule } from 'eslint';
 
   export const configs: {
     recommended: {
