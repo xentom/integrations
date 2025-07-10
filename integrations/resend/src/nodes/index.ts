@@ -1,3 +1,5 @@
 export * from './audiences';
+export * from './broadcasts';
 export * from './contacts';
+export * from './domains';
 export * from './emails';

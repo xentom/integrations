@@ -3,7 +3,7 @@ import * as v from 'valibot';
 
 import * as i from '@acme/integration-framework';
 
-export const uuid = common.uuid.with({
+export const id = common.uuid.with({
   displayName: 'Audience ID',
   description: 'The unique identifier for the audience.',
 });

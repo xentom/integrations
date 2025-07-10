@@ -23,25 +23,84 @@ export const sendEmail = i.nodes.callable({
     subject: pins.email.subject.with({
       description: 'Email subject line.',
     }),
-    body: pins.email.body.with({
-      description: 'Email body content. This is a simple text message.',
+    html: pins.email.html.with({
+      description: 'The HTML content of the email.',
+      optional: true,
+    }),
+    text: pins.email.text.with({
+      description: 'The plain text content of the email.',
+      optional: true,
+    }),
+    cc: pins.email.addresses.with({
+      description: 'Carbon copy recipient email addresses.',
+      optional: true,
+    }),
+    bcc: pins.email.addresses.with({
+      description: 'Blind carbon copy recipient email addresses.',
+      optional: true,
+    }),
+    replyTo: pins.email.addresses.with({
+      description: 'Reply-to email addresses.',
+      optional: true,
+    }),
+    scheduledAt: pins.email.scheduledAt.with({
+      description:
+        'Schedule email for future sending (ISO 8601 format or natural language like "in 1 min").',
+      optional: true,
+    }),
+    headers: pins.email.headers.with({
+      description: 'Custom email headers as key-value pairs.',
+      optional: true,
+    }),
+    attachments: pins.email.attachments.with({
+      description:
+        'File attachments (JSON array with content, filename, path, contentType).',
+      optional: true,
+    }),
+    tags: pins.email.tags.with({
+      description: 'Custom key/value metadata for email tracking.',
+      optional: true,
+    }),
+    idempotencyKey: pins.email.idempotencyKey.with({
+      description:
+        'Unique key for safe retries without duplicating operations.',
+      optional: true,
     }),
   },
 
   outputs: {
-    id: pins.email.uuid.with({
+    id: pins.email.id.with({
       description: 'The ID of the sent email.',
       control: false,
     }),
   },
 
   async run(opts) {
-    const response = await opts.state.resend.emails.send({
-      from: opts.inputs.from,
-      to: opts.inputs.to,
-      subject: opts.inputs.subject,
-      text: opts.inputs.body,
-    });
+    // Validate that at least one content type is provided
+    if (!opts.inputs.html && !opts.inputs.text) {
+      throw new Error('At least one of html or text must be provided');
+    }
+
+    const response = await opts.state.resend.emails.send(
+      {
+        from: opts.inputs.from,
+        to: opts.inputs.to,
+        subject: opts.inputs.subject,
+        html: opts.inputs.html,
+        text: opts.inputs.text,
+        react: undefined,
+        cc: opts.inputs.cc,
+        bcc: opts.inputs.bcc,
+        replyTo: opts.inputs.replyTo,
+        scheduledAt: opts.inputs.scheduledAt,
+        headers: opts.inputs.headers,
+        attachments: opts.inputs.attachments,
+        tags: opts.inputs.tags,
+      },
+      {
+        idempotencyKey: opts.inputs.idempotencyKey,
+      },
+    );
 
     if (response.error) {
       throw new Error(response.error.message);
@@ -62,7 +121,7 @@ export const getEmail = i.nodes.callable({
   description: 'Retrieve details of a sent email by its ID.',
 
   inputs: {
-    id: pins.email.uuid.with({
+    id: pins.email.id.with({
       description: 'The ID of the email to retrieve.',
     }),
   },
@@ -92,7 +151,7 @@ export const updateEmail = i.nodes.callable({
   description: 'Update a scheduled email by its ID.',
 
   inputs: {
-    id: pins.email.uuid.with({
+    id: pins.email.id.with({
       description: 'The ID of the email to update.',
     }),
     scheduledAt: i.pins.data({
@@ -105,7 +164,7 @@ export const updateEmail = i.nodes.callable({
   },
 
   outputs: {
-    id: pins.email.uuid.with({
+    id: pins.email.id.with({
       description: 'The ID of the updated email.',
       control: false,
     }),
@@ -136,13 +195,13 @@ export const cancelEmail = i.nodes.callable({
   description: 'Cancel a previously sent email by its ID.',
 
   inputs: {
-    id: pins.email.uuid.with({
+    id: pins.email.id.with({
       description: 'The ID of the email to cancel.',
     }),
   },
 
   outputs: {
-    id: pins.email.uuid.with({
+    id: pins.email.id.with({
       description: 'The ID of the cancelled email.',
       control: false,
     }),

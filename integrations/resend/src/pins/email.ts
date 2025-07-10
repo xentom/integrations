@@ -3,7 +3,9 @@ import * as v from 'valibot';
 
 import * as i from '@acme/integration-framework';
 
-export const uuid = common.uuid.with({
+const EmailSchmea = v.pipe(v.string(), v.trim(), v.email());
+
+export const id = common.uuid.with({
   displayName: 'Email ID',
   description: 'The unique identifier for the email.',
 });
@@ -13,7 +15,7 @@ export const address = i.pins.data({
   control: i.controls.text({
     placeholder: 'john.doe@example.com',
   }),
-  schema: v.pipe(v.string(), v.trim(), v.email()),
+  schema: EmailSchmea,
 });
 
 export const addressWithDisplayName = i.pins.data({
@@ -38,8 +40,8 @@ export const addresses = i.pins.data({
   }),
   schema: v.pipe(
     v.string(),
-    v.transform((emails) => emails.split(',')),
-    v.pipe(v.array(v.pipe(v.string(), v.trim(), v.email())), v.maxLength(50)),
+    v.transform((emails) => emails.replace('\n', '').split(',')),
+    v.pipe(v.array(EmailSchmea), v.maxLength(50)),
   ),
 });
 
@@ -58,4 +60,108 @@ export const body = i.pins.data({
     rows: 5,
   }),
   schema: v.string(),
+});
+
+export const html = i.pins.data({
+  displayName: 'HTML',
+  description: 'The HTML content of the email.',
+  control: i.controls.text({
+    language: i.TextControlLanguage.Html,
+    placeholder: '<h1>Hello World</h1>',
+    rows: 3,
+  }),
+  schema: v.pipe(v.string(), v.minLength(1)),
+});
+
+export const text = i.pins.data({
+  description: 'The plain text content of the email.',
+  control: i.controls.text({
+    language: i.TextControlLanguage.Plain,
+    placeholder: 'Plain text content',
+    rows: 3,
+  }),
+  schema: v.pipe(v.string(), v.minLength(1)),
+});
+
+export const previewText = i.pins.data({
+  description: 'A short snippet shown in email previews.',
+  control: i.controls.text({
+    placeholder: 'Preview text',
+  }),
+  schema: v.string(),
+});
+
+export const scheduledAt = i.pins.data({
+  description:
+    'Schedule email for future sending (ISO 8601 format or natural language like "in 1 min").',
+  control: i.controls.text({
+    placeholder: '2024-08-05T11:52:01.858Z',
+  }),
+  schema: v.pipe(v.string(), v.minLength(1)),
+});
+
+export const headers = i.pins.data({
+  description: 'Custom email headers as key-value pairs.',
+  control: i.controls.expression({
+    defaultValue: {
+      'X-Custom-Header': 'value',
+    },
+  }),
+  schema: v.record(v.string(), v.string()),
+});
+
+export const attachments = i.pins.data({
+  description: 'File attachments',
+  control: i.controls.expression({
+    defaultValue: [
+      {
+        filename: 'file.pdf',
+        content: 'base64content',
+        contentType: 'application/pdf',
+      },
+    ],
+  }),
+  schema: v.array(
+    v.object({
+      content: v.optional(v.string()),
+      filename: v.optional(v.string()),
+      path: v.optional(v.string()),
+      contentType: v.optional(v.string()),
+    }),
+  ),
+});
+
+export const tags = i.pins.data({
+  description: 'Custom key/value metadata for email tracking.',
+  control: i.controls.expression({
+    defaultValue: [{ name: 'category', value: 'newsletter' }],
+  }),
+  schema: v.array(
+    v.object({
+      name: v.pipe(
+        v.string(),
+        v.regex(
+          /^[a-zA-Z0-9_-]+$/,
+          'Name must contain only letters, numbers, underscores, or dashes',
+        ),
+        v.maxLength(256),
+      ),
+      value: v.pipe(
+        v.string(),
+        v.regex(
+          /^[a-zA-Z0-9_-]+$/,
+          'Value must contain only letters, numbers, underscores, or dashes',
+        ),
+        v.maxLength(256),
+      ),
+    }),
+  ),
+});
+
+export const idempotencyKey = i.pins.data({
+  description: 'Unique key for safe retries without duplicating operations.',
+  control: i.controls.text({
+    placeholder: 'unique-key-123',
+  }),
+  schema: v.pipe(v.string(), v.minLength(1), v.maxLength(256)),
 });

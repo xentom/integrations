@@ -1,26 +1,10 @@
 import * as common from '@/pins/common';
+import { type GetContactResponseSuccess } from 'resend';
 import * as v from 'valibot';
 
 import * as i from '@acme/integration-framework';
 
-export interface Contact {
-  created_at: string;
-  id: string;
-  email: string;
-  first_name?: string;
-  last_name?: string;
-  unsubscribed: boolean;
-}
-
-export const object = i.pins.data<Contact>({
-  description: 'Contact object.',
-});
-
-export const objects = i.pins.data<Contact[]>({
-  description: 'Array of contact objects.',
-});
-
-export const uuid = common.uuid.with({
+export const id = common.uuid.with({
   displayName: 'Contact ID',
   description: 'The unique identifier for the contact.',
 });
@@ -46,3 +30,13 @@ export const unsubscribed = i.pins.data({
   control: i.controls.switch(),
   schema: v.boolean(),
 });
+
+export const object = i.pins.data<GetContactResponseSuccess>({
+  description: 'Contact object.',
+});
+
+export const objects = i.pins.data<Omit<GetContactResponseSuccess, 'object'>[]>(
+  {
+    description: 'Array of contact objects.',
+  },
+);

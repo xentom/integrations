@@ -18,7 +18,7 @@ export const createAudience = i.nodes.callable({
   },
 
   outputs: {
-    id: pins.audience.uuid.with({
+    id: pins.audience.id.with({
       description: 'The ID of the created audience.',
       control: false,
     }),
@@ -38,7 +38,7 @@ export const createAudience = i.nodes.callable({
     }
 
     if (!response.data) {
-      throw new Error('No audience data returned');
+      throw new Error('Missing response data');
     }
 
     return opts.next({
@@ -51,8 +51,6 @@ export const createAudience = i.nodes.callable({
 export const listAudiences = i.nodes.callable({
   category,
   description: 'List all audiences in Resend.',
-
-  inputs: {},
 
   outputs: {
     audiences: i.pins.data({
@@ -76,7 +74,7 @@ export const listAudiences = i.nodes.callable({
     }
 
     if (!response.data) {
-      throw new Error('No audience data returned');
+      throw new Error('Missing response data');
     }
 
     return opts.next({
@@ -90,13 +88,13 @@ export const getAudience = i.nodes.callable({
   description: 'Get a specific audience by ID.',
 
   inputs: {
-    id: pins.audience.uuid.with({
+    id: pins.audience.id.with({
       description: 'The ID of the audience to retrieve.',
     }),
   },
 
   outputs: {
-    id: pins.audience.uuid.with({
+    id: pins.audience.id.with({
       description: 'The ID of the audience.',
       control: false,
     }),
@@ -118,7 +116,7 @@ export const getAudience = i.nodes.callable({
     }
 
     if (!response.data) {
-      throw new Error('No audience data returned');
+      throw new Error('Missing response data');
     }
 
     return opts.next({
@@ -134,13 +132,13 @@ export const deleteAudience = i.nodes.callable({
   description: 'Delete an audience by ID.',
 
   inputs: {
-    id: pins.audience.uuid.with({
+    id: pins.audience.id.with({
       description: 'The ID of the audience to delete.',
     }),
   },
 
   outputs: {
-    id: pins.audience.uuid.with({
+    id: pins.audience.id.with({
       description: 'The ID of the deleted audience.',
       control: false,
     }),
@@ -154,7 +152,7 @@ export const deleteAudience = i.nodes.callable({
     }
 
     if (!response.data) {
-      throw new Error('No audience data returned');
+      throw new Error('Missing response data');
     }
 
     if (!response.data.deleted) {

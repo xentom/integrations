@@ -11,7 +11,7 @@ export const createContact = i.nodes.callable({
   description: 'Create a new contact in Resend.',
 
   inputs: {
-    audienceId: pins.audience.uuid.with({
+    audienceId: pins.audience.id.with({
       description: 'The ID of the audience to add the contact to.',
     }),
     email: pins.email.address.with({
@@ -29,7 +29,7 @@ export const createContact = i.nodes.callable({
   },
 
   outputs: {
-    id: pins.contact.uuid.with({
+    id: pins.contact.id.with({
       description: 'The ID of the created contact.',
       control: false,
     }),
@@ -49,7 +49,7 @@ export const createContact = i.nodes.callable({
     }
 
     if (!response.data) {
-      throw new Error('No contact data returned');
+      throw new Error('Missing response data');
     }
 
     return opts.next({
@@ -63,10 +63,10 @@ export const getContact = i.nodes.callable({
   description: 'Retrieve a contact by its ID.',
 
   inputs: {
-    audienceId: pins.audience.uuid.with({
+    audienceId: pins.audience.id.with({
       description: 'The ID of the audience the contact belongs to.',
     }),
-    id: pins.contact.uuid.with({
+    id: pins.contact.id.with({
       optional: true,
     }),
     email: pins.email.address.with({
@@ -91,7 +91,7 @@ export const getContact = i.nodes.callable({
     }
 
     if (!response.data) {
-      throw new Error('No contact data returned');
+      throw new Error('Missing response data');
     }
 
     return opts.next({
@@ -105,7 +105,7 @@ export const listContacts = i.nodes.callable({
   description: 'List all contacts in Resend.',
 
   inputs: {
-    audienceId: pins.audience.uuid.with({
+    audienceId: pins.audience.id.with({
       description: 'The ID of the audience to list the contacts from.',
     }),
   },
@@ -124,7 +124,7 @@ export const listContacts = i.nodes.callable({
     }
 
     if (!response.data) {
-      throw new Error('No contact data returned');
+      throw new Error('Missing response data');
     }
 
     return opts.next({
@@ -138,10 +138,10 @@ export const updateContact = i.nodes.callable({
   description: 'Update an existing contact by its ID.',
 
   inputs: {
-    audienceId: pins.audience.uuid.with({
+    audienceId: pins.audience.id.with({
       description: 'The ID of the audience to update the contact in.',
     }),
-    id: pins.contact.uuid,
+    id: pins.contact.id,
     email: pins.email.address.with({
       description: 'The email address of the contact.',
       optional: true,
@@ -161,7 +161,7 @@ export const updateContact = i.nodes.callable({
   },
 
   outputs: {
-    id: pins.contact.uuid.with({
+    id: pins.contact.id.with({
       description: 'The ID of the updated contact.',
       control: false,
     }),
@@ -182,7 +182,7 @@ export const updateContact = i.nodes.callable({
     }
 
     if (!response.data) {
-      throw new Error('No contact data returned');
+      throw new Error('Missing response data');
     }
 
     return opts.next({
@@ -196,14 +196,14 @@ export const deleteContact = i.nodes.callable({
   description: 'Delete a contact by its ID.',
 
   inputs: {
-    audienceId: pins.audience.uuid.with({
+    audienceId: pins.audience.id.with({
       description: 'The ID of the audience to delete the contact from.',
     }),
-    id: pins.contact.uuid,
+    id: pins.contact.id,
   },
 
   outputs: {
-    id: pins.contact.uuid.with({
+    id: pins.contact.id.with({
       description: 'The ID of the deleted contact.',
       control: false,
     }),
@@ -220,7 +220,7 @@ export const deleteContact = i.nodes.callable({
     }
 
     if (!response.data) {
-      throw new Error('No contact data returned');
+      throw new Error('Missing response data');
     }
 
     return opts.next({
