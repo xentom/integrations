@@ -120,6 +120,43 @@ The `pins/` folder defines reusable data types and schemas used across nodes. Al
 - A valibot schema (required, not optional)
 - A control definition for simple data types
 
+#### Pin Optionality Best Practices
+
+**Define pins as non-optional by default** in the `/pins` folder. This promotes reusability and consistency:
+
+- **Pin definitions**: Always define pins with non-optional schemas in shared pin files
+- **Usage-specific optionality**: Use `.with({ optional: true })` when a node doesn't require the pin
+- **Avoid duplicate definitions**: Don't create separate optional and non-optional versions of the same pin
+
+```typescript
+// ✅ Good - Single pin definition (non-optional by default)
+export const flag = i.pins.data({
+  description: 'A boolean flag.',
+  control: i.controls.switch(),
+  schema: v.boolean(),
+});
+
+// ✅ Good - Make optional at usage site
+inputs: {
+  requiredFlag: pins.common.flag,
+  optionalFlag: pins.common.flag.with({ optional: true }),
+}
+
+// ❌ Bad - Duplicate optional variant
+export const flag = i.pins.data({
+  description: 'A boolean flag.',
+  control: i.controls.switch(),
+  schema: v.boolean(),
+});
+
+export const optionalFlag = i.pins.data({
+  description: 'An optional boolean flag.',
+  control: i.controls.switch(),
+  optional: true,
+  schema: v.boolean(),
+});
+```
+
 ```typescript
 // Example pin definition
 export const emailAddress = i.pins.data({
@@ -535,6 +572,40 @@ env: {
 
 1. **Prefer Official Node.js Clients Over Raw Requests**: When implementing new integrations, avoid manually crafting raw API requests or relying on online API references alone. Instead, search for an official or well-maintained Node.js client library on npm and use that. For existing integrations, always use the client or SDK that is already defined in the integration's entry point, rather than introducing a new one.
 
+2. **Review Official Documentation Before Implementation**: Always examine official documentation links found in comments or provided with library usage. This is crucial for understanding:
+   - **Deprecated fields**: Avoid using fields marked as deprecated in the official API documentation
+   - **Best practices**: Follow recommended usage patterns and implementation guidelines
+   - **Future compatibility**: Understand upcoming changes and deprecation timelines
+   - **Required vs optional parameters**: Verify which fields are truly required
+   - **API limitations**: Understand rate limits, data constraints, and usage boundaries
+
+```typescript
+// ✅ Good - Check documentation links before implementing
+// Example: Slack API deprecates certain fields
+// See: https://api.slack.com/methods/chat.postMessage
+const response = await opts.state.slack.chat.postMessage({
+  channel: opts.inputs.channel,
+  text: opts.inputs.text,
+  // Don't use 'parse' - deprecated in favor of 'mrkdwn'
+  mrkdwn: true,
+});
+
+// ❌ Bad - Using deprecated fields without checking docs
+const response = await opts.state.slack.chat.postMessage({
+  channel: opts.inputs.channel,
+  text: opts.inputs.text,
+  parse: 'full', // This field is deprecated
+});
+```
+
+**When gathering information about a library:**
+
+- **Follow documentation links**: Don't skip links in comments or library documentation
+- **Check deprecation notices**: Look for fields or methods marked as deprecated
+- **Review examples**: Official examples often show best practices
+- **Understand breaking changes**: Be aware of version differences and migration paths
+- **Consider future updates**: Design integrations to be forward-compatible when possible
+
 ### TypeScript Best Practices
 
 1. **Prefer Inline Type Specifiers Over Top-Level Type-Only Imports**: Use inline `type` specifiers in import statements instead of top-level type-only imports for better tree-shaking and clarity.
@@ -559,6 +630,70 @@ This approach:
 - Better tree-shaking for bundlers
 - More explicit and readable
 - Follows modern TypeScript best practices
+
+2. **Investigate Library Types Instead of Creating Workarounds**: When encountering TypeScript errors with third-party libraries, examine the actual type definitions in `/node_modules/[library-name]/` to understand the correct API usage instead of creating workarounds.
+
+```typescript
+// ✅ Good - Investigate library types and use them correctly
+// After checking /node_modules/@slack/web-api/dist/types/
+const response = await opts.state.slack.chat.postMessage({
+  channel: opts.inputs.channel,
+  text: opts.inputs.text,
+  blocks: opts.inputs.blocks, // Library handles undefined correctly
+});
+
+// ❌ Bad - Workarounds to avoid TypeScript errors
+const response = await opts.state.slack.chat.postMessage({
+  channel: opts.inputs.channel,
+  text: opts.inputs.text,
+  ...(opts.inputs.blocks && { blocks: opts.inputs.blocks }), // Unnecessary workaround
+} as any); // Type assertion to bypass errors
+```
+
+**When facing TypeScript errors:**
+
+1. **Check the library's type definitions** in `node_modules/[lib-name]/dist/types/` or similar
+2. **Read method signatures** to understand expected parameter shapes
+3. **Look for union types** that might explain why certain combinations are required
+4. **Check for exported interfaces** that define the correct structure
+5. **Use the types as intended** rather than forcing them with workarounds
+
+**Common anti-patterns to avoid:**
+
+- Using `any` to bypass type errors
+- Conditional spreads when direct assignment would work
+- Type assertions (`as SomeType`) without understanding why they're needed
+- Ignoring TypeScript errors with `@ts-ignore` comments
+
+3. **Pass Objects Directly to Functions**: Avoid creating intermediate variables when passing objects directly to function calls. This reduces unnecessary code and improves readability.
+
+```typescript
+// ✅ Good - Direct object passing
+const response = await opts.state.slack.files.uploadV2({
+  content: opts.inputs.content,
+  filename: opts.inputs.filename,
+  channels: opts.inputs.channels,
+  filetype: opts.inputs.filetype,
+  initial_comment: opts.inputs.initialComment,
+});
+
+// ❌ Bad - Useless intermediate variable
+const uploadParams = {
+  content: opts.inputs.content,
+  filename: opts.inputs.filename,
+  channels: opts.inputs.channels,
+  filetype: opts.inputs.filetype,
+  initial_comment: opts.inputs.initialComment,
+};
+const response = await opts.state.slack.files.uploadV2(uploadParams);
+```
+
+**Benefits of direct object passing:**
+
+- **Fewer lines of code**: Eliminates unnecessary variable declarations
+- **Clearer intent**: Shows exactly what data is being passed to the function
+- **Reduced cognitive load**: One less variable name to track
+- **Better locality**: Parameter definition is right where it's used
 
 ### Pin Organization and Optimization
 
@@ -646,6 +781,7 @@ const orders = await opts.state.shopify.rest.Order.all({
 - **Simpler logic**: No need for conditional checks
 - **API-friendly**: Most APIs properly handle undefined/null values
 - **Consistent structure**: Object shape is always the same
+- **Works with new pin optionality pattern**: No special handling needed for optional pins
 
 2. **Use Shared Session State**: Access the authenticated session through `opts.state.session` rather than creating session objects in individual nodes.
 

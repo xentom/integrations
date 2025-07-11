@@ -69,6 +69,7 @@ acme-integrations/
 - **Proper typing over v.any()**: Use `i.pins.data<ResponseType>()` instead of `schema: v.any()`
 - **Type-first development**: Define types before implementation, leverage TypeScript inference
 - **No runtime schema for complex objects**: Omit schema property when using TypeScript generics
+- **Investigate library types, don't workaround**: When facing TypeScript errors, examine types in `/node_modules/[lib-name]/` to understand proper API usage instead of creating workarounds with `any`, conditional spreads, or type assertions
 
 ### Pin Development Rules
 
@@ -77,21 +78,71 @@ acme-integrations/
 - **Reusability first**: Design pins to be reused across multiple nodes with `.with({})`
 - **Required fields**: All pins need description, schema (for simple types), control (unless output-only)
 - **Control property**: Only use `control: false` when extending pins that already have controls
-- **Optional clarity**: Mark non-essential pins as `optional: true` for better UX
+- **Non-optional by default**: Define pins in `/pins` folder as non-optional with non-optional schemas. Handle optionality at usage with `.with({ optional: true })`
 - **Priority ordering**: Most important pins first, advanced/optional last
 
 ### Node Implementation Standards
 
 - **Direct property passing**: Pass inputs directly to API calls, avoid conditional spreads
+
   ```typescript
   // ✅ Good
-  api.call({ field: opts.inputs.field, optional: opts.inputs.optional });
+  api.call({
+    field: opts.inputs.field,
+    optional: opts.inputs.optional,
+  });
+
   // ❌ Bad
   api.call({
     field: opts.inputs.field,
     ...(opts.inputs.optional && { optional: opts.inputs.optional }),
   });
   ```
+
+- **Direct object passing**: Pass objects directly to functions instead of creating useless intermediate variables
+
+  ```typescript
+  // ✅ Good
+  const response = await api.call({
+    field: opts.inputs.field,
+    optional: opts.inputs.optional,
+  });
+
+  // ❌ Bad
+  const params = {
+    field: opts.inputs.field,
+    optional: opts.inputs.optional,
+  };
+  const response = await api.call(params);
+  ```
+
+- **Complex union types**: For APIs with complex union type requirements, use conditional spread with ternary operator instead of intermediate variables and if/else blocks
+
+  ```typescript
+  // ✅ Good - Clean conditional spread with ternary
+  const response = await api.call({
+    baseField: opts.inputs.base,
+    ...(opts.inputs.condition && opts.inputs.related
+      ? {
+          requiredField: opts.inputs.condition,
+          dependentField: opts.inputs.related,
+        }
+      : {
+          requiredField: opts.inputs.condition,
+        }),
+  });
+
+  // ❌ Bad - Verbose if/else blocks
+  const params = { baseField: opts.inputs.base };
+  if (opts.inputs.condition && opts.inputs.related) {
+    params.requiredField = opts.inputs.condition;
+    params.dependentField = opts.inputs.related;
+  } else if (opts.inputs.condition) {
+    params.requiredField = opts.inputs.condition;
+  }
+  const response = await api.call(params);
+  ```
+
 - **Shared state usage**: Use `opts.state.session` and `opts.state.client` from integration
 - **Error handling**: Always handle API errors gracefully with descriptive messages
 - **Category organization**: Group related nodes in category folders with proper exports
@@ -102,6 +153,7 @@ acme-integrations/
 - **Existing client reuse**: Use client instances from `opts.state.client` (set in integration start)
 - **Type imports**: Import response types from client libraries when available
 - **Environment access**: Use validated environment variables through `opts.env` or `process.env`
+- **Documentation review**: Always review official documentation links found in comments before implementing. Check for deprecated fields, best practices, and future compatibility requirements
 
 ## File Patterns & Examples
 
@@ -327,13 +379,18 @@ export * from './broadcasts';
 Before implementing, always verify:
 
 - [ ] Official Node.js client library exists and is being used
+- [ ] Official documentation has been reviewed for deprecated fields and best practices
 - [ ] Pin definitions follow naming conventions (no category prefixes)
+- [ ] Pin definitions are non-optional by default; use `.with({ optional: true })` at usage sites
 - [ ] TypeScript types are imported with inline `type` specifiers
+- [ ] When facing TypeScript errors, investigate library types in `/node_modules/[lib-name]/` instead of creating workarounds
 - [ ] Environment variables are properly validated
 - [ ] Error handling is comprehensive and user-friendly
 - [ ] Pin priorities are ordered correctly (required → optional → advanced)
 - [ ] Use `control: false` only when extending pins that have existing controls
-- [ ] API calls use direct property assignment (no conditional spreads)
+- [ ] API calls use direct property assignment (no conditional spreads, even with optional pins)
+- [ ] Pass objects directly to functions instead of creating useless intermediate variables
+- [ ] For complex union types, use conditional spread with ternary instead of if/else blocks
 
 ## Knowledge Resources
 
