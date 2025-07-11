@@ -1,216 +1,682 @@
-# ACME Integrations Project
+# ACME Integrations Framework Documentation
 
 ## Overview
 
-This is a workspace for building integrations using the ACME integration framework. The project uses a monorepo structure with Turbo for build orchestration and Bun as the package manager.
+This is a comprehensive guide for building integrations using the ACME integration framework. This monorepo uses Turbo for build orchestration, Bun as the package manager, and TypeScript with strict type checking.
+
+## Table of Contents
+
+1. [Architecture & Core Concepts](#architecture--core-concepts)
+2. [Project Structure](#project-structure)
+3. [Integration Development Guide](#integration-development-guide)
+4. [Pin System Deep Dive](#pin-system-deep-dive)
+5. [Node Implementation Patterns](#node-implementation-patterns)
+6. [Environment & Configuration](#environment--configuration)
+7. [API Integration Strategies](#api-integration-strategies)
+8. [Development Workflow](#development-workflow)
+9. [Build Process](#build-process)
+10. [Examples & Patterns](#examples--patterns)
+
+## Architecture & Core Concepts
+
+### Integration Framework Components
+
+**Nodes** - Building blocks of integrations:
+
+- **Trigger nodes**: Event-driven (webhooks, polling) that start workflows
+- **Callable nodes**: On-demand execution for business logic functions
+- **Pure nodes**: Stateless transformations for data manipulation
+
+**Pins** - Type-safe data definitions:
+
+- **Data pins**: Typed inputs/outputs with valibot schemas or TypeScript generics
+- **Execution pins**: Control flow connections between nodes
+
+**Controls** - UI components for user configuration:
+
+- **Text**: Plain text input with template expression support
+- **Expression**: JavaScript code evaluation at runtime
+- **Select**: Dropdown with static or dynamic options
+- **Switch**: Boolean toggle controls
+
+**Environment** - Secure configuration management:
+
+- API keys, tokens, connection strings
+- Validated with valibot schemas, encrypted storage
+
+**Webhooks** - HTTP endpoints for external triggers:
+
+- Automatic endpoint generation and request routing
+
+### Framework Philosophy
+
+- **Type Safety First**: Leverage TypeScript for compile-time validation
+- **Runtime Validation**: Use valibot for user input validation
+- **Reusability**: Design pins to be reused across multiple nodes
+- **Performance**: Minimize runtime overhead with proper typing
+- **Developer Experience**: Clear APIs and helpful error messages
 
 ## Project Structure
 
 ```
 acme-integrations/
-├── integrations/                     # Integration packages
-│   ├── resend/                       # Resend email integration
-│   ├── template/                     # Template for new integrations
-│   └── .../                          # Other integrations
-├── node_modules/
-│   └── @acme/
-│       └── integration-framework/    # Core framework
-├── tooling/
-│   └── style-guide/                  # ESLint, Prettier, TypeScript configs
-├── package.json                      # Root package.json with workspaces
-└── turbo.json                        # Turbo configuration
-```
-
-## Integration Framework
-
-The `@acme/integration-framework` provides the core building blocks for integrations:
-
-- **Nodes**: Nodes are the building blocks of an integration.
-  - Trigger nodes: Event-driven (webhooks, polling)
-  - Callable nodes: On-demand execution
-  - Pure nodes: Stateless transformations
-- **Pins**: Data types and schema definitions for inputs/outputs
-  - Data pins: Typed data with validation schemas
-  - Execution pins: Control flow connections
-- **Controls**: UI components for user inputs
-  - **Text**: Plain text input with template expression support
-  - **Expression**: JavaScript code evaluation at runtime
-  - **Select**: Dropdown with static or dynamic options
-  - **Switch**: Boolean toggle controls
-- **Environment**: Secure configuration management
-  - API keys, tokens, connection strings
-  - Validated with valibot schemas
-- **Webhooks**: HTTP endpoints for external triggers
-  - Automatic endpoint generation
-  - Request validation and routing
-
-## Building Integrations
-
-### Required Files
-
-Each integration must have:
-
-- `images/icon.png` - Integration icon
-- `src/index.ts` - Main integration export with nodes and environment
-- `src/nodes/` - Directory containing triggers and actions
-- `src/pins/` - Data type definitions and schemas
-- `eslint.config.mjs` - ESLint configuration
-- `tsconfig.json` - TypeScript configuration
-- `package.json` - Package configuration with framework dependency
-
-### Integration Structure
-
-Each integration follows a standardized folder structure that organizes nodes, pins, and configuration files:
-
-```
-integrations/
-├── [integration-name]/
+├── integrations/[name]/               # Individual integrations
 │   ├── src/
-│   │   ├── index.ts                 # Integration entry point
-│   │   ├── globals.d.ts             # TypeScript global declarations
+│   │   ├── index.ts                  # Integration entry point
+│   │   ├── globals.d.ts              # TypeScript global declarations
 │   │   ├── nodes/
-│   │   │   ├── [...category]/       # Node category directories
-│   │   │   │   ├── [category].ts    # Node implementations
-│   │   │   │   └── index.ts         # Category exports
-│   │   │   └── index.ts             # All nodes export
+│   │   │   ├── [category]/           # Node category directories
+│   │   │   │   ├── [category].ts     # Node implementations
+│   │   │   │   └── index.ts          # Category exports
+│   │   │   └── index.ts              # All nodes export
 │   │   └── pins/
-│   │       ├── [category].ts        # Pin definitions by category
-│   │       └── index.ts             # All pins export
-│   ├── images/
-│   │   └── icon.png                 # Integration icon
-│   ├── package.json                 # Package configuration
-│   ├── tsconfig.json                # TypeScript config
-│   └── eslint.config.mjs            # ESLint configuration
+│   │       ├── [category].ts         # Pin definitions by category
+│   │       └── index.ts              # All pins export
+│   ├── images/icon.png               # Integration icon (required)
+│   ├── package.json                  # Package configuration
+│   ├── tsconfig.json                 # TypeScript config
+│   └── eslint.config.mjs             # ESLint configuration
+├── node_modules/@acme/integration-framework/  # Core framework
+├── tooling/style-guide/              # Shared linting/formatting configs
+├── package.json                      # Root workspace configuration
+├── turbo.json                        # Turbo build configuration
+└── CLAUDE.md                         # This documentation
 ```
 
-**Example: Resend Integration**
+### Required Files for Each Integration
 
-```
-integrations/
-├── resend/
-│   ├── src/
-│   │   ├── index.ts                 # Main integration export
-│   │   ├── globals.d.ts             # Type declarations
-│   │   ├── nodes/
-│   │   │   ├── emails/
-│   │   │   │   ├── emails.ts        # Email operations (send, get, etc.)
-│   │   │   │   └── index.ts         # Email node exports
-│   │   │   ├── contacts/
-│   │   │   │   ├── contacts.ts      # Contact management
-│   │   │   │   └── index.ts         # Contact node exports
-│   │   │   └── index.ts             # All nodes export
-│   │   └── pins/
-│   │       ├── email.ts             # Email-related pins
-│   │       ├── contact.ts           # Contact-related pins
-│   │       ├── audience.ts          # Audience-related pins
-│   │       ├── common.ts            # Shared pins
-│   │       └── index.ts             # All pins export
-│   ├── images/
-│   │   └── icon.png                 # Resend integration icon
-│   ├── package.json
-│   ├── tsconfig.json
-│   └── eslint.config.mjs
-```
+1. **`images/icon.png`** - Integration icon for UI display
+2. **`src/index.ts`** - Main integration export with nodes and environment
+3. **`src/nodes/`** - Directory containing all node implementations
+4. **`src/pins/`** - Data type definitions and schemas
+5. **`eslint.config.mjs`** - ESLint configuration
+6. **`tsconfig.json`** - TypeScript configuration
+7. **`package.json`** - Package configuration with framework dependency
 
-### Pin Structure
+## Integration Development Guide
 
-The `pins/` folder defines reusable data types and schemas used across nodes. All pins require:
+### Creating a New Integration
 
-- A useful description
-- A valibot schema (required, not optional)
-- A control definition for simple data types
+1. **Copy Template**: Start with `/integrations/template/` as base
+2. **Update Package Info**: Modify `package.json` with integration name and dependencies
+3. **Add Icon**: Replace `images/icon.png` with integration-specific icon
+4. **Configure Environment**: Define required API keys and configuration in `src/index.ts`
+5. **Implement Pins**: Create data type definitions in `src/pins/`
+6. **Build Nodes**: Implement integration functionality in `src/nodes/`
 
-#### Pin Optionality Best Practices
-
-**Define pins as non-optional by default** in the `/pins` folder. This promotes reusability and consistency:
-
-- **Pin definitions**: Always define pins with non-optional schemas in shared pin files
-- **Usage-specific optionality**: Use `.with({ optional: true })` when a node doesn't require the pin
-- **Avoid duplicate definitions**: Don't create separate optional and non-optional versions of the same pin
+### Integration Entry Point Pattern
 
 ```typescript
-// ✅ Good - Single pin definition (non-optional by default)
-export const flag = i.pins.data({
-  description: 'A boolean flag.',
-  control: i.controls.switch(),
-  schema: v.boolean(),
-});
+// src/index.ts
+import { SomeApiClient } from 'some-api-client';
+import * as v from 'valibot';
 
-// ✅ Good - Make optional at usage site
-inputs: {
-  requiredFlag: pins.common.flag,
-  optionalFlag: pins.common.flag.with({ optional: true }),
-}
+import * as i from '@acme/integration-framework';
 
-// ❌ Bad - Duplicate optional variant
-export const flag = i.pins.data({
-  description: 'A boolean flag.',
-  control: i.controls.switch(),
-  schema: v.boolean(),
-});
+import * as nodes from './nodes';
 
-export const optionalFlag = i.pins.data({
-  description: 'An optional boolean flag.',
-  control: i.controls.switch(),
-  optional: true,
-  schema: v.boolean(),
+export default i.integration({
+  nodes,
+  env: {
+    API_KEY: i.env({
+      control: i.controls.text({
+        label: 'API Key',
+        sensitive: true,
+        description: 'Your API key for authentication',
+      }),
+      schema: v.string(),
+    }),
+    API_URL: i.env({
+      control: i.controls.text({
+        label: 'API Base URL',
+        description: 'Base URL for API requests',
+        placeholder: 'https://api.example.com',
+      }),
+      schema: v.pipe(v.string(), v.url()),
+    }),
+  },
+  start(opts) {
+    // Initialize shared state with API client
+    opts.state.client = new SomeApiClient({
+      apiKey: process.env.API_KEY,
+      baseURL: process.env.API_URL,
+    });
+  },
 });
 ```
 
+## Pin System Deep Dive
+
+### Pin Categories and Organization
+
+Organize pins by logical domain categories:
+
+```
+pins/
+├── user.ts          # User-related data types
+├── file.ts          # File and document types
+├── message.ts       # Communication types
+├── common.ts        # Shared/utility types
+└── index.ts         # Export all categories
+```
+
+### Pin Naming Conventions
+
+**Critical Rules:**
+
+- **NO category prefixes**: Export `address` not `emailAddress`
+- **Generic naming**: Use `item` for singles, `list` for arrays
+- **Semantic properties**: Use specific names for individual fields
+
 ```typescript
-// Example pin definition
-export const emailAddress = i.pins.data({
+// ✅ Good naming patterns
+export const item; // pins.user.item
+export const list; // pins.user.list
+export const id; // pins.user.id
+export const name; // pins.user.name
+export const email; // pins.user.email
+
+// ❌ Bad naming patterns
+export const user; // Would create pins.user.user
+export const users; // Use 'list' instead
+export const userId; // Use 'id' instead
+```
+
+### Pin Type Strategies
+
+**Simple Types with Validation:**
+
+```typescript
+export const email = i.pins.data({
   description: 'An email address.',
   control: i.controls.text({
-    placeholder: 'john.doe@example.com',
+    placeholder: 'user@example.com',
   }),
   schema: v.pipe(v.string(), v.trim(), v.email()),
 });
 ```
 
-#### Control Property Best Practices
-
-The `control` property in pin definitions follows these rules:
-
-- **New pins default to no control**: When defining a new pin, omitting the `control` property means it has no UI control
-- **Only use `control: false` when extending**: Use `control: false` only when extending an existing pin that has a control and you want to remove it
-- **Output pins typically don't need controls**: API response objects and computed values usually don't need UI controls
+**Complex Types with TypeScript Generics:**
 
 ```typescript
-// ✅ Good - New pin with no control (for API responses)
-export const apiResponse = i.pins.data<ApiResponse>({
-  description: 'Response from the API.',
-  // No control property needed - defaults to no control
-});
+import { type UserProfile } from 'api-client';
 
-// ✅ Good - New pin with control (for user input)
-export const userInput = i.pins.data({
-  description: 'User provided text.',
-  control: i.controls.text({
-    placeholder: 'Enter text...',
-  }),
-  schema: v.string(),
-});
-
-// ✅ Good - Extending pin with control to remove it
-export const responseData = pins.common.inputField.with({
-  description: 'Response data from API.',
-  control: false, // Remove control from pin that was meant for input
-});
-
-// ❌ Bad - Unnecessary control: false on new pin
-export const badResponse = i.pins.data<ApiResponse>({
-  description: 'Response from the API.',
-  control: false, // Unnecessary - pins default to no control
+export const profile = i.pins.data<UserProfile>({
+  description: 'Complete user profile information.',
+  // No schema needed - TypeScript provides type safety
 });
 ```
 
-### Integration Entry Point
+**Transformed Input Types:**
 
-The main integration file exports nodes, environment variables, and initialization logic:
+```typescript
+export const emails = i.pins.data({
+  description: 'Multiple email addresses (comma-separated).',
+  control: i.controls.text({
+    placeholder: 'user1@example.com, user2@example.com',
+  }),
+  schema: v.pipe(
+    v.string(),
+    v.transform((str) => str.split(',').map((s) => s.trim())),
+    v.array(v.pipe(v.string(), v.email())),
+    v.maxLength(50),
+  ),
+});
+```
+
+### Pin Optionality Patterns
+
+**Define pins as non-optional by default:**
+
+```typescript
+// src/pins/common.ts
+export const timeout = i.pins.data({
+  description: 'Request timeout in seconds.',
+  control: i.controls.text({
+    placeholder: '30',
+  }),
+  schema: v.pipe(v.string(), v.transform(Number), v.integer(), v.minValue(1)),
+});
+```
+
+**Handle optionality at usage sites:**
+
+```typescript
+// In node implementations
+inputs: {
+  required: pins.common.timeout,
+  optional: pins.common.timeout.with({ optional: true }),
+  withDefault: pins.common.timeout.with({
+    optional: true,
+    description: 'Request timeout in seconds (default: 30).',
+  }),
+}
+```
+
+### Control Configuration Patterns
+
+**Input Controls (for user-facing pins):**
+
+```typescript
+export const message = i.pins.data({
+  description: 'Message content.',
+  control: i.controls.text({
+    placeholder: 'Enter your message...',
+    multiline: true,
+  }),
+  schema: v.pipe(v.string(), v.minLength(1)),
+});
+
+export const priority = i.pins.data({
+  description: 'Message priority level.',
+  control: i.controls.select({
+    options: [
+      { value: 'low', label: 'Low' },
+      { value: 'normal', label: 'Normal' },
+      { value: 'high', label: 'High' },
+    ],
+  }),
+  schema: v.picklist(['low', 'normal', 'high']),
+});
+```
+
+**Output-Only Pins (no controls needed):**
+
+```typescript
+import { type ApiResponse } from 'client';
+
+export const response = i.pins.data<ApiResponse>({
+  description: 'API response data.',
+  // No control property - this pin is for outputs only
+});
+```
+
+## Node Implementation Patterns
+
+### Node Categories and Structure
+
+```typescript
+// src/nodes/users/users.ts
+import * as pins from '@/pins';
+
+import * as i from '@acme/integration-framework';
+
+const category = {
+  path: ['Users'],
+} satisfies i.NodeCategory;
+
+export const getUser = i.nodes.callable({
+  category,
+  description: 'Retrieve user information by ID.',
+
+  inputs: {
+    // Required inputs first
+    id: pins.user.id,
+
+    // Optional inputs after
+    includeProfile: pins.common.flag.with({
+      description: 'Include full profile information.',
+      optional: true,
+    }),
+  },
+
+  outputs: {
+    user: pins.user.item.with<UserResponse['user']>({
+      description: 'User information.',
+    }),
+  },
+
+  async run(opts) {
+    const response = await opts.state.client.users.get({
+      id: opts.inputs.id,
+      include_profile: opts.inputs.includeProfile,
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to get user: ${response.error}`);
+    }
+
+    return opts.next({ user: response.user });
+  },
+});
+```
+
+### Semantic Output Patterns
+
+**Return Specific Data (not full API responses):**
+
+```typescript
+// ✅ Good - Extract meaningful data
+export const listFiles = i.nodes.callable({
+  outputs: {
+    files: pins.file.list.with<FileItem[]>({
+      description: 'Array of files.',
+    }),
+    totalCount: pins.common.count.with({
+      description: 'Total number of files.',
+    }),
+  },
+
+  async run(opts) {
+    const response = await opts.state.client.files.list();
+
+    return opts.next({
+      files: response.files ?? [],
+      totalCount: response.total ?? 0,
+    });
+  },
+});
+
+// ❌ Bad - Return full API response
+export const listFiles = i.nodes.callable({
+  outputs: {
+    response: pins.file.apiResponse.with({
+      description: 'Files API response.',
+    }),
+  },
+
+  async run(opts) {
+    const response = await opts.state.client.files.list();
+    return opts.next({ response }); // User must navigate response.files
+  },
+});
+```
+
+### Operation Nodes (No Outputs)
+
+```typescript
+export const deleteFile = i.nodes.callable({
+  category,
+  description: 'Delete a file permanently.',
+
+  inputs: {
+    id: pins.file.id,
+  },
+
+  // No outputs property for operations that don't return data
+
+  async run(opts) {
+    const response = await opts.state.client.files.delete({
+      id: opts.inputs.id,
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to delete file: ${response.error}`);
+    }
+
+    return opts.next(); // Operation completed successfully
+  },
+});
+```
+
+### Error Handling Patterns
+
+```typescript
+async run(opts) {
+  try {
+    const response = await opts.state.client.someOperation({
+      param: opts.inputs.param,
+    });
+
+    // Handle API-specific error responses
+    if (!response.ok) {
+      throw new Error(`API Error: ${response.error?.message || 'Unknown error'}`);
+    }
+
+    // Handle missing required data
+    if (!response.data) {
+      throw new Error('No data returned from API');
+    }
+
+    return opts.next({ result: response.data });
+
+  } catch (error) {
+    // Re-throw with context
+    throw new Error(`Failed to complete operation: ${error.message}`);
+  }
+}
+```
+
+### Trigger Node Patterns
+
+```typescript
+export const webhookTrigger = i.nodes.trigger({
+  category,
+  description: 'Triggered when a webhook is received.',
+
+  outputs: {
+    payload: pins.webhook.payload.with<WebhookPayload>({
+      description: 'Webhook payload data.',
+    }),
+    headers: pins.webhook.headers.with({
+      description: 'Request headers.',
+    }),
+  },
+
+  async setup(opts) {
+    // Configure webhook endpoint
+    return opts.webhook({
+      path: '/webhook',
+      method: 'POST',
+    });
+  },
+
+  async run(opts) {
+    const { payload, headers } = opts.request;
+
+    // Validate webhook signature if needed
+    const isValid = validateWebhookSignature(headers, payload);
+    if (!isValid) {
+      throw new Error('Invalid webhook signature');
+    }
+
+    return opts.next({
+      payload,
+      headers,
+    });
+  },
+});
+```
+
+## Environment & Configuration
+
+### Environment Variable Patterns
+
+```typescript
+env: {
+  // Required API credentials
+  API_KEY: i.env({
+    control: i.controls.text({
+      label: 'API Key',
+      sensitive: true,
+      description: 'Your API key for authentication',
+    }),
+    schema: v.string(),
+  }),
+
+  // Optional configuration with defaults
+  TIMEOUT: i.env({
+    control: i.controls.text({
+      label: 'Request Timeout',
+      description: 'Timeout for API requests in seconds',
+      placeholder: '30',
+    }),
+    schema: v.pipe(
+      v.string(),
+      v.transform(str => str || '30'),
+      v.transform(Number),
+      v.integer(),
+      v.minValue(1),
+      v.maxValue(300)
+    ),
+  }),
+
+  // URL validation
+  BASE_URL: i.env({
+    control: i.controls.text({
+      label: 'Base URL',
+      description: 'API base URL',
+      placeholder: 'https://api.example.com',
+    }),
+    schema: v.pipe(v.string(), v.url()),
+  }),
+}
+```
+
+### Client Initialization Patterns
+
+```typescript
+start(opts) {
+  // Basic client setup
+  opts.state.client = new ApiClient({
+    apiKey: process.env.API_KEY,
+    baseURL: process.env.BASE_URL,
+    timeout: Number(process.env.TIMEOUT || '30') * 1000,
+  });
+
+  // Session-based setup
+  opts.state.session = {
+    accessToken: process.env.ACCESS_TOKEN,
+    refreshToken: process.env.REFRESH_TOKEN,
+    expiresAt: Date.now() + 3600000, // 1 hour
+  };
+
+  // Multiple client setup
+  opts.state.api = new ApiClient(process.env.API_KEY);
+  opts.state.webhook = new WebhookClient(process.env.WEBHOOK_SECRET);
+}
+```
+
+## API Integration Strategies
+
+### Official Client Libraries
+
+**Search for official Node.js SDKs first:**
+
+1. Check npm for `[service-name]` or `@[service-name]/[client]`
+2. Look for official documentation and TypeScript support
+3. Verify maintenance status and version compatibility
+
+**Example integration with official client:**
+
+```typescript
+// Using official Slack Web API
+import { WebClient } from '@slack/web-api';
+
+start(opts) {
+  opts.state.slack = new WebClient(process.env.SLACK_BOT_TOKEN);
+}
+
+// In nodes
+const response = await opts.state.slack.chat.postMessage({
+  channel: opts.inputs.channel,
+  text: opts.inputs.text,
+});
+```
+
+### Type Import Strategies
+
+**Import response types from client libraries:**
+
+```typescript
+import {
+  type ChatPostMessageResponse,
+  type ConversationsListResponse,
+  type UsersListResponse,
+} from '@slack/web-api';
+
+// Use in pin definitions
+export const message = i.pins.data<ChatPostMessageResponse['message']>({
+  description: 'Posted message information.',
+});
+```
+
+### Library Type Investigation
+
+**When facing TypeScript errors, investigate library types:**
+
+```bash
+# Check library type definitions
+ls node_modules/@slack/web-api/dist/types/
+cat node_modules/@slack/web-api/dist/types/response/chat.d.ts
+```
+
+**Use discovered types correctly:**
+
+```typescript
+// After checking types, use proper method signatures
+const response: ChatPostMessageResponse =
+  await opts.state.slack.chat.postMessage({
+    channel: opts.inputs.channel,
+    text: opts.inputs.text,
+    blocks: opts.inputs.blocks, // Library handles undefined correctly
+  });
+```
+
+## Development Workflow
+
+### Commands
+
+**Root Level Commands:**
+
+```bash
+bun run dev        # Start development mode for all integrations
+bun run build      # Build all integrations with Turbo
+bun run lint       # Lint all packages
+bun run typecheck  # Type check all packages
+bun run format     # Format code with Prettier
+```
+
+**Integration Level Commands (within `/integrations/[name]/`):**
+
+```bash
+bun run dev        # Start development mode (acme dev)
+bun run build      # Build integration (acme build)
+bun run publish    # Publish integration (acme publish)
+bun run lint       # Lint integration code
+bun run typecheck  # Type check integration
+bun run format     # Format integration code
+```
+
+### Development Process
+
+1. **Setup**: Copy template and configure basic settings
+2. **Environment**: Define required environment variables
+3. **Pins**: Create data type definitions
+4. **Nodes**: Implement integration functionality
+5. **Testing**: Use `bun run dev` for iterative development
+6. **Validation**: Run lint and typecheck before publishing
+
+## Build Process
+
+### Build Pipeline Steps
+
+1. **TypeScript Compilation**: Source code compiled to JavaScript in `build/` directory
+2. **Turbo Orchestration**: Manages builds with proper dependency ordering across monorepo
+3. **Definition Generation**: Each integration exports `definition.json` and `types.json`
+4. **Schema Validation**: Framework validates all pin schemas and environment configurations
+5. **Type Generation**: Automatic TypeScript type generation from schemas
+6. **Asset Processing**: Integration icons and assets processed and included
+
+### Build Outputs
+
+```
+build/
+├── definition.json    # Runtime integration metadata
+├── types.json        # TypeScript type definitions
+├── index.js          # Compiled integration code
+└── assets/           # Processed icons and resources
+```
+
+## Examples & Patterns
+
+### Complete Integration Example: Resend
 
 ```typescript
 // src/index.ts
+import { Resend } from 'resend';
+import * as v from 'valibot';
+
 import * as i from '@acme/integration-framework';
 
 import * as nodes from './nodes';
@@ -228,21 +694,43 @@ export default i.integration({
     }),
   },
   start(opts) {
-    // Initialize shared state with API client
     opts.state.resend = new Resend(process.env.RESEND_API_KEY);
   },
 });
 ```
 
-### Node Types
+```typescript
+// src/pins/email.ts
+import { type GetEmailResponse } from 'resend';
+import * as v from 'valibot';
 
-- **Trigger Nodes**: Event-driven nodes that start workflows (e.g., webhooks, polling)
-- **Callable Nodes**: Functions that execute business logic and return results
-- **Pure Nodes**: Stateless transformation functions for data manipulation
+import * as i from '@acme/integration-framework';
 
-### Node Implementation
+export const address = i.pins.data({
+  description: 'An email address.',
+  control: i.controls.text({
+    placeholder: 'john.doe@example.com',
+  }),
+  schema: v.pipe(v.string(), v.trim(), v.email()),
+});
 
-Nodes are organized by category and use pins for inputs and outputs:
+export const addresses = i.pins.data({
+  description: 'Multiple email addresses (comma-separated).',
+  control: i.controls.text({
+    placeholder: 'john@example.com, jane@example.com',
+  }),
+  schema: v.pipe(
+    v.string(),
+    v.transform((emails) => emails.split(',')),
+    v.array(v.pipe(v.string(), v.trim(), v.email())),
+    v.maxLength(50),
+  ),
+});
+
+export const item = i.pins.data<GetEmailResponse['data']>({
+  description: 'Email object with complete information.',
+});
+```
 
 ```typescript
 // src/nodes/emails/emails.ts
@@ -256,23 +744,29 @@ const category = {
 
 export const sendEmail = i.nodes.callable({
   category,
-  description: 'Send a simple email using Resend.',
+  description: 'Send an email using Resend.',
 
   inputs: {
-    from: pins.email.addressWithDisplayName.with({
-      description: "Sender's email address with optional display name.",
+    from: pins.email.address.with({
+      description: "Sender's email address.",
     }),
     to: pins.email.addresses.with({
       description: 'Recipient email addresses.',
     }),
     subject: pins.email.subject,
-    body: pins.email.body,
+    html: pins.email.html.with({
+      description: 'HTML content of the email.',
+      optional: true,
+    }),
+    text: pins.email.text.with({
+      description: 'Plain text content of the email.',
+      optional: true,
+    }),
   },
 
   outputs: {
-    id: pins.email.uuid.with({
+    id: pins.email.id.with({
       description: 'The ID of the sent email.',
-      control: false, // No control needed for output-only pins
     }),
   },
 
@@ -281,11 +775,12 @@ export const sendEmail = i.nodes.callable({
       from: opts.inputs.from,
       to: opts.inputs.to,
       subject: opts.inputs.subject,
-      text: opts.inputs.body,
+      html: opts.inputs.html,
+      text: opts.inputs.text,
     });
 
     if (response.error) {
-      throw new Error(response.error.message);
+      throw new Error(`Failed to send email: ${response.error.message}`);
     }
 
     return opts.next({ id: response.data.id });
@@ -293,523 +788,108 @@ export const sendEmail = i.nodes.callable({
 });
 ```
 
-### Pin Categories
+### Common Integration Patterns
 
-Pins are organized by category to promote reusability and maintain clean namespacing:
-
-#### Pin Naming Best Practices
-
-**Do NOT prefix exported variables with the category name** since they are already namespaced by the index.ts export structure:
+**List Operations:**
 
 ```typescript
-// ❌ Bad - Redundant prefixes
-export const emailAddress = i.pins.data({...});
-export const emailAddresses = i.pins.data({...});
-export const emailSubject = i.pins.data({...});
-
-// ✅ Good - Clean names without prefixes
-export const address = i.pins.data({...});
-export const addresses = i.pins.data({...});
-export const subject = i.pins.data({...});
-```
-
-The category namespacing is handled automatically by the export structure:
-
-```typescript
-// Usage in nodes
-import * as pins from '@/pins';
-
-// src/pins/index.ts
-export * as email from './email';
-export * as broadcast from './broadcast';
-export * as domain from './domain';
-
-pins.email.address; // ✅ Clear namespacing
-pins.broadcast.subject; // ✅ Clear namespacing
-pins.domain.name; // ✅ Clear namespacing
-```
-
-#### Pin Reusability Best Practices
-
-**Promote reusability by placing pins in their most logical category** and use `.with({...})` to customize them for specific use cases:
-
-```typescript
-// ✅ Good - Reusable email content pins in src/pins/email.ts
-export const html = i.pins.data({
-  description: 'The HTML content of the email.',
-  control: i.controls.text({
-    placeholder: '<h1>Hello World</h1>',
-  }),
-  schema: v.pipe(v.string(), v.minLength(1)),
-});
-
-export const text = i.pins.data({
-  description: 'The plain text content of the email.',
-  control: i.controls.text({
-    placeholder: 'Plain text content',
-  }),
-  schema: v.pipe(v.string(), v.minLength(1)),
-});
-
-export const react = i.pins.data({
-  description: 'React component as JSX string for the email content.',
-  control: i.controls.text({
-    placeholder: '<div><h1>Hello World</h1></div>',
-  }),
-  schema: v.pipe(v.string(), v.minLength(1)),
-});
-```
-
-**Reuse pins across different nodes with custom descriptions**:
-
-```typescript
-// In broadcast nodes
-inputs: {
-  html: pins.email.html.with({
-    description: 'The HTML content of the broadcast.',
-    optional: true,
-  }),
-  text: pins.email.text.with({
-    description: 'The plain text content of the broadcast.',
-    optional: true,
-  }),
-  react: pins.email.react.with({
-    description: 'React component as JSX string for the broadcast content.',
-    optional: true,
-  }),
-}
-
-// In email nodes - same pins, different context
-inputs: {
-  html: pins.email.html.with({
-    description: 'The HTML content of the email message.',
-    optional: true,
-  }),
-  text: pins.email.text.with({
-    description: 'The plain text content of the email message.',
-    optional: true,
-  }),
-}
-```
-
-#### Pin Schema Typing Best Practices
-
-**Always use proper TypeScript types instead of `v.any()` for schemas**:
-
-```typescript
-// ❌ Bad - Using v.any() schema
-export const object = i.pins.data({
-  description: 'A broadcast object containing all broadcast information.',
-  schema: v.any(), // Avoid this!
-});
-
-// ✅ Good - Using proper TypeScript types
-export const object = i.pins.data<GetBroadcastResponseSuccess>({
-  description: 'A broadcast object containing all broadcast information.',
-  // No schema needed - TypeScript type provides validation
-});
-
-// ✅ Alternative - If no specific type available, omit schema (same as v.any() but more performant)
-export const object = i.pins.data({
-  description: 'A custom object.',
-  // No schema property - implicitly allows any type
-});
-```
-
-**Import types from the library and use them for complex response objects**:
-
-```typescript
-// src/pins/broadcast.ts
-import { type GetBroadcastResponseSuccess, type ListBroadcastsResponseSuccess, type RemoveBroadcastResponseSuccess } from 'resend';
-
-export const object = i.pins.data<GetBroadcastResponseSuccess>({
-  description: 'A broadcast object containing all broadcast information.',
-});
-
-export const list = i.pins.data<ListBroadcastsResponseSuccess>({
-  description: 'A list of broadcasts.',
-});
-
-// Usage in nodes
-outputs: {
-  result: i.pins.data<RemoveBroadcastResponseSuccess>({
-    description: 'The deletion result.',
-  }),
-}
-```
-
-**Benefits of proper typing**:
-
-- **Better performance**: No runtime validation overhead
-- **Type safety**: Compile-time type checking
-- **Better IDE support**: Auto-completion and error detection
-- **Documentation**: Types serve as documentation
-- **Maintainability**: Changes to API types are automatically reflected
-
-#### Pin Implementation Examples
-
-```typescript
-// src/pins/email.ts
-import * as v from 'valibot';
-
-import * as i from '@acme/integration-framework';
-
-// Simple data pin with validation
-export const address = i.pins.data({
-  description: 'An email address.',
-  control: i.controls.text({
-    placeholder: 'john.doe@example.com',
-  }),
-  schema: v.pipe(v.string(), v.trim(), v.email()),
-});
-
-// Complex data pin with transformation
-export const addresses = i.pins.data({
-  description: 'A list of email addresses.',
-  control: i.controls.text({
-    placeholder: 'john.doe@example.com, jane.smith@example.com',
-  }),
-  schema: v.pipe(
-    v.string(),
-    v.transform((emails) => emails.split(',')),
-    v.pipe(v.array(v.pipe(v.string(), v.trim(), v.email())), v.maxLength(50)),
-  ),
-});
-
-// Pin with regex validation
-export const addressWithDisplayName = i.pins.data({
-  description: 'An email address with a display name.',
-  control: i.controls.text({
-    placeholder: 'Your Name <sender@domain.com>',
-  }),
-  schema: v.pipe(
-    v.string(),
-    v.trim(),
-    v.regex(
-      /^(.+?)\s*<([^<>]+@[^<>]+)>$/,
-      'Must be in format "Display Name <email@domain.com>"',
-    ),
-  ),
-});
-```
-
-## Development Commands
-
-### Root Level
-
-- `bun run dev` - Start development mode for all integrations
-- `bun run build` - Build all integrations
-- `bun run lint` - Lint all packages
-- `bun run typecheck` - Type check all packages
-- `bun run format` - Format code with Prettier
-
-### Integration Level
-
-- `bun run dev` - Start development mode (`acme dev`)
-- `bun run build` - Build integration (`acme build`)
-- `bun run publish` - Publish integration (`acme publish`)
-- `bun run lint` - Lint integration code
-- `bun run typecheck` - Type check integration
-- `bun run format` - Format integration code
-
-## Dependencies
-
-Core dependencies managed via workspace catalog:
-
-- `@acme/integration-framework` - Core framework
-- `@acme/style-guide` - Shared linting/formatting configs
-- `valibot` - Schema validation
-- `typescript` - TypeScript compiler
-- `eslint` - Code linting
-- `prettier` - Code formatting
-
-## Build Process
-
-1. **TypeScript Compilation**: Source code is compiled to JavaScript in `build/` directory
-2. **Turbo Orchestration**: Turbo manages builds with proper dependency ordering across the monorepo
-3. **Definition Generation**: Each integration exports:
-   - `definition.json` - Runtime integration metadata
-   - `types.json` - TypeScript type definitions
-4. **Schema Validation**: Framework validates all pin schemas and environment configurations
-5. **Type Generation**: Automatic generation of TypeScript types from schemas
-6. **Asset Processing**: Integration icons and other assets are processed and included
-
-## Environment Variables
-
-Integrations can define required environment variables that are:
-
-- **Validated**: Using valibot schemas during setup
-- **Secure**: Encrypted storage with sensitive flag support
-- **Accessible**: Available to all nodes through `opts.env`
-- **User-friendly**: Configured through UI controls with descriptions
-- **Type-safe**: Full TypeScript support with auto-completion
-
-```typescript
-// Environment definition example
-env: {
-  DATABASE_URL: i.env({
-    control: i.controls.text({
-      label: 'Database URL',
-      description: 'PostgreSQL connection string',
-      sensitive: true,
-    }),
-    schema: v.pipe(v.string(), v.url()),
-  }),
-  MAX_RETRIES: i.env({
-    control: i.controls.text({
-      label: 'Max Retries',
-      description: 'Maximum number of retry attempts',
-      placeholder: '3',
-    }),
-    schema: v.pipe(v.string(), v.transform(Number), v.minValue(0), v.maxValue(10)),
-  }),
-}
-```
-
-## Integration Development Best Practices
-
-### API and Client Management
-
-1. **Prefer Official Node.js Clients Over Raw Requests**: When implementing new integrations, avoid manually crafting raw API requests or relying on online API references alone. Instead, search for an official or well-maintained Node.js client library on npm and use that. For existing integrations, always use the client or SDK that is already defined in the integration's entry point, rather than introducing a new one.
-
-2. **Review Official Documentation Before Implementation**: Always examine official documentation links found in comments or provided with library usage. This is crucial for understanding:
-   - **Deprecated fields**: Avoid using fields marked as deprecated in the official API documentation
-   - **Best practices**: Follow recommended usage patterns and implementation guidelines
-   - **Future compatibility**: Understand upcoming changes and deprecation timelines
-   - **Required vs optional parameters**: Verify which fields are truly required
-   - **API limitations**: Understand rate limits, data constraints, and usage boundaries
-
-```typescript
-// ✅ Good - Check documentation links before implementing
-// Example: Slack API deprecates certain fields
-// See: https://api.slack.com/methods/chat.postMessage
-const response = await opts.state.slack.chat.postMessage({
-  channel: opts.inputs.channel,
-  text: opts.inputs.text,
-  // Don't use 'parse' - deprecated in favor of 'mrkdwn'
-  mrkdwn: true,
-});
-
-// ❌ Bad - Using deprecated fields without checking docs
-const response = await opts.state.slack.chat.postMessage({
-  channel: opts.inputs.channel,
-  text: opts.inputs.text,
-  parse: 'full', // This field is deprecated
-});
-```
-
-**When gathering information about a library:**
-
-- **Follow documentation links**: Don't skip links in comments or library documentation
-- **Check deprecation notices**: Look for fields or methods marked as deprecated
-- **Review examples**: Official examples often show best practices
-- **Understand breaking changes**: Be aware of version differences and migration paths
-- **Consider future updates**: Design integrations to be forward-compatible when possible
-
-### TypeScript Best Practices
-
-1. **Prefer Inline Type Specifiers Over Top-Level Type-Only Imports**: Use inline `type` specifiers in import statements instead of top-level type-only imports for better tree-shaking and clarity.
-
-```typescript
-// ✅ Good - Inline type specifiers
-import {
-  type GetBroadcastResponseSuccess,
-  type ListBroadcastsResponseSuccess,
-} from 'resend';
-
-// ❌ Bad - Top-level type-only import
-import type {
-  GetBroadcastResponseSuccess,
-  ListBroadcastsResponseSuccess,
-} from 'resend';
-```
-
-This approach:
-
-- Makes it clear which imports are types vs runtime values
-- Better tree-shaking for bundlers
-- More explicit and readable
-- Follows modern TypeScript best practices
-
-2. **Investigate Library Types Instead of Creating Workarounds**: When encountering TypeScript errors with third-party libraries, examine the actual type definitions in `/node_modules/[library-name]/` to understand the correct API usage instead of creating workarounds.
-
-```typescript
-// ✅ Good - Investigate library types and use them correctly
-// After checking /node_modules/@slack/web-api/dist/types/
-const response = await opts.state.slack.chat.postMessage({
-  channel: opts.inputs.channel,
-  text: opts.inputs.text,
-  blocks: opts.inputs.blocks, // Library handles undefined correctly
-});
-
-// ❌ Bad - Workarounds to avoid TypeScript errors
-const response = await opts.state.slack.chat.postMessage({
-  channel: opts.inputs.channel,
-  text: opts.inputs.text,
-  ...(opts.inputs.blocks && { blocks: opts.inputs.blocks }), // Unnecessary workaround
-} as any); // Type assertion to bypass errors
-```
-
-**When facing TypeScript errors:**
-
-1. **Check the library's type definitions** in `node_modules/[lib-name]/dist/types/` or similar
-2. **Read method signatures** to understand expected parameter shapes
-3. **Look for union types** that might explain why certain combinations are required
-4. **Check for exported interfaces** that define the correct structure
-5. **Use the types as intended** rather than forcing them with workarounds
-
-**Common anti-patterns to avoid:**
-
-- Using `any` to bypass type errors
-- Conditional spreads when direct assignment would work
-- Type assertions (`as SomeType`) without understanding why they're needed
-- Ignoring TypeScript errors with `@ts-ignore` comments
-
-3. **Pass Objects Directly to Functions**: Avoid creating intermediate variables when passing objects directly to function calls. This reduces unnecessary code and improves readability.
-
-```typescript
-// ✅ Good - Direct object passing
-const response = await opts.state.slack.files.uploadV2({
-  content: opts.inputs.content,
-  filename: opts.inputs.filename,
-  channels: opts.inputs.channels,
-  filetype: opts.inputs.filetype,
-  initial_comment: opts.inputs.initialComment,
-});
-
-// ❌ Bad - Useless intermediate variable
-const uploadParams = {
-  content: opts.inputs.content,
-  filename: opts.inputs.filename,
-  channels: opts.inputs.channels,
-  filetype: opts.inputs.filetype,
-  initial_comment: opts.inputs.initialComment,
-};
-const response = await opts.state.slack.files.uploadV2(uploadParams);
-```
-
-**Benefits of direct object passing:**
-
-- **Fewer lines of code**: Eliminates unnecessary variable declarations
-- **Clearer intent**: Shows exactly what data is being passed to the function
-- **Reduced cognitive load**: One less variable name to track
-- **Better locality**: Parameter definition is right where it's used
-
-### Pin Organization and Optimization
-
-1. **Prioritize Pins**: Order the input and output pins based on the priority or importance of the data they carry. Most critical pins should appear first to improve user experience.
-
-2. **Use Optional Flags for Clarity**: Improve node readability in the UI by marking less relevant or non-essential pins with `optional: true`. This helps users focus on required parameters first.
-
-3. **Only Use `control: false` When Extending Existing Pins**: The `control` property defaults to no control when defining new pins. Only use `control: false` when extending existing pins that already have a control defined and you want to remove it.
-
-```typescript
-// Example demonstrating best practices
-export const processData = i.nodes.callable({
-  category,
-  description: 'Process data with optional parameters.',
-
+export const listItems = i.nodes.callable({
   inputs: {
-    // High priority - required data
-    data: pins.common.jsonData.with({
-      description: 'Primary data to process.',
-    }),
-
-    // Medium priority - commonly used
-    format: pins.common.format.with({
-      description: 'Output format for the processed data.',
-      optional: true,
-    }),
-
-    // Low priority - advanced options
-    timeout: pins.common.timeout.with({
-      description: 'Processing timeout in seconds.',
-      optional: true,
-    }),
+    limit: pins.common.limit.with({ optional: true }),
+    offset: pins.common.offset.with({ optional: true }),
   },
 
   outputs: {
-    // Output pins have no control by default - no need to specify control: false
-    result: pins.common.jsonData.with({
-      description: 'The processed data result.',
+    items: pins.item.list.with<ItemType[]>({
+      description: 'Array of items.',
     }),
-
-    // When extending a pin that has a control, use control: false to remove it
-    status: pins.common.inputStatus.with({
-      description: 'Processing status information.',
-      control: false, // Remove control from pin that was originally meant for input
+    total: pins.common.count.with({
+      description: 'Total number of items.',
     }),
   },
 
   async run(opts) {
-    // Implementation
+    const response = await opts.state.client.items.list({
+      limit: opts.inputs.limit,
+      offset: opts.inputs.offset,
+    });
+
+    return opts.next({
+      items: response.items ?? [],
+      total: response.total ?? 0,
+    });
   },
 });
 ```
 
-### Node Implementation Best Practices
-
-1. **Pass Properties Directly Into Objects**: When making API calls, pass input properties directly into parameter objects instead of using conditional spread operators. This keeps the code clean and lets the API handle undefined values appropriately.
+**CRUD Operations:**
 
 ```typescript
-// ✅ Good - Direct property assignment
-const orders = await opts.state.shopify.rest.Order.all({
-  session: opts.state.session,
-  limit: opts.inputs.limit,
-  status: opts.inputs.status,
-  financial_status: opts.inputs.financialStatus,
-  created_at_min: opts.inputs.createdAtMin,
-  fields: opts.inputs.fields,
+export const createItem = i.nodes.callable({
+  inputs: {
+    name: pins.item.name,
+    description: pins.item.description.with({ optional: true }),
+  },
+
+  outputs: {
+    item: pins.item.item.with<CreatedItem>({
+      description: 'The created item.',
+    }),
+  },
+
+  async run(opts) {
+    const response = await opts.state.client.items.create({
+      name: opts.inputs.name,
+      description: opts.inputs.description,
+    });
+
+    return opts.next({ item: response.item });
+  },
 });
 
-// ❌ Bad - Conditional spread operators
-const orders = await opts.state.shopify.rest.Order.all({
-  session: opts.state.session,
-  ...(opts.inputs.limit && { limit: opts.inputs.limit }),
-  ...(opts.inputs.status && { status: opts.inputs.status }),
-  ...(opts.inputs.financialStatus && {
-    financial_status: opts.inputs.financialStatus,
-  }),
-  ...(opts.inputs.createdAtMin && { created_at_min: opts.inputs.createdAtMin }),
-  ...(opts.inputs.fields && { fields: opts.inputs.fields }),
+export const updateItem = i.nodes.callable({
+  inputs: {
+    id: pins.item.id,
+    name: pins.item.name.with({ optional: true }),
+    description: pins.item.description.with({ optional: true }),
+  },
+
+  outputs: {
+    item: pins.item.item.with<UpdatedItem>({
+      description: 'The updated item.',
+    }),
+  },
+
+  async run(opts) {
+    const response = await opts.state.client.items.update({
+      id: opts.inputs.id,
+      name: opts.inputs.name,
+      description: opts.inputs.description,
+    });
+
+    return opts.next({ item: response.item });
+  },
+});
+
+export const deleteItem = i.nodes.callable({
+  inputs: {
+    id: pins.item.id,
+  },
+
+  // No outputs for delete operations
+
+  async run(opts) {
+    const response = await opts.state.client.items.delete({
+      id: opts.inputs.id,
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to delete item: ${response.error}`);
+    }
+
+    return opts.next();
+  },
 });
 ```
 
-**Benefits of direct assignment**:
-
-- **Cleaner code**: More readable and maintainable
-- **Simpler logic**: No need for conditional checks
-- **API-friendly**: Most APIs properly handle undefined/null values
-- **Consistent structure**: Object shape is always the same
-- **Works with new pin optionality pattern**: No special handling needed for optional pins
-
-2. **Use Shared Session State**: Access the authenticated session through `opts.state.session` rather than creating session objects in individual nodes.
-
-```typescript
-// ✅ Good - Use shared session
-const product = await opts.state.shopify.rest.Product.find({
-  session: opts.state.session,
-  id: opts.inputs.id,
-});
-
-// ❌ Bad - Create session in node
-const session = process.env.ACCESS_TOKEN
-  ? { accessToken: process.env.ACCESS_TOKEN, shop: process.env.SHOP_DOMAIN }
-  : null;
-```
-
-## Example: Resend Integration
-
-The Resend integration (`integrations/resend/`) demonstrates:
-
-- Email sending with the Resend API
-- Contact management functionality
-- Proper error handling and validation
-- Environment variable configuration for API keys
-- Structured pins for email addresses, UUIDs, and objects
-
-Key files:
-
-- `src/nodes/emails/emails.ts` - Email operations (send, get, update, cancel)
-- `src/nodes/contacts/contacts.ts` - Contact management (CRUD operations)
-- `src/pins/` - Data type definitions for emails, contacts, audiences
+This documentation provides comprehensive guidance for building integrations with the ACME framework, covering everything from basic concepts to advanced patterns and real-world examples.
