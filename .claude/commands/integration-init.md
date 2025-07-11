@@ -2,7 +2,28 @@
 
 ## Overview
 
-Initialize a complete integration for the ACME Integration Framework by setting up the project structure, API client, pins, and nodes following established patterns and best practices.
+Initialize a complete integration for the ACME Integration Framework **monorepo** by setting up the project structure, API client, pins, and nodes following established patterns and best practices.
+
+## Monorepo Structure
+
+This is a **monorepo** containing multiple integrations and shared tooling:
+
+```
+acme-integrations/         # Root monorepo directory
+├── integrations/          # All service integrations
+│   ├── discord/           # Discord integration package
+│   ├── essentials/        # Core framework nodes package
+│   ├── github/            # GitHub integration package
+│   ├── openai/            # OpenAI integration package
+│   ├── resend/            # Resend integration package
+│   ├── teamspeak/         # TeamSpeak integration package
+│   └── template/          # Template for new integrations
+├── tooling/               # Shared development tools
+│   └── style-guide/       # ESLint, Prettier, TypeScript configs
+├── package.json           # Root package.json (workspace manager)
+├── turbo.json             # Turbo build configuration
+└── bun.lock               # Dependency lockfile
+```
 
 ## Usage
 
@@ -41,24 +62,28 @@ Search npm for the best TypeScript-compatible client:
 
 ##### 1.2.1 Copy template
 
-To create a new integration, start by copying the existing template:
+To create a new integration, start by copying the existing template from within the monorepo:
 
 ```bash
-# Copy the integration template
+# From monorepo root (acme-integrations/)
 cp -r integrations/template integrations/$ARGUMENTS
 
-# Navigate into the new integration directory
+# Navigate to the new integration directory
 cd integrations/$ARGUMENTS
 ```
 
-##### 1.2.2 Configure package.json
+##### 1.2.2 Configure `package.json`
 
-Update the `package.json` name, displayName and description.
+Update the integration's `package.json` with the following fields:
 
-##### 1.2.3 API Client Installation
+- `name` - unique package identifier
+- `displayName` - human-readable name for the integration
+- `description` - a brief summary of the integration's purpose
+
+##### 1.2.3 Install the required packages
 
 ```bash
-# Install API client
+# Make sure you are in the integration directory
 bun install [selected-package]
 ```
 
@@ -66,10 +91,11 @@ bun install [selected-package]
 
 #### 2.1 Library Investigation
 
-Examine the installed package structure:
+**Current working directory:** `acme-integrations/`
+
+Examine the installed package structure from within the integration directory:
 
 ```bash
-# Check package structure
 ls node_modules/[package-name]/
 cat node_modules/[package-name]/package.json
 cat node_modules/[package-name]/README.md
@@ -87,7 +113,6 @@ cat node_modules/[package-name]/README.md
 #### 2.2 Type Definitions Discovery
 
 ```bash
-# Check for TypeScript definitions
 ls node_modules/[package-name]/**/*.d.ts
 ls node_modules/@types/[package-name]/ # If separate types package
 ```
@@ -101,11 +126,11 @@ ls node_modules/@types/[package-name]/ # If separate types package
 
 ### Phase 3: Integration Architecture
 
-#### 3.1 Change to the integration directory
+#### 3.1 Working Directory Context
 
-```bash
-cd integrations/$ARGUMENTS
-```
+**Current working directory:** `acme-integrations/integrations/$ARGUMENTS/`
+
+All subsequent file paths are relative to this integration directory unless otherwise specified.
 
 #### 3.2 Environment Variables Planning
 
@@ -117,36 +142,59 @@ Based on API client requirements, identify needed environment variables:
 
 #### 3.3 Category Structure Design
 
-Analyze the service API to create logical node categories:
+Analyze the service API to create logical node categories within the integration:
 
-**Common Patterns:**
+**Standard Integration Structure:**
+
+```
+integrations/$ARGUMENTS/                  # Individual integration package
+├── src/
+│   ├── index.ts                          # Integration entry point
+│   ├── nodes/                            # All node implementations
+│   │   ├── [category]/
+│   │   │   ├── [category].ts             # Node implementations for category
+│   │   │   └── index.ts                  # Category exports
+│   │   └── index.ts                      # All nodes export
+│   └── pins/                             # Type definitions
+│       ├── [category].ts                 # Pin definitions by category
+│       └── index.ts                      # All pins export
+├── images/
+│   └── icon.png                          # Integration icon
+├── package.json                          # Integration package config
+├── tsconfig.json                         # TypeScript config
+└── eslint.config.mjs                     # ESLint config
+```
+
+**Common Node Category Patterns:**
 
 - Resource-based: `users`, `projects`, `files`, `messages`
 - Action-based: `auth`, `search`, `notifications`
 - Workflow-based: `boards`, `cards`, `lists` (for project management)
 
-**Example Structure:**
+**Example Structure for a Project Management Service:**
 
 ```
 src/
 ├── nodes/
-│   ├── users/users.ts          # User management
-│   ├── projects/projects.ts    # Project operations
-│   ├── files/files.ts          # File operations
-│   └── search/search.ts        # Search functionality
+│   ├── users/users.ts          # User management nodes
+│   ├── projects/projects.ts    # Project operation nodes
+│   ├── files/files.ts          # File operation nodes
+│   └── search/search.ts        # Search functionality nodes
 └── pins/
-    ├── user.ts                 # User data types
-    ├── project.ts              # Project data types
-    ├── file.ts                 # File data types
-    ├── common.ts               # Shared types
+    ├── user.ts                 # User data type pins
+    ├── project.ts              # Project data type pins
+    ├── file.ts                 # File data type pins
+    ├── common.ts               # Shared type pins
     └── index.ts                # Export all pins
 ```
 
 ### Phase 4: Implementation
 
+**Current working directory:** `acme-integrations/integrations/$ARGUMENTS/`
+
 #### 4.1 Integration Entry Point (`src/index.ts`)
 
-```typescript
+```ts
 import { ServiceClient } from 'service-api-client';
 import * as v from 'valibot';
 
@@ -194,7 +242,7 @@ export default i.integration({
 
 **Pattern for each category:**
 
-```typescript
+```ts
 // src/pins/user.ts
 import { type UserResponse } from 'service-api-client';
 import * as v from 'valibot';
@@ -222,7 +270,7 @@ export const list = i.pins.data<UserResponse[]>({
 
 **List Operations:**
 
-```typescript
+```ts
 export const listUsers = i.nodes.callable({
   category,
   description: 'List all users.',
@@ -266,6 +314,8 @@ export const listUsers = i.nodes.callable({
 
 ### Phase 5: Quality Assurance
 
+**Current working directory:** `acme-integrations/integrations/$ARGUMENTS/`
+
 #### 5.1 Code Quality Checks
 
 ```bash
@@ -278,19 +328,9 @@ bun run lint
 # Fix any issues found
 ```
 
-#### 5.2 Integration Testing
+#### 5.2 Documentation Creation
 
-```bash
-# Test development mode
-bun run dev
-
-# Verify all nodes are discoverable
-# Test basic functionality with mock data
-```
-
-#### 5.3 Documentation Creation
-
-Create `README.md` in integration root:
+Create `README.md` in integration root: `integrations/$ARGUMENTS/README.md`
 
 ```markdown
 # [Service Name] Integration
@@ -341,7 +381,8 @@ Brief description of the service and integration capabilities.
 
 **Project Structure:**
 
-- [ ] Integration directory created from template
+- [ ] Integration directory created at `integrations/$ARGUMENTS/`
+- [ ] All files copied from `integrations/template/`
 - [ ] API client installed and configured
 - [ ] All necessary dependencies added
 
@@ -377,7 +418,7 @@ Brief description of the service and integration capabilities.
 
 **Documentation:**
 
-- [ ] README.md created with setup instructions
+- [ ] README.md created at `integrations/$ARGUMENTS/README.md`
 - [ ] Environment variables documented
 - [ ] Available nodes listed
 - [ ] Getting started guide included
@@ -403,4 +444,4 @@ Brief description of the service and integration capabilities.
 
 - See `.cursorrules` for critical coding standards and quick reference
 - See `CLAUDE.md` for comprehensive documentation and examples
-- Reference existing integrations in `/integrations/` for patterns
+- Reference existing integrations in `/integrations/` directory for patterns
