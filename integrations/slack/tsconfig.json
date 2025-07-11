@@ -1,0 +1,11 @@
+{
+  "extends": "@acme/style-guide/typescript",
+  "compilerOptions": {
+    "baseUrl": "src",
+    "paths": {
+      "@/*": ["./*"]
+    }
+  },
+  "include": ["src"],
+  "exclude": ["node_modules"]
+}
