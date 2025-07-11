@@ -41,16 +41,14 @@ export const presence = i.pins.data({
 export const includeDeactivated = i.pins.data({
   description: 'Include deactivated users in the results.',
   control: i.controls.switch(),
-  optional: true,
-  schema: v.optional(v.boolean()),
+  schema: v.boolean(),
 });
 
 // Include deleted users in lists
 export const includeDeleted = i.pins.data({
   description: 'Include deleted users in the results.',
   control: i.controls.switch(),
-  optional: true,
-  schema: v.optional(v.boolean()),
+  schema: v.boolean(),
 });
 
 // Team ID for Enterprise Grid
@@ -59,16 +57,14 @@ export const teamId = i.pins.data({
   control: i.controls.text({
     placeholder: 'T1234567890',
   }),
-  optional: true,
-  schema: v.optional(v.pipe(v.string(), v.trim())),
+  schema: v.pipe(v.string(), v.trim()),
 });
 
 // Include locale in user profiles
 export const includeLocale = i.pins.data({
   description: 'Include locale information in user profiles.',
   control: i.controls.switch(),
-  optional: true,
-  schema: v.optional(v.boolean()),
+  schema: v.boolean(),
 });
 
 // Users list response

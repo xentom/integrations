@@ -21,28 +21,10 @@ export const text = i.pins.data({
   schema: v.pipe(v.string(), v.trim()),
 });
 
-// Optional text pin
-export const optionalText = i.pins.data({
-  description: 'Optional text content.',
-  control: i.controls.text({
-    placeholder: 'Enter text...',
-  }),
-  optional: true,
-  schema: v.pipe(v.string(), v.trim()),
-});
-
 // Boolean flag pin
 export const flag = i.pins.data({
   description: 'A boolean flag.',
   control: i.controls.switch(),
-  schema: v.boolean(),
-});
-
-// Optional boolean flag
-export const optionalFlag = i.pins.data({
-  description: 'An optional boolean flag.',
-  control: i.controls.switch(),
-  optional: true,
   schema: v.boolean(),
 });
 
@@ -52,10 +34,7 @@ export const limit = i.pins.data({
   control: i.controls.expression({
     placeholder: '100',
   }),
-  optional: true,
-  schema: v.optional(
-    v.pipe(v.number(), v.integer(), v.minValue(1), v.maxValue(1000)),
-  ),
+  schema: v.pipe(v.number(), v.integer(), v.minValue(1), v.maxValue(1000)),
 });
 
 // Cursor for pagination
@@ -64,8 +43,7 @@ export const cursor = i.pins.data({
   control: i.controls.text({
     placeholder: 'dXNlcjpVMDY...',
   }),
-  optional: true,
-  schema: v.optional(v.pipe(v.string(), v.trim())),
+  schema: v.pipe(v.string(), v.trim()),
 });
 
 // Generic Slack API response

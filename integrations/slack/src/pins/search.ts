@@ -25,8 +25,7 @@ export const sort = i.pins.data({
       { label: 'Timestamp', value: 'timestamp' },
     ],
   }),
-  optional: true,
-  schema: v.optional(v.picklist(['score', 'timestamp'])),
+  schema: v.picklist(['score', 'timestamp']),
 });
 
 // Sort direction
@@ -38,16 +37,14 @@ export const sortDir = i.pins.data({
       { label: 'Ascending', value: 'asc' },
     ],
   }),
-  optional: true,
-  schema: v.optional(v.picklist(['asc', 'desc'])),
+  schema: v.picklist(['asc', 'desc']),
 });
 
 // Highlight search terms
 export const highlight = i.pins.data({
   description: 'Highlight search terms in results.',
   control: i.controls.switch(),
-  optional: true,
-  schema: v.optional(v.boolean()),
+  schema: v.boolean(),
 });
 
 // Search responses

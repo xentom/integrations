@@ -13,6 +13,7 @@ export const getTeamInfo = i.nodes.callable({
   inputs: {
     team: pins.team.teamId.with({
       description: 'Team ID to get info for (optional for current team).',
+      optional: true,
     }),
   },
 
@@ -42,12 +43,15 @@ export const getAccessLogs = i.nodes.callable({
   inputs: {
     before: pins.team.before.with({
       description: 'End of time range of logs to include.',
+      optional: true,
     }),
     count: pins.common.limit.with({
       description: 'Number of items to return.',
+      optional: true,
     }),
     page: pins.reaction.page.with({
       description: 'Page number for pagination.',
+      optional: true,
     }),
   },
 
@@ -79,6 +83,7 @@ export const getBillableInfo = i.nodes.callable({
   inputs: {
     user: pins.user.userId.with({
       description: 'User to get billable info for (optional for all users).',
+      optional: true,
     }),
   },
 

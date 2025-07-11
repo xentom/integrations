@@ -34,8 +34,7 @@ export const filetype = i.pins.data({
   control: i.controls.text({
     placeholder: 'txt',
   }),
-  optional: true,
-  schema: v.optional(v.pipe(v.string(), v.trim())),
+  schema: v.pipe(v.string(), v.trim()),
 });
 
 // File title
@@ -44,8 +43,7 @@ export const title = i.pins.data({
   control: i.controls.text({
     placeholder: 'My Document',
   }),
-  optional: true,
-  schema: v.optional(v.pipe(v.string(), v.trim())),
+  schema: v.pipe(v.string(), v.trim()),
 });
 
 // Initial comment when sharing file
@@ -54,8 +52,7 @@ export const initialComment = i.pins.data({
   control: i.controls.text({
     placeholder: 'Here is the file...',
   }),
-  optional: true,
-  schema: v.optional(v.pipe(v.string(), v.trim())),
+  schema: v.pipe(v.string(), v.trim()),
 });
 
 // Channels to share file to (comma-separated)
@@ -64,8 +61,7 @@ export const channels = i.pins.data({
   control: i.controls.text({
     placeholder: 'C1234567890,C0987654321',
   }),
-  optional: true,
-  schema: v.optional(v.pipe(v.string(), v.trim())),
+  schema: v.pipe(v.string(), v.trim()),
 });
 
 // File ID
@@ -83,8 +79,7 @@ export const userId = i.pins.data({
   control: i.controls.text({
     placeholder: 'U1234567890',
   }),
-  optional: true,
-  schema: v.optional(v.pipe(v.string(), v.trim())),
+  schema: v.pipe(v.string(), v.trim()),
 });
 
 // Channel ID for filtering files by channel
@@ -93,8 +88,7 @@ export const channelId = i.pins.data({
   control: i.controls.text({
     placeholder: 'C1234567890',
   }),
-  optional: true,
-  schema: v.optional(v.pipe(v.string(), v.trim())),
+  schema: v.pipe(v.string(), v.trim()),
 });
 
 // File types filter
@@ -103,8 +97,7 @@ export const types = i.pins.data({
   control: i.controls.text({
     placeholder: 'images,docs,spreadsheets',
   }),
-  optional: true,
-  schema: v.optional(v.pipe(v.string(), v.trim())),
+  schema: v.pipe(v.string(), v.trim()),
 });
 
 // Timestamp range for file filtering
@@ -113,8 +106,7 @@ export const tsFrom = i.pins.data({
   control: i.controls.text({
     placeholder: '1234567890',
   }),
-  optional: true,
-  schema: v.optional(v.pipe(v.string(), v.trim())),
+  schema: v.pipe(v.string(), v.trim()),
 });
 
 export const tsTo = i.pins.data({
@@ -122,8 +114,7 @@ export const tsTo = i.pins.data({
   control: i.controls.text({
     placeholder: '1234567890',
   }),
-  optional: true,
-  schema: v.optional(v.pipe(v.string(), v.trim())),
+  schema: v.pipe(v.string(), v.trim()),
 });
 
 // File upload response

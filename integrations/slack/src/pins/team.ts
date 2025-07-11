@@ -13,8 +13,7 @@ export const teamId = i.pins.data({
   control: i.controls.text({
     placeholder: 'T1234567890',
   }),
-  optional: true,
-  schema: v.optional(v.pipe(v.string(), v.trim())),
+  schema: v.pipe(v.string(), v.trim()),
 });
 
 // Before timestamp for access logs
@@ -23,8 +22,7 @@ export const before = i.pins.data({
   control: i.controls.text({
     placeholder: '1234567890',
   }),
-  optional: true,
-  schema: v.optional(v.pipe(v.string(), v.transform(Number))),
+  schema: v.pipe(v.string(), v.transform(Number)),
 });
 
 // Team responses

@@ -14,16 +14,20 @@ export const listConversations = i.nodes.callable({
     types: pins.conversation.types.with({
       description:
         'Mix and match conversation types by providing a comma-separated list.',
+      optional: true,
     }),
     excludeArchived: pins.conversation.excludeArchived.with({
       description: 'Set to true to exclude archived channels from the list.',
+      optional: true,
     }),
     limit: pins.common.limit.with({
       description: 'The maximum number of items to return.',
+      optional: true,
     }),
     cursor: pins.common.cursor.with({
       description:
         'Paginate through collections by providing the next_cursor value.',
+      optional: true,
     }),
   },
 
@@ -60,10 +64,12 @@ export const getConversationInfo = i.nodes.callable({
     includeLocale: pins.user.includeLocale.with({
       description:
         'Set this to true to receive the locale for this conversation.',
+      optional: true,
     }),
     includeNumMembers: pins.conversation.includeNumMembers.with({
       description:
         'Set to true to include the member count for the returned conversation.',
+      optional: true,
     }),
   },
 
@@ -98,9 +104,11 @@ export const createConversation = i.nodes.callable({
     }),
     isPrivate: pins.conversation.isPrivate.with({
       description: 'Create a private channel instead of public.',
+      optional: true,
     }),
     teamId: pins.user.teamId.with({
       description: 'Team ID for Enterprise Grid.',
+      optional: true,
     }),
   },
 
@@ -321,10 +329,12 @@ export const getConversationMembers = i.nodes.callable({
     }),
     limit: pins.common.limit.with({
       description: 'Maximum number of users to return.',
+      optional: true,
     }),
     cursor: pins.common.cursor.with({
       description:
         'Paginate through collections by providing the next_cursor value.',
+      optional: true,
     }),
   },
 
@@ -359,19 +369,24 @@ export const getConversationHistory = i.nodes.callable({
     }),
     latest: pins.common.timestamp.with({
       description: 'End of time range of messages to include.',
+      optional: true,
     }),
     oldest: pins.common.timestamp.with({
       description: 'Start of time range of messages to include.',
+      optional: true,
     }),
     inclusive: pins.conversation.inclusive.with({
       description: 'Include messages with latest or oldest timestamp.',
+      optional: true,
     }),
     limit: pins.common.limit.with({
       description: 'Number of messages to return.',
+      optional: true,
     }),
     cursor: pins.common.cursor.with({
       description:
         'Paginate through collections by providing the next_cursor value.',
+      optional: true,
     }),
   },
 
@@ -409,7 +424,6 @@ export const setConversationPurpose = i.nodes.callable({
     }),
     purpose: pins.conversation.purpose.with({
       description: 'New purpose for the conversation.',
-      optional: false,
     }),
   },
 
@@ -443,7 +457,6 @@ export const setConversationTopic = i.nodes.callable({
     }),
     topic: pins.conversation.topic.with({
       description: 'New topic for the conversation.',
-      optional: false,
     }),
   },
 

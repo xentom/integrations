@@ -20,6 +20,7 @@ export const addReminder = i.nodes.callable({
     }),
     user: pins.user.userId.with({
       description: 'User who will receive the reminder.',
+      optional: true,
     }),
   },
 

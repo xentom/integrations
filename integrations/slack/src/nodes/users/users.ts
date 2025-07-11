@@ -13,16 +13,20 @@ export const listUsers = i.nodes.callable({
   inputs: {
     limit: pins.common.limit.with({
       description: 'The maximum number of items to return.',
+      optional: true,
     }),
     cursor: pins.common.cursor.with({
       description:
         'Paginate through collections by providing the next_cursor value.',
+      optional: true,
     }),
     includeLocale: pins.user.includeLocale.with({
       description: 'Set this to true to receive the locale for users.',
+      optional: true,
     }),
     teamId: pins.user.teamId.with({
       description: 'Team ID for Enterprise Grid.',
+      optional: true,
     }),
   },
 
@@ -58,6 +62,7 @@ export const getUserInfo = i.nodes.callable({
     }),
     includeLocale: pins.user.includeLocale.with({
       description: 'Set this to true to receive the locale for this user.',
+      optional: true,
     }),
   },
 

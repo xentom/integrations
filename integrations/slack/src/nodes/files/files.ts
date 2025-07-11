@@ -13,21 +13,27 @@ export const listFiles = i.nodes.callable({
   inputs: {
     user: pins.file.userId.with({
       description: 'Filter files created by this user.',
+      optional: true,
     }),
     channel: pins.file.channelId.with({
       description: 'Filter files appearing in this channel.',
+      optional: true,
     }),
     tsFrom: pins.file.tsFrom.with({
       description: 'Filter files created after this timestamp.',
+      optional: true,
     }),
     tsTo: pins.file.tsTo.with({
       description: 'Filter files created before this timestamp.',
+      optional: true,
     }),
     types: pins.file.types.with({
       description: 'Filter by file type.',
+      optional: true,
     }),
     limit: pins.common.limit.with({
       description: 'Number of items to return per page.',
+      optional: true,
     }),
   },
 
@@ -100,20 +106,23 @@ export const uploadFile = i.nodes.callable({
     // Optional
     channels: pins.file.channels.with({
       description: 'Comma-separated list of channel IDs to upload to.',
+      optional: true,
     }),
-
-    // Optional
     filetype: pins.file.filetype.with({
       description: 'Type of file being uploaded.',
+      optional: true,
     }),
     initialComment: pins.file.initialComment.with({
       description: 'Initial comment to add about the file.',
+      optional: true,
     }),
     title: pins.file.title.with({
       description: 'Title for the file.',
+      optional: true,
     }),
     threadTs: pins.chat.threadTs.with({
       description: 'Thread timestamp to upload file to.',
+      optional: true,
     }),
   },
 
@@ -124,27 +133,21 @@ export const uploadFile = i.nodes.callable({
   },
 
   async run(opts) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const uploadParams: any = {
+    const response = await opts.state.slack.files.uploadV2({
       content: opts.inputs.content,
       filename: opts.inputs.filename,
-    };
-
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    if (opts.inputs.channels) uploadParams.channels = opts.inputs.channels;
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    if (opts.inputs.filetype) uploadParams.filetype = opts.inputs.filetype;
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    if (opts.inputs.initialComment)
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      uploadParams.initial_comment = opts.inputs.initialComment;
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    if (opts.inputs.title) uploadParams.title = opts.inputs.title;
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    if (opts.inputs.threadTs) uploadParams.thread_ts = opts.inputs.threadTs;
-
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    const response = await opts.state.slack.files.uploadV2(uploadParams);
+      filetype: opts.inputs.filetype,
+      initial_comment: opts.inputs.initialComment,
+      title: opts.inputs.title,
+      ...(opts.inputs.channels && opts.inputs.threadTs
+        ? {
+            channel_id: opts.inputs.channels,
+            thread_ts: opts.inputs.threadTs,
+          }
+        : {
+            channel_id: opts.inputs.channels,
+          }),
+    });
 
     if (!response.ok) {
       throw new Error(`Failed to upload file: ${response.error}`);
@@ -193,6 +196,7 @@ export const shareFile = i.nodes.callable({
     }),
     channel: pins.file.channelId.with({
       description: 'Channel ID to share the file to.',
+      optional: true,
     }),
   },
 

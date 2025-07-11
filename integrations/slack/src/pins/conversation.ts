@@ -60,8 +60,7 @@ export const topic = i.pins.data({
 export const isPrivate = i.pins.data({
   description: 'Create a private channel instead of public.',
   control: i.controls.switch(),
-  optional: true,
-  schema: v.optional(v.boolean()),
+  schema: v.boolean(),
 });
 
 // Conversation types filter
@@ -70,24 +69,21 @@ export const types = i.pins.data({
   control: i.controls.text({
     placeholder: 'public_channel,private_channel,im,mpim',
   }),
-  optional: true,
-  schema: v.optional(v.pipe(v.string(), v.trim())),
+  schema: v.pipe(v.string(), v.trim()),
 });
 
 // Exclude archived channels flag
 export const excludeArchived = i.pins.data({
   description: 'Exclude archived channels from results.',
   control: i.controls.switch(),
-  optional: true,
-  schema: v.optional(v.boolean()),
+  schema: v.boolean(),
 });
 
 // Include number of members in each conversation
 export const includeNumMembers = i.pins.data({
   description: 'Include the number of members in each conversation.',
   control: i.controls.switch(),
-  optional: true,
-  schema: v.optional(v.boolean()),
+  schema: v.boolean(),
 });
 
 // User ID for filtering user's conversations
@@ -96,8 +92,7 @@ export const userId = i.pins.data({
   control: i.controls.text({
     placeholder: 'U1234567890',
   }),
-  optional: true,
-  schema: v.optional(v.pipe(v.string(), v.trim())),
+  schema: v.pipe(v.string(), v.trim()),
 });
 
 // Conversations list response
@@ -131,8 +126,7 @@ export const userList = i.pins.data({
 export const inclusive = i.pins.data({
   description: 'Include messages with latest or oldest timestamp in results.',
   control: i.controls.switch(),
-  optional: true,
-  schema: v.optional(v.boolean()),
+  schema: v.boolean(),
 });
 
 // Conversation members response

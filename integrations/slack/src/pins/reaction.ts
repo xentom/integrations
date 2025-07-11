@@ -19,8 +19,7 @@ export const name = i.pins.data({
 export const full = i.pins.data({
   description: 'Include full user information in reaction details.',
   control: i.controls.switch(),
-  optional: true,
-  schema: v.optional(v.boolean()),
+  schema: v.boolean(),
 });
 
 // Page number for pagination
@@ -29,8 +28,7 @@ export const page = i.pins.data({
   control: i.controls.text({
     placeholder: '1',
   }),
-  optional: true,
-  schema: v.optional(v.pipe(v.string(), v.trim())),
+  schema: v.pipe(v.string(), v.trim()),
 });
 
 // Reactions get response

@@ -16,18 +16,23 @@ export const searchMessages = i.nodes.callable({
     }),
     sort: pins.search.sort.with({
       description: 'Sort order for results.',
+      optional: true,
     }),
     sortDir: pins.search.sortDir.with({
       description: 'Sort direction (asc or desc).',
+      optional: true,
     }),
     highlight: pins.search.highlight.with({
       description: 'Enable search term highlighting.',
+      optional: true,
     }),
     count: pins.common.limit.with({
       description: 'Number of results to return.',
+      optional: true,
     }),
     page: pins.reaction.page.with({
       description: 'Page number for pagination.',
+      optional: true,
     }),
   },
 
@@ -65,18 +70,23 @@ export const searchFiles = i.nodes.callable({
     }),
     sort: pins.search.sort.with({
       description: 'Sort order for results.',
+      optional: true,
     }),
     sortDir: pins.search.sortDir.with({
       description: 'Sort direction (asc or desc).',
+      optional: true,
     }),
     highlight: pins.search.highlight.with({
       description: 'Enable search term highlighting.',
+      optional: true,
     }),
     count: pins.common.limit.with({
       description: 'Number of results to return.',
+      optional: true,
     }),
     page: pins.reaction.page.with({
       description: 'Page number for pagination.',
+      optional: true,
     }),
   },
 
@@ -114,18 +124,23 @@ export const searchAll = i.nodes.callable({
     }),
     sort: pins.search.sort.with({
       description: 'Sort order for results.',
+      optional: true,
     }),
     sortDir: pins.search.sortDir.with({
       description: 'Sort direction (asc or desc).',
+      optional: true,
     }),
     highlight: pins.search.highlight.with({
       description: 'Enable search term highlighting.',
+      optional: true,
     }),
     count: pins.common.limit.with({
       description: 'Number of results to return.',
+      optional: true,
     }),
     page: pins.reaction.page.with({
       description: 'Page number for pagination.',
+      optional: true,
     }),
   },
 

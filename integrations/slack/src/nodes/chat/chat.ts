@@ -25,35 +25,39 @@ export const postMessage = i.nodes.callable({
     // Optional formatting options
     blocks: pins.chat.blocks.with({
       description: 'Block Kit blocks for rich formatting (JSON string).',
+      optional: true,
     }),
     attachments: pins.chat.attachments.with({
       description: 'Legacy message attachments (JSON string).',
+      optional: true,
     }),
 
     // Thread options
     threadTs: pins.chat.threadTs.with({
       description: 'Provide to reply to a specific message thread.',
+      optional: true,
     }),
     replyBroadcast: pins.chat.replyBroadcast.with({
       description: 'Broadcast thread reply to the entire channel.',
+      optional: true,
     }),
 
     // Advanced options
     parse: pins.chat.parse.with({
       description: 'Change how messages are treated.',
+      optional: true,
     }),
     linkNames: pins.chat.linkNames.with({
       description: 'Find and link channel names and usernames.',
+      optional: true,
     }),
     unfurlLinks: pins.chat.unfurlLinks.with({
       description: 'Enable automatic link unfurling.',
+      optional: true,
     }),
     unfurlMedia: pins.chat.unfurlMedia.with({
       description: 'Enable automatic media unfurling.',
-    }),
-    asUser: pins.chat.asUser.with({
-      description:
-        'Post the message as the authenticated user instead of the bot.',
+      optional: true,
     }),
   },
 
@@ -103,26 +107,27 @@ export const postEphemeral = i.nodes.callable({
     // Optional formatting
     blocks: pins.chat.blocks.with({
       description: 'Block Kit blocks for rich formatting (JSON string).',
+      optional: true,
     }),
     attachments: pins.chat.attachments.with({
       description: 'Legacy message attachments (JSON string).',
+      optional: true,
     }),
 
     // Threading
     threadTs: pins.chat.threadTs.with({
       description: 'Provide to make the ephemeral message part of a thread.',
+      optional: true,
     }),
 
     // Options
     parse: pins.chat.parse.with({
       description: 'Change how messages are treated.',
+      optional: true,
     }),
     linkNames: pins.chat.linkNames.with({
       description: 'Find and link channel names and usernames.',
-    }),
-    asUser: pins.chat.asUser.with({
-      description:
-        'Post the message as the authenticated user instead of the bot.',
+      optional: true,
     }),
   },
 
@@ -142,7 +147,6 @@ export const postEphemeral = i.nodes.callable({
       thread_ts: opts.inputs.threadTs,
       parse: opts.inputs.parse,
       link_names: opts.inputs.linkNames,
-      as_user: opts.inputs.asUser,
     });
 
     if (!response.ok) {
@@ -166,6 +170,7 @@ export const deleteMessage = i.nodes.callable({
     }),
     asUser: pins.chat.asUser.with({
       description: 'Pass true to delete the message as the authenticated user.',
+      optional: true,
     }),
   },
 
@@ -209,20 +214,25 @@ export const updateMessage = i.nodes.callable({
     // Optional formatting
     blocks: pins.chat.blocks.with({
       description: 'New Block Kit blocks for the message (JSON string).',
+      optional: true,
     }),
     attachments: pins.chat.attachments.with({
       description: 'New message attachments (JSON string).',
+      optional: true,
     }),
 
     // Options
     parse: pins.chat.parse.with({
       description: 'Change how messages are treated.',
+      optional: true,
     }),
     linkNames: pins.chat.linkNames.with({
       description: 'Find and link channel names and usernames.',
+      optional: true,
     }),
     asUser: pins.chat.asUser.with({
       description: 'Update the message as the authenticated user.',
+      optional: true,
     }),
   },
 
@@ -241,7 +251,7 @@ export const updateMessage = i.nodes.callable({
       attachments: opts.inputs.attachments,
       parse: opts.inputs.parse,
       link_names: opts.inputs.linkNames,
-      //as_user: opts.inputs.asUser,
+      as_user: opts.inputs.asUser,
     });
 
     if (!response.ok) {

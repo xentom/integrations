@@ -31,8 +31,7 @@ export const threadTs = i.pins.data({
   control: i.controls.text({
     placeholder: '1234567890.123456',
   }),
-  optional: true,
-  schema: v.optional(v.pipe(v.string(), v.trim())),
+  schema: v.pipe(v.string(), v.trim()),
 });
 
 // Message response object
@@ -70,32 +69,28 @@ export const parse = i.pins.data({
       { label: 'None', value: 'none' },
     ],
   }),
-  optional: true,
-  schema: v.optional(v.picklist(['full', 'none'])),
+  schema: v.picklist(['full', 'none']),
 });
 
 // Link names flag
 export const linkNames = i.pins.data({
   description: 'Find and link channel names and usernames.',
   control: i.controls.switch(),
-  optional: true,
-  schema: v.optional(v.boolean()),
+  schema: v.boolean(),
 });
 
 // Unfurl links flag
 export const unfurlLinks = i.pins.data({
   description: 'Enable automatic link unfurling.',
   control: i.controls.switch(),
-  optional: true,
-  schema: v.optional(v.boolean()),
+  schema: v.boolean(),
 });
 
 // Unfurl media flag
 export const unfurlMedia = i.pins.data({
   description: 'Enable automatic media unfurling.',
   control: i.controls.switch(),
-  optional: true,
-  schema: v.optional(v.boolean()),
+  schema: v.boolean(),
 });
 
 // As user flag for posting as bot
@@ -104,14 +99,12 @@ export const asUser = i.pins.data({
   control: i.controls.switch({
     defaultValue: false,
   }),
-
-  schema: v.optional(v.boolean()),
+  schema: v.boolean(),
 });
 
 // Reply broadcast flag
 export const replyBroadcast = i.pins.data({
   description: 'Broadcast thread reply to channel.',
   control: i.controls.switch(),
-  optional: true,
-  schema: v.optional(v.boolean()),
+  schema: v.boolean(),
 });

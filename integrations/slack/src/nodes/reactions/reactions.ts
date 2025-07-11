@@ -93,6 +93,7 @@ export const getReactions = i.nodes.callable({
     }),
     full: pins.reaction.full.with({
       description: 'Include full user info for reactions.',
+      optional: true,
     }),
   },
 
@@ -124,15 +125,19 @@ export const listReactions = i.nodes.callable({
   inputs: {
     user: pins.user.userId.with({
       description: 'User to get reactions for.',
+      optional: true,
     }),
     full: pins.reaction.full.with({
       description: 'Include full user info for reactions.',
+      optional: true,
     }),
     count: pins.common.limit.with({
       description: 'Number of reactions to return.',
+      optional: true,
     }),
     page: pins.reaction.page.with({
       description: 'Page number for pagination.',
+      optional: true,
     }),
   },
 
