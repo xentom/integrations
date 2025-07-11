@@ -2,7 +2,7 @@
 
 ## Overview
 
-This command initializes a new integration for the workflow editor by setting up the complete integration structure, API client, and all necessary nodes.
+Initialize a complete integration for the ACME Integration Framework by setting up the project structure, API client, pins, and nodes following established patterns and best practices.
 
 ## Usage
 
@@ -12,206 +12,379 @@ This command initializes a new integration for the workflow editor by setting up
 
 **Arguments:**
 
-- `$ARGUMENTS` - Service name (e.g., "trello", "github", "slack")
+- `service-name` - Target service (e.g., "trello", "github", "notion")
 
-## Reference Documentation
+## Execution Flow
 
-For detailed information about the ACME Integration Framework, project structure, and development best practices, refer to `/CLAUDE.md` in the project root.
+### Phase 1: Research & Setup
 
-## Command Flow
+#### 1.1 API Client Research
 
-### Step 1: Research API Client
+Search npm for the best TypeScript-compatible client:
 
-Search for existing API clients for the specified service:
+**Priority Order:**
 
-1. **Search npm registry** for packages related to the service
-   - Look for official packages (e.g., `@trello/api`, `trello-api`)
-   - Consider popular community packages with good maintenance
-   - Check package stats: downloads, last updated, GitHub stars
-   - Prioritize TypeScript-compatible packages
+1. Official packages (`@service/api`, `service-sdk`)
+2. Popular community packages (>1M weekly downloads)
+3. Well-maintained libraries (updated within 6 months)
+4. TypeScript-first or includes type definitions
 
-2. **Evaluate and select the best client**
-   - Official packages > Well-maintained community packages
-   - TypeScript support preferred
-   - Recent updates and active maintenance
-   - Good documentation and examples
+**Evaluation Criteria:**
 
-3. **Gather package details**
-   - Package name and version
-   - Installation command
-   - Basic usage examples
-   - Required environment variables/configuration
+- TypeScript support (native or @types package)
+- Recent maintenance (last updated within 6 months)
+- Good documentation and examples
+- GitHub stars and npm downloads
+- Official endorsement or community adoption
 
-### Step 2: Create Integration Structure
-
-Copy the template integration to create the new integration:
+#### 1.2 Project Initialization
 
 ```bash
-cp -r /integrations/template /integrations/$ARGUMENTS
+# Copy template
+cp -r integrations/template integrations/$ARGUMENTS
+
+# Navigate to new integration
+cd integrations/$ARGUMENTS
+
+# Install API client
+bun install [selected-package]
+
+# Update package.json name and description
 ```
 
-### Step 3: Install API Client
+### Phase 2: API Client Analysis
 
-Navigate to the new integration directory and install the selected API client:
+#### 2.1 Library Investigation
+
+Examine the installed package structure:
 
 ```bash
-cd /integrations/$ARGUMENTS
-bun install [api-client-package]
+# Check package structure
+ls node_modules/[package-name]/
+cat node_modules/[package-name]/package.json
+cat node_modules/[package-name]/README.md
 ```
 
-### Step 4: Analyze API Client
+**Key Information to Extract:**
 
-Thoroughly examine the API client to understand its structure:
+- Client initialization pattern
+- Authentication requirements (API keys, OAuth, tokens)
+- Available methods and endpoints
+- Request/response type definitions
+- Error handling patterns
+- Rate limiting considerations
 
-1. **Read the main module files**
-   - `[monorepo-root]/node_modules/[lib-name]/package.json` - Understanding exports and main files
-   - `[monorepo-root]/node_modules/[lib-name]/index.js` or `[monorepo-root]/node_modules/[lib-name]/dist/index.js`
-   - `[monorepo-root]/node_modules/[lib-name]/lib/` or `[monorepo-root]/node_modules/[lib-name]/src/` directories
+#### 2.2 Type Definitions Discovery
 
-2. **Extract key information**
-   - Client initialization process
-   - Authentication requirements
-   - Available endpoints and methods
-   - Request/response patterns
-   - Error handling approaches
-
-3. **Identify endpoint categories**
-   - Group related endpoints logically
-   - Create a hierarchical structure
-   - Consider the service's natural API organization
-
-### Step 5: Implement Integration Entrypoint
-
-Create the main integration file with proper lifecycle management:
-
-1. **Update integration configuration**
-   - Define required environment variables
-   - Set integration metadata (name, version, description)
-   - Configure authentication requirements
-
-2. **Define IntegrationState interface**
-   - Create TypeScript interface defining shared state properties
-   - Add API client instance as a property
-   - Ensure type safety across all nodes and pins
-
-3. **Implement lifecycle hooks**
-   - `start()`: Initialize API client, handle authentication and configuration validation
-   - `stop()`: Cleanup resources, close connections
-
-Refer to `/CLAUDE.md` for detailed implementation patterns and examples.
-
-### Step 6: Generate Endpoint Category Tree
-
-Create a well-structured category tree based on the API analysis:
-
-1. **Analyze API endpoints** and group them logically
-2. **Create category hierarchy** that makes sense for workflow users
-3. **Plan file structure** following the pattern specified in `/CLAUDE.md`
-
-Example for $ARGUMENTS:
-
-```
-/$ARGUMENTS/src/
-  /nodes/
-    [category1]/
-      [category1].ts
-      index.ts
-    [category2]/
-      [category2].ts
-      index.ts
-    [category3]/
-      [category3].ts
-      index.ts
-  /pins/
-    [category1].ts
-    [category2].ts
-    [category3].ts
-    index.ts
+```bash
+# Check for TypeScript definitions
+ls node_modules/[package-name]/**/*.d.ts
+ls node_modules/@types/[package-name]/ # If separate types package
 ```
 
-### Step 7: Implement Nodes and Pins
+**Document:**
 
-For each category, create comprehensive node implementations following the patterns and best practices detailed in `/CLAUDE.md`:
+- Response type interfaces
+- Method signatures
+- Configuration options
+- Error types
 
-1. **Create category nodes** (`[category].ts`)
-   - Implement CRUD operations where applicable
-   - Handle pagination for list operations
-   - Implement proper error handling
-   - Add input validation
-   - Include proper TypeScript types
+### Phase 3: Integration Architecture
 
-2. **Create reusable pins** (`/pins/[category].ts`)
-   - Define common data structures
-   - Create reusable validation schemas
-   - Implement helper functions
-   - Export type definitions
+#### 3.1 Environment Variables Planning
 
-3. **Follow integration best practices**
-   - Use consistent naming conventions
-   - Implement proper error handling
-   - Add comprehensive logging
-   - Include parameter validation
-   - Handle rate limiting appropriately
-   - Support pagination where needed
-   - Implement proper TypeScript types
-   - Follow pin organization and optimization guidelines
+Based on API client requirements, identify needed environment variables:
 
-Refer to `/CLAUDE.md` for detailed implementation patterns, examples, and best practices.
+- API keys, tokens, secrets
+- Base URLs, endpoints
+- Configuration options (timeouts, retries)
 
-### Step 8: Test Integration
+#### 3.2 Category Structure Design
 
-Run comprehensive tests to ensure everything works correctly:
+Analyze the service API to create logical node categories:
 
-1. **Lint check**
+**Common Patterns:**
 
-   ```bash
-   cd /integrations/$ARGUMENTS
-   bun run lint
-   ```
+- Resource-based: `users`, `projects`, `files`, `messages`
+- Action-based: `auth`, `search`, `notifications`
+- Workflow-based: `boards`, `cards`, `lists` (for project management)
 
-2. **Type check**
+**Example Structure:**
 
-   ```bash
-   cd /integrations/$ARGUMENTS
-   bun run typecheck
-   ```
+```
+src/
+├── nodes/
+│   ├── users/users.ts          # User management
+│   ├── projects/projects.ts    # Project operations
+│   ├── files/files.ts          # File operations
+│   └── search/search.ts        # Search functionality
+└── pins/
+    ├── user.ts                 # User data types
+    ├── project.ts              # Project data types
+    ├── file.ts                 # File data types
+    ├── common.ts               # Shared types
+    └── index.ts                # Export all pins
+```
 
-3. **Fix any issues** found during testing
-   - Resolve linting errors
-   - Fix TypeScript compilation errors
-   - Ensure all imports are correct
-   - Verify all exports are properly defined
+### Phase 4: Implementation
 
-## Additional Considerations
+#### 4.1 Integration Entry Point (`src/index.ts`)
 
-### Error Handling
+```typescript
+import { ServiceClient } from 'service-api-client';
+import * as v from 'valibot';
 
-- Implement consistent error handling across all nodes
-- Handle API rate limits gracefully
-- Provide meaningful error messages to users
-- Log errors appropriately for debugging
+import * as i from '@acme/integration-framework';
 
-### Documentation
+import * as nodes from './nodes';
 
-- Include comprehensive node, pin, and env descriptions to help users and AI use the integration correctly
-- Create integration-specific README file (required)
-  - Integration name as header
-  - Short description of the integration
-  - Additional notes for environment variables
-  - Instructions on how to generate tokens/API keys on the service
+// Define shared state interface
+interface IntegrationState {
+  client: ServiceClient;
+  // Add other shared resources
+}
 
-### Performance
+export default i.integration({
+  nodes,
+  env: {
+    API_KEY: i.env({
+      control: i.controls.text({
+        label: 'API Key',
+        sensitive: true,
+        description: 'Your service API key',
+      }),
+      schema: v.string(),
+    }),
+    // Add other environment variables
+  },
+  start(opts) {
+    opts.state.client = new ServiceClient({
+      apiKey: process.env.API_KEY,
+      // Other configuration
+    });
+  },
+});
+```
 
-- Implement efficient data fetching strategies
-- Use caching where appropriate
-- Handle large datasets with pagination
-- Optimize API calls to minimize requests
+#### 4.2 Pin Definitions (`src/pins/`)
+
+**Follow Pin Development Rules:**
+
+- No category prefixes in exports
+- Use `item` for singles, `list` for arrays
+- Non-optional by default
+- TypeScript types for complex objects
+- Controls only for user input pins
+
+**Pattern for each category:**
+
+```typescript
+// src/pins/user.ts
+import { type UserResponse } from 'service-api-client';
+import * as v from 'valibot';
+
+import * as i from '@acme/integration-framework';
+
+export const id = i.pins.data({
+  description: 'User ID.',
+  control: i.controls.text(),
+  schema: v.pipe(v.string(), v.minLength(1)),
+});
+
+export const item = i.pins.data<UserResponse>({
+  description: 'User object with complete information.',
+});
+
+export const list = i.pins.data<UserResponse[]>({
+  description: 'Array of users.',
+});
+```
+
+#### 4.3 Node Implementations (`src/nodes/`)
+
+**For each category, implement core operations:**
+
+**List Operations:**
+
+```typescript
+export const listUsers = i.nodes.callable({
+  category,
+  description: 'List all users.',
+
+  inputs: {
+    limit: pins.common.limit.with({ optional: true }),
+    search: pins.common.search.with({ optional: true }),
+  },
+
+  outputs: {
+    users: pins.user.list.with<UserResponse[]>({
+      description: 'Array of users.',
+    }),
+  },
+
+  async run(opts) {
+    const response = await opts.state.client.users.list({
+      limit: opts.inputs.limit,
+      search: opts.inputs.search,
+    });
+
+    return opts.next({ users: response.users ?? [] });
+  },
+});
+```
+
+**CRUD Operations:**
+
+- Create: Return created object
+- Read: Return specific object
+- Update: Return updated object
+- Delete: No outputs (operation only)
+
+**Critical Implementation Rules:**
+
+- Direct property passing (no conditional spreads)
+- Semantic outputs (extract specific data, not full responses)
+- Type safety (every output pin must have TypeScript type)
+- Error handling with descriptive messages
+- Handle API errors gracefully
+
+### Phase 5: Quality Assurance
+
+#### 5.1 Code Quality Checks
+
+```bash
+# Type checking
+bun run typecheck
+
+# Linting
+bun run lint
+
+# Fix any issues found
+```
+
+#### 5.2 Integration Testing
+
+```bash
+# Test development mode
+bun run dev
+
+# Verify all nodes are discoverable
+# Test basic functionality with mock data
+```
+
+#### 5.3 Documentation Creation
+
+Create `README.md` in integration root:
+
+```markdown
+# [Service Name] Integration
+
+Brief description of the service and integration capabilities.
+
+## Environment Variables
+
+### Required
+
+- `API_KEY` - Your [Service] API key. Get it from [service.com/api-keys](url)
+
+### Optional
+
+- `BASE_URL` - Custom API base URL (default: https://api.service.com)
+
+## Getting Started
+
+1. Sign up for [Service Name] account
+2. Generate API key from [specific instructions]
+3. Configure environment variables
+4. Test connection with [specific node]
+
+## Available Nodes
+
+### [Category 1]
+
+- List [items]
+- Get [item]
+- Create [item]
+- Update [item]
+- Delete [item]
+
+### [Category 2]
+
+- [Specific operations]
+
+## Notes
+
+- [Any rate limiting considerations]
+- [Authentication specifics]
+- [Common use cases or patterns]
+```
 
 ## Success Criteria
 
-- All files are created and properly structured
-- API client is correctly initialized and configured
-- All endpoint categories are implemented with full CRUD operations
-- Integration passes linting and type checking
-- Error handling is comprehensive and user-friendly
-- Code follows established patterns and best practices
+### ✅ Complete Implementation Checklist
+
+**Project Structure:**
+
+- [ ] Integration directory created from template
+- [ ] API client installed and configured
+- [ ] All necessary dependencies added
+
+**Type Safety:**
+
+- [ ] TypeScript compilation passes without errors
+- [ ] All output pins have proper type definitions
+- [ ] IntegrationState interface properly defined
+- [ ] Type imports use inline `type` specifiers
+
+**Pin Implementation:**
+
+- [ ] Pin naming follows conventions (no prefixes, item/list pattern)
+- [ ] Pins are non-optional by default
+- [ ] Complex types use TypeScript generics (no schema)
+- [ ] Simple types use valibot schemas
+- [ ] Controls only on user input pins
+
+**Node Implementation:**
+
+- [ ] All major CRUD operations implemented
+- [ ] Direct property passing (no conditional spreads)
+- [ ] Semantic outputs (specific data, not API responses)
+- [ ] Comprehensive error handling
+- [ ] Proper category organization
+
+**Code Quality:**
+
+- [ ] ESLint passes without errors
+- [ ] TypeScript compilation successful
+- [ ] No anti-patterns used
+- [ ] Consistent naming and structure
+
+**Documentation:**
+
+- [ ] README.md created with setup instructions
+- [ ] Environment variables documented
+- [ ] Available nodes listed
+- [ ] Getting started guide included
+
+**Functionality:**
+
+- [ ] Integration starts without errors
+- [ ] API client initializes correctly
+- [ ] Basic operations work as expected
+- [ ] Error handling provides useful feedback
+
+## Common Pitfalls to Avoid
+
+- ❌ Using conditional spreads instead of direct property passing
+- ❌ Returning full API responses instead of semantic data
+- ❌ Missing TypeScript types on output pins
+- ❌ Category prefixes in pin exports
+- ❌ Creating intermediate variables for direct function calls
+- ❌ Using `v.any()` instead of proper TypeScript types
+- ❌ Top-level type imports instead of inline specifiers
+
+## Reference
+
+- See `.cursorrules` for critical coding standards and quick reference
+- See `CLAUDE.md` for comprehensive documentation and examples
+- Reference existing integrations in `/integrations/` for patterns
