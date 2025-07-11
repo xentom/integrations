@@ -39,17 +39,27 @@ Search npm for the best TypeScript-compatible client:
 
 #### 1.2 Project Initialization
 
+##### 1.2.1 Copy template
+
+To create a new integration, start by copying the existing template:
+
 ```bash
-# Copy template
+# Copy the integration template
 cp -r integrations/template integrations/$ARGUMENTS
 
-# Navigate to new integration
+# Navigate into the new integration directory
 cd integrations/$ARGUMENTS
+```
 
+##### 1.2.2 Configure package.json
+
+Update the `package.json` name, displayName and description.
+
+##### 1.2.3 API Client Installation
+
+```bash
 # Install API client
 bun install [selected-package]
-
-# Update package.json name and description
 ```
 
 ### Phase 2: API Client Analysis
@@ -91,7 +101,13 @@ ls node_modules/@types/[package-name]/ # If separate types package
 
 ### Phase 3: Integration Architecture
 
-#### 3.1 Environment Variables Planning
+#### 3.1 Change to the integration directory
+
+```bash
+cd integrations/$ARGUMENTS
+```
+
+#### 3.2 Environment Variables Planning
 
 Based on API client requirements, identify needed environment variables:
 
@@ -99,7 +115,7 @@ Based on API client requirements, identify needed environment variables:
 - Base URLs, endpoints
 - Configuration options (timeouts, retries)
 
-#### 3.2 Category Structure Design
+#### 3.3 Category Structure Design
 
 Analyze the service API to create logical node categories:
 
