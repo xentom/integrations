@@ -131,6 +131,43 @@ export const emailAddress = i.pins.data({
 });
 ```
 
+#### Control Property Best Practices
+
+The `control` property in pin definitions follows these rules:
+
+- **New pins default to no control**: When defining a new pin, omitting the `control` property means it has no UI control
+- **Only use `control: false` when extending**: Use `control: false` only when extending an existing pin that has a control and you want to remove it
+- **Output pins typically don't need controls**: API response objects and computed values usually don't need UI controls
+
+```typescript
+// ✅ Good - New pin with no control (for API responses)
+export const apiResponse = i.pins.data<ApiResponse>({
+  description: 'Response from the API.',
+  // No control property needed - defaults to no control
+});
+
+// ✅ Good - New pin with control (for user input)
+export const userInput = i.pins.data({
+  description: 'User provided text.',
+  control: i.controls.text({
+    placeholder: 'Enter text...',
+  }),
+  schema: v.string(),
+});
+
+// ✅ Good - Extending pin with control to remove it
+export const responseData = pins.common.inputField.with({
+  description: 'Response data from API.',
+  control: false, // Remove control from pin that was meant for input
+});
+
+// ❌ Bad - Unnecessary control: false on new pin
+export const badResponse = i.pins.data<ApiResponse>({
+  description: 'Response from the API.',
+  control: false, // Unnecessary - pins default to no control
+});
+```
+
 ### Integration Entry Point
 
 The main integration file exports nodes, environment variables, and initialization logic:
@@ -326,21 +363,18 @@ inputs: {
 // ❌ Bad - Using v.any() schema
 export const object = i.pins.data({
   description: 'A broadcast object containing all broadcast information.',
-  control: false,
   schema: v.any(), // Avoid this!
 });
 
 // ✅ Good - Using proper TypeScript types
 export const object = i.pins.data<GetBroadcastResponseSuccess>({
   description: 'A broadcast object containing all broadcast information.',
-  control: false,
   // No schema needed - TypeScript type provides validation
 });
 
 // ✅ Alternative - If no specific type available, omit schema (same as v.any() but more performant)
 export const object = i.pins.data({
   description: 'A custom object.',
-  control: false,
   // No schema property - implicitly allows any type
 });
 ```
@@ -353,19 +387,16 @@ import { type GetBroadcastResponseSuccess, type ListBroadcastsResponseSuccess, t
 
 export const object = i.pins.data<GetBroadcastResponseSuccess>({
   description: 'A broadcast object containing all broadcast information.',
-  control: false,
 });
 
 export const list = i.pins.data<ListBroadcastsResponseSuccess>({
   description: 'A list of broadcasts.',
-  control: false,
 });
 
 // Usage in nodes
 outputs: {
   result: i.pins.data<RemoveBroadcastResponseSuccess>({
     description: 'The deletion result.',
-    control: false,
   }),
 }
 ```
@@ -535,7 +566,7 @@ This approach:
 
 2. **Use Optional Flags for Clarity**: Improve node readability in the UI by marking less relevant or non-essential pins with `optional: true`. This helps users focus on required parameters first.
 
-3. **Minimize Unnecessary Controls**: Set the control property to `false` for pins that do not affect the node's functionality—especially for output pins that don't need to be controlled via the UI.
+3. **Only Use `control: false` When Extending Existing Pins**: The `control` property defaults to no control when defining new pins. Only use `control: false` when extending existing pins that already have a control defined and you want to remove it.
 
 ```typescript
 // Example demonstrating best practices
@@ -563,16 +594,15 @@ export const processData = i.nodes.callable({
   },
 
   outputs: {
-    // Output pins typically don't need controls
+    // Output pins have no control by default - no need to specify control: false
     result: pins.common.jsonData.with({
       description: 'The processed data result.',
-      control: false,
     }),
 
-    // Status information
-    status: pins.common.status.with({
+    // When extending a pin that has a control, use control: false to remove it
+    status: pins.common.inputStatus.with({
       description: 'Processing status information.',
-      control: false,
+      control: false, // Remove control from pin that was originally meant for input
     }),
   },
 
@@ -602,13 +632,16 @@ const orders = await opts.state.shopify.rest.Order.all({
   session: opts.state.session,
   ...(opts.inputs.limit && { limit: opts.inputs.limit }),
   ...(opts.inputs.status && { status: opts.inputs.status }),
-  ...(opts.inputs.financialStatus && { financial_status: opts.inputs.financialStatus }),
+  ...(opts.inputs.financialStatus && {
+    financial_status: opts.inputs.financialStatus,
+  }),
   ...(opts.inputs.createdAtMin && { created_at_min: opts.inputs.createdAtMin }),
   ...(opts.inputs.fields && { fields: opts.inputs.fields }),
 });
 ```
 
 **Benefits of direct assignment**:
+
 - **Cleaner code**: More readable and maintainable
 - **Simpler logic**: No need for conditional checks
 - **API-friendly**: Most APIs properly handle undefined/null values
@@ -624,7 +657,7 @@ const product = await opts.state.shopify.rest.Product.find({
 });
 
 // ❌ Bad - Create session in node
-const session = process.env.ACCESS_TOKEN 
+const session = process.env.ACCESS_TOKEN
   ? { accessToken: process.env.ACCESS_TOKEN, shop: process.env.SHOP_DOMAIN }
   : null;
 ```
