@@ -1,0 +1,30 @@
+{
+  "name": "@acme/integrations-testing",
+  "displayName": "Testing",
+  "description": "Toolkit for testing ACME integrations, including nodes, pins, and controls.",
+  "version": "0.0.1",
+  "type": "module",
+  "icon": "./images/icon.png",
+  "main": "./build/index.js",
+  "scripts": {
+    "lint": "eslint",
+    "format": "prettier --check . --ignore-path ../../.gitignore",
+    "typecheck": "tsc --noEmit",
+    "clean": "git clean -xdf .cache .turbo node_modules build dist",
+    "dev": "acme dev",
+    "build": "acme build",
+    "publish": "acme publish"
+  },
+  "dependencies": {
+    "@acme/integration-framework": "catalog:",
+    "valibot": "catalog:"
+  },
+  "devDependencies": {
+    "@acme/style-guide": "catalog:",
+    "@types/bun": "catalog:",
+    "eslint": "catalog:",
+    "prettier": "catalog:",
+    "typescript": "catalog:"
+  },
+  "prettier": "@acme/style-guide/prettier"
+}

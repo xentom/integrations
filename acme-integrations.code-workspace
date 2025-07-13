@@ -24,5 +24,9 @@
       "name": "template",
       "path": "integrations/template",
     },
+    {
+      "name": "testing",
+      "path": "integrations/testing",
+    },
   ],
 }
