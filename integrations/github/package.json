@@ -2,7 +2,7 @@
   "name": "@acme/integrations-github",
   "displayName": "GitHub",
   "description": "Integrate GitHub to trigger workflows from issues, pull requests or commits and automate actions like creating issues or commenting on pull requests.",
-  "version": "0.0.5",
+  "version": "0.0.2",
   "type": "module",
   "icon": "./images/icon.png",
   "main": "./build/index.js",

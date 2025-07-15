@@ -2,7 +2,7 @@
   "name": "@acme/integrations-openai",
   "displayName": "OpenAI",
   "description": "Integrate OpenAI to trigger workflows from prompts or data inputs and generate text, summaries, or code using AI-powered actions.",
-  "version": "0.0.1",
+  "version": "0.0.4",
   "type": "module",
   "icon": "./images/icon.png",
   "main": "./build/index.js",

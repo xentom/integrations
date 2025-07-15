@@ -11,11 +11,11 @@ export const number = i.nodes.pure({
   outputs: {
     value: i.pins.data({
       displayName: false,
-      schema: v.number(),
       control: i.controls.expression({
         placeholder: 'Enter a number',
         defaultValue: 0,
       }),
+      schema: v.number(),
     }),
   },
 });
@@ -25,11 +25,11 @@ export const string = i.nodes.pure({
   outputs: {
     value: i.pins.data({
       displayName: false,
-      schema: v.string(),
-      control: i.controls.expression({
+      control: i.controls.text({
         placeholder: 'Enter a string',
         defaultValue: '',
       }),
+      schema: v.string(),
     }),
   },
 });
@@ -39,10 +39,10 @@ export const boolean = i.nodes.pure({
   outputs: {
     value: i.pins.data({
       displayName: false,
-      schema: v.boolean(),
       control: i.controls.switch({
         defaultValue: true,
       }),
+      schema: v.boolean(),
     }),
   },
 });

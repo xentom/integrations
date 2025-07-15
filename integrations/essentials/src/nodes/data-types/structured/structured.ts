@@ -12,11 +12,11 @@ export const html = i.nodes.pure({
   outputs: {
     value: i.pins.data({
       displayName: false,
-      schema: v.string(),
       control: i.controls.text({
         language: i.TextControlLanguage.Html,
         defaultValue: '<h1>HTML</h1>',
       }),
+      schema: v.string(),
     }),
   },
 });
@@ -26,11 +26,11 @@ export const markdown = i.nodes.pure({
   outputs: {
     value: i.pins.data({
       displayName: false,
-      schema: v.string(),
       control: i.controls.text({
         language: i.TextControlLanguage.Markdown,
         defaultValue: '# Markdown',
       }),
+      schema: v.string(),
     }),
   },
 });

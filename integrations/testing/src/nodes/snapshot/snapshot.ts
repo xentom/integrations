@@ -4,9 +4,13 @@ import * as v from 'valibot';
 
 import * as i from '@acme/integration-framework';
 
+import { writeSnapshots } from './utils';
+
 const category = {
   path: ['Testing', 'Snapshot'],
 } satisfies i.NodeCategory;
+
+let timeout: NodeJS.Timeout | null = null;
 
 export const toMatchSnapshot = i.nodes.pure({
   category,
@@ -36,5 +40,13 @@ export const toMatchSnapshot = i.nodes.pure({
     } else {
       expect(opts.inputs.actual).toEqual(expected);
     }
+
+    if (timeout) {
+      clearTimeout(timeout);
+    }
+
+    timeout = setTimeout(() => {
+      void writeSnapshots(opts.state.snapshots);
+    }, 1000);
   },
 });

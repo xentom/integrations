@@ -3,8 +3,10 @@ import * as v from 'valibot';
 import * as i from '@acme/integration-framework';
 
 import * as nodes from './nodes';
+import { writeSnapshots } from './nodes/snapshot/utils';
 
 export interface IntegrationState {
+  snapshotFile: string;
   snapshots: Map<string, unknown>;
 }
 
@@ -23,6 +25,7 @@ export default i.integration({
   },
 
   async start(opts) {
+    opts.state.snapshotFile = process.env.SNAPSHOTS_FILE;
     opts.state.snapshots = new Map();
 
     try {
@@ -36,9 +39,6 @@ export default i.integration({
   },
 
   async stop(opts) {
-    await Bun.write(
-      process.env.SNAPSHOTS_FILE,
-      JSON.stringify(Object.fromEntries(opts.state.snapshots)),
-    );
+    await writeSnapshots(opts.state.snapshots);
   },
 });

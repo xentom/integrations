@@ -2,7 +2,7 @@
   "name": "@acme/integrations-testing",
   "displayName": "Testing",
   "description": "Toolkit for testing ACME integrations, including nodes, pins, and controls.",
-  "version": "0.0.1",
+  "version": "0.0.0",
   "type": "module",
   "icon": "./images/icon.png",
   "main": "./build/index.js",

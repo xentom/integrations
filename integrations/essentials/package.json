@@ -2,7 +2,7 @@
   "name": "@acme/integrations-essentials",
   "displayName": "Essentials",
   "description": "Add essentials to trigger workflows on schedules or manual runs and perform core actions like sending emails, making HTTP requests, or manipulating data.",
-  "version": "0.0.31",
+  "version": "0.0.2",
   "type": "module",
   "icon": "./images/icon.png",
   "main": "./build/index.js",

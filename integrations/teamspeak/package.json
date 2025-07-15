@@ -1,5 +1,7 @@
 {
   "name": "@acme/integrations-teamspeak",
+  "displayName": "TeamSpeak",
+  "description": "Connect to TeamSpeak servers to manage channels, users, and server settings programmatically.",
   "version": "0.0.0",
   "type": "module",
   "icon": "./images/icon.jpg",

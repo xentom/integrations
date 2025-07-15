@@ -70,6 +70,8 @@ export default i.integration({
   },
 
   async start(opts) {
+    console.log('Starting TeamSpeak 3 integration...');
+
     opts.state.teamspeak = await TeamSpeak.connect({
       protocol: QueryProtocol.RAW,
       host: process.env.SERVER_IP,
@@ -93,9 +95,19 @@ export default i.integration({
     await opts.state.teamspeak.registerEvent('textprivate');
 
     opts.state.whoami = await opts.state.teamspeak.whoami();
+
+    console.log('TeamSpeak 3 integration started.');
   },
 
   async stop(opts) {
-    await opts.state.teamspeak.quit();
+    console.log('Stopping TeamSpeak 3 integration...');
+    try {
+      await opts.state.teamspeak.quit();
+    } catch {
+      console.log('Force quitting TeamSpeak 3 integration...');
+      opts.state.teamspeak.forceQuit();
+    } finally {
+      console.log('TeamSpeak 3 integration stopped.');
+    }
   },
 });

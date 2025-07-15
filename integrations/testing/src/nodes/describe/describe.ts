@@ -12,3 +12,23 @@ export const describe = i.nodes.trigger({
     void opts.next();
   },
 });
+
+export const passthrough = i.nodes.callable({
+  category,
+  description: 'Pass through the data.',
+  inputs: {
+    data: i.pins.data({
+      description: 'The data to pass through.',
+    }),
+  },
+  outputs: {
+    data: i.pins.data({
+      description: 'The data to pass through.',
+    }),
+  },
+  run(opts) {
+    return opts.next({
+      data: opts.inputs.data,
+    });
+  },
+});
