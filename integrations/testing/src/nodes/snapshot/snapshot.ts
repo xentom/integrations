@@ -2,7 +2,7 @@ import * as pins from '@/pins';
 import { expect } from 'bun:test';
 import * as v from 'valibot';
 
-import * as i from '@acme/integration-framework';
+import * as i from '@xentom/integration-framework';
 
 import { writeSnapshots } from './utils';
 

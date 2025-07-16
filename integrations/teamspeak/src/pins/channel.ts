@@ -2,7 +2,7 @@ import { TeamSpeakChannel } from 'ts3-nodejs-library';
 import { type ChannelEntry } from 'ts3-nodejs-library/lib/types/ResponseTypes';
 import * as v from 'valibot';
 
-import * as i from '@acme/integration-framework';
+import * as i from '@xentom/integration-framework';
 
 export const object = {
   input: i.pins.data({

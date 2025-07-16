@@ -6,7 +6,7 @@ import {
   type VerifyDomainsResponseSuccess,
 } from 'resend';
 
-import * as i from '@acme/integration-framework';
+import * as i from '@xentom/integration-framework';
 
 const category = {
   path: ['Domains'],

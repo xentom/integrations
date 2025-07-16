@@ -2,7 +2,7 @@
   "Import Integration Framework": {
     "prefix": ["iif"],
     "scope": "javascript,typescript",
-    "body": ["import * as i from '@acme/integration-framework';"],
+    "body": ["import * as i from '@xentom/integration-framework';"],
   },
 
   "Add Trigger Node": {

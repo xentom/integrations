@@ -1,8 +1,8 @@
-# ACME Integrations Framework Documentation
+# Xentom Integrations Framework Documentation
 
 ## Overview
 
-This is a comprehensive guide for building integrations using the ACME integration framework. This monorepo uses Turbo for build orchestration, Bun as the package manager, and TypeScript with strict type checking.
+This is a comprehensive guide for building integrations using the Xentom integration framework. This monorepo uses Turbo for build orchestration, Bun as the package manager, and TypeScript with strict type checking.
 
 ## Table of Contents
 
@@ -59,8 +59,8 @@ This is a comprehensive guide for building integrations using the ACME integrati
 ## Project Structure
 
 ```
-acme-integrations/
-├── integrations/[name]/               # Individual integrations
+.                                     # Root monorepo directory
+├── integrations/[name]/              # Individual integrations
 │   ├── src/
 │   │   ├── index.ts                  # Integration entry point
 │   │   ├── globals.d.ts              # TypeScript global declarations
@@ -76,7 +76,7 @@ acme-integrations/
 │   ├── package.json                  # Package configuration
 │   ├── tsconfig.json                 # TypeScript config
 │   └── eslint.config.mjs             # ESLint configuration
-├── node_modules/@acme/integration-framework/  # Core framework
+├── node_modules/@xentom/integration-framework/  # Core framework
 ├── tooling/style-guide/              # Shared linting/formatting configs
 ├── package.json                      # Root workspace configuration
 ├── turbo.json                        # Turbo build configuration
@@ -111,7 +111,7 @@ acme-integrations/
 import { SomeApiClient } from 'some-api-client';
 import * as v from 'valibot';
 
-import * as i from '@acme/integration-framework';
+import * as i from '@xentom/integration-framework';
 
 import * as nodes from './nodes';
 
@@ -299,7 +299,7 @@ export const response = i.pins.data<ApiResponse>({
 // src/nodes/users/users.ts
 import * as pins from '@/pins';
 
-import * as i from '@acme/integration-framework';
+import * as i from '@xentom/integration-framework';
 
 const category = {
   path: ['Users'],
@@ -630,9 +630,9 @@ bun run format     # Format code with Prettier
 **Integration Level Commands (within `/integrations/[name]/`):**
 
 ```bash
-bun run dev        # Start development mode (acme dev)
-bun run build      # Build integration (acme build)
-bun run publish    # Publish integration (acme publish)
+bun run dev        # Start development mode (xentom dev)
+bun run build      # Build integration (xentom build)
+bun run publish    # Publish integration (xentom publish)
 bun run lint       # Lint integration code
 bun run typecheck  # Type check integration
 bun run format     # Format integration code
@@ -677,7 +677,7 @@ build/
 import { Resend } from 'resend';
 import * as v from 'valibot';
 
-import * as i from '@acme/integration-framework';
+import * as i from '@xentom/integration-framework';
 
 import * as nodes from './nodes';
 
@@ -704,7 +704,7 @@ export default i.integration({
 import { type GetEmailResponse } from 'resend';
 import * as v from 'valibot';
 
-import * as i from '@acme/integration-framework';
+import * as i from '@xentom/integration-framework';
 
 export const address = i.pins.data({
   description: 'An email address.',
@@ -736,7 +736,7 @@ export const item = i.pins.data<GetEmailResponse['data']>({
 // src/nodes/emails/emails.ts
 import * as pins from '@/pins';
 
-import * as i from '@acme/integration-framework';
+import * as i from '@xentom/integration-framework';
 
 const category = {
   path: ['Emails'],
@@ -892,4 +892,4 @@ export const deleteItem = i.nodes.callable({
 });
 ```
 
-This documentation provides comprehensive guidance for building integrations with the ACME framework, covering everything from basic concepts to advanced patterns and real-world examples.
+This documentation provides comprehensive guidance for building integrations with the Xentom framework, covering everything from basic concepts to advanced patterns and real-world examples.

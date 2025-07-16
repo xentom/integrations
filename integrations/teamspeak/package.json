@@ -1,5 +1,5 @@
 {
-  "name": "@acme/integrations-teamspeak",
+  "name": "@xentom/integrations-teamspeak",
   "displayName": "TeamSpeak",
   "description": "Connect to TeamSpeak servers to manage channels, users, and server settings programmatically.",
   "version": "0.0.0",
@@ -11,22 +11,22 @@
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "typecheck": "tsc --noEmit",
     "clean": "git clean -xdf .cache .turbo node_modules build dist",
-    "dev": "acme dev",
-    "build": "acme build",
-    "publish": "acme publish"
+    "dev": "xentom dev",
+    "build": "xentom build",
+    "publish": "xentom publish"
   },
   "dependencies": {
-    "@acme/integration-framework": "catalog:",
+    "@xentom/integration-framework": "catalog:",
     "valibot": "catalog:",
     "ts3-nodejs-library": "^3.5.1"
   },
   "devDependencies": {
-    "@acme/style-guide": "catalog:",
+    "@xentom/style-guide": "catalog:",
     "@types/bun": "catalog:",
     "@types/node": "^24.0.3",
     "eslint": "catalog:",
     "prettier": "catalog:",
     "typescript": "catalog:"
   },
-  "prettier": "@acme/style-guide/prettier"
+  "prettier": "@xentom/style-guide/prettier"
 }

@@ -4,14 +4,12 @@
 /** @type { PrettierConfig | SortImportsConfig | TailwindConfig } */
 const config = {
   singleQuote: true,
-  plugins: [
-    '@ianvs/prettier-plugin-sort-imports',
-  ],
+  plugins: ['@ianvs/prettier-plugin-sort-imports'],
   importOrder: [
     '^(react/(.*)$)|^(react$)|^(react-native(.*)$)',
     '<THIRD_PARTY_MODULES>',
     '',
-    '^@acme/(.*)$',
+    '^@xentom/(.*)$',
     '',
     '^#',
     '',

@@ -2,14 +2,14 @@
 
 ## Overview
 
-Initialize a complete integration for the ACME Integration Framework **monorepo** by setting up the project structure, API client, pins, and nodes following established patterns and best practices.
+Initialize a complete integration for the Xentom Integration Framework **monorepo** by setting up the project structure, API client, pins, and nodes following established patterns and best practices.
 
 ## Monorepo Structure
 
 This is a **monorepo** containing multiple integrations and shared tooling:
 
 ```
-acme-integrations/         # Root monorepo directory
+/                          # Root monorepo directory
 ├── integrations/          # All service integrations
 │   ├── discord/           # Discord integration package
 │   ├── essentials/        # Core framework nodes package
@@ -65,11 +65,11 @@ Search npm for the best TypeScript-compatible client:
 To create a new integration, start by copying the existing template from within the monorepo:
 
 ```bash
-# From monorepo root (acme-integrations/)
-cp -r integrations/template integrations/$ARGUMENTS
+# From monorepo root
+cp -r ./integrations/template ./integrations/$ARGUMENTS
 
 # Navigate to the new integration directory
-cd integrations/$ARGUMENTS
+cd ./integrations/$ARGUMENTS
 ```
 
 ##### 1.2.2 Configure `package.json`
@@ -91,7 +91,7 @@ bun install [selected-package]
 
 #### 2.1 Library Investigation
 
-**Current working directory:** `acme-integrations/`
+**Current working directory:** `./`
 
 Examine the installed package structure from within the integration directory:
 
@@ -128,7 +128,7 @@ ls node_modules/@types/[package-name]/ # If separate types package
 
 #### 3.1 Working Directory Context
 
-**Current working directory:** `acme-integrations/integrations/$ARGUMENTS/`
+**Current working directory:** `./integrations/$ARGUMENTS/`
 
 All subsequent file paths are relative to this integration directory unless otherwise specified.
 
@@ -147,7 +147,7 @@ Analyze the service API to create logical node categories within the integration
 **Standard Integration Structure:**
 
 ```
-integrations/$ARGUMENTS/                  # Individual integration package
+./integrations/$ARGUMENTS/                  # Individual integration package
 ├── src/
 │   ├── index.ts                          # Integration entry point
 │   ├── nodes/                            # All node implementations
@@ -190,7 +190,7 @@ src/
 
 ### Phase 4: Implementation
 
-**Current working directory:** `acme-integrations/integrations/$ARGUMENTS/`
+**Current working directory:** `./integrations/$ARGUMENTS/`
 
 #### 4.1 Integration Entry Point (`src/index.ts`)
 
@@ -198,7 +198,7 @@ src/
 import { ServiceClient } from 'service-api-client';
 import * as v from 'valibot';
 
-import * as i from '@acme/integration-framework';
+import * as i from '@xentom/integration-framework';
 
 import * as nodes from './nodes';
 
@@ -247,7 +247,7 @@ export default i.integration({
 import { type UserResponse } from 'service-api-client';
 import * as v from 'valibot';
 
-import * as i from '@acme/integration-framework';
+import * as i from '@xentom/integration-framework';
 
 export const id = i.pins.data({
   description: 'User ID.',
@@ -314,7 +314,7 @@ export const listUsers = i.nodes.callable({
 
 ### Phase 5: Quality Assurance
 
-**Current working directory:** `acme-integrations/integrations/$ARGUMENTS/`
+**Current working directory:** `./integrations/$ARGUMENTS/`
 
 #### 5.1 Code Quality Checks
 
@@ -330,7 +330,7 @@ bun run lint
 
 #### 5.2 Documentation Creation
 
-Create `README.md` in integration root: `integrations/$ARGUMENTS/README.md`
+Create `README.md` in integration root: `./integrations/$ARGUMENTS/README.md`
 
 ```markdown
 # [Service Name] Integration
@@ -381,8 +381,8 @@ Brief description of the service and integration capabilities.
 
 **Project Structure:**
 
-- [ ] Integration directory created at `integrations/$ARGUMENTS/`
-- [ ] All files copied from `integrations/template/`
+- [ ] Integration directory created at `./integrations/$ARGUMENTS/`
+- [ ] All files copied from `./integrations/template/`
 - [ ] API client installed and configured
 - [ ] All necessary dependencies added
 
@@ -418,7 +418,7 @@ Brief description of the service and integration capabilities.
 
 **Documentation:**
 
-- [ ] README.md created at `integrations/$ARGUMENTS/README.md`
+- [ ] README.md created at `./integrations/$ARGUMENTS/README.md`
 - [ ] Environment variables documented
 - [ ] Available nodes listed
 - [ ] Getting started guide included
@@ -444,4 +444,4 @@ Brief description of the service and integration capabilities.
 
 - See `.cursorrules` for critical coding standards and quick reference
 - See `CLAUDE.md` for comprehensive documentation and examples
-- Reference existing integrations in `/integrations/` directory for patterns
+- Reference existing integrations in `./integrations/` directory for patterns

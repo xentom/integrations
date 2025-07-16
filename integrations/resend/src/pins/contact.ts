@@ -2,7 +2,7 @@ import * as common from '@/pins/common';
 import { type GetContactResponseSuccess } from 'resend';
 import * as v from 'valibot';
 
-import * as i from '@acme/integration-framework';
+import * as i from '@xentom/integration-framework';
 
 export const id = common.uuid.with({
   displayName: 'Contact ID',

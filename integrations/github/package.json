@@ -1,5 +1,5 @@
 {
-  "name": "@acme/integrations-github",
+  "name": "@xentom/integrations-github",
   "displayName": "GitHub",
   "description": "Integrate GitHub to trigger workflows from issues, pull requests or commits and automate actions like creating issues or commenting on pull requests.",
   "version": "0.0.2",
@@ -11,22 +11,22 @@
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "typecheck": "tsc --noEmit",
     "clean": "git clean -xdf .cache .turbo node_modules build dist",
-    "dev": "acme dev",
-    "build": "acme build",
-    "publish": "acme publish"
+    "dev": "xentom dev",
+    "build": "xentom build",
+    "publish": "xentom publish"
   },
   "dependencies": {
-    "@acme/integration-framework": "catalog:",
+    "@xentom/integration-framework": "catalog:",
     "valibot": "catalog:",
     "@octokit/webhooks": "^13.8.0",
     "octokit": "^4.1.2"
   },
   "devDependencies": {
-    "@acme/style-guide": "catalog:",
+    "@xentom/style-guide": "catalog:",
     "@types/bun": "catalog:",
     "eslint": "catalog:",
     "prettier": "catalog:",
     "typescript": "catalog:"
   },
-  "prettier": "@acme/style-guide/prettier"
+  "prettier": "@xentom/style-guide/prettier"
 }

@@ -1,5 +1,5 @@
 {
-  "extends": "@acme/style-guide/typescript",
+  "extends": "@xentom/style-guide/typescript",
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {

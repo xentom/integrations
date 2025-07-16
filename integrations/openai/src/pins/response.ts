@@ -1,7 +1,7 @@
 import { type Response } from 'openai/resources/responses/responses';
 import * as z from 'zod';
 
-import * as i from '@acme/integration-framework';
+import * as i from '@xentom/integration-framework';
 
 export const responseId = i.pins.data({
   displayName: 'Response ID',

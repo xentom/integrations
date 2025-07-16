@@ -10,6 +10,6 @@ declare global {
   }
 }
 
-declare module '@acme/integration-framework' {
+declare module '@xentom/integration-framework' {
   interface IntegrationState extends CustomIntegrationState {}
 }

@@ -13,8 +13,8 @@
 # testing
 /coverage
 
-# acme
-/.acme/
+# xentom
+/.xentom/
 /dist
 
 # production

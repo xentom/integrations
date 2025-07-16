@@ -1,7 +1,7 @@
 import { type FileObject } from 'openai/resources';
 import * as z from 'zod';
 
-import * as i from '@acme/integration-framework';
+import * as i from '@xentom/integration-framework';
 
 export const fileId = i.pins.data({
   displayName: 'File ID',

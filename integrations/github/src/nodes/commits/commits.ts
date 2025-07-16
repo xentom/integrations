@@ -2,7 +2,7 @@ import { createRepositoryWebhook } from '@/helpers/webhooks';
 import { repositoryFullName } from '@/pins';
 import { type EmitterWebhookEvent } from '@octokit/webhooks/types';
 
-import * as i from '@acme/integration-framework';
+import * as i from '@xentom/integration-framework';
 
 const category = {
   path: ['Commits'],

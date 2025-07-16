@@ -1,6 +1,6 @@
 import * as v from 'valibot';
 
-import * as i from '@acme/integration-framework';
+import * as i from '@xentom/integration-framework';
 
 export const uuid = i.pins.data({
   description: 'A unique identifier.',

@@ -2,7 +2,7 @@ import { QueryProtocol, TeamSpeak } from 'ts3-nodejs-library';
 import { type Whoami } from 'ts3-nodejs-library/lib/types/ResponseTypes';
 import * as v from 'valibot';
 
-import * as i from '@acme/integration-framework';
+import * as i from '@xentom/integration-framework';
 
 import * as nodes from './nodes';
 

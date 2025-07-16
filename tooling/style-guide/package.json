@@ -1,6 +1,6 @@
 {
-  "name": "@acme/style-guide",
-  "description": "Acme's engineering style guide",
+  "name": "@xentom/style-guide",
+  "description": "Xentom's engineering style guide",
   "version": "0.0.0",
   "type": "module",
   "publishConfig": {

@@ -1,4 +1,8 @@
 {
+  "search.exclude": {
+    "/patches/": true,
+    "/bun.lock": true
+  },
   "typescript.preferences.importModuleSpecifierEnding": "auto",
   "typescript.preferences.includePackageJsonAutoImports": "on",
   "typescript.preferences.preferTypeOnlyAutoImports": false

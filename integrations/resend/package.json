@@ -1,5 +1,5 @@
 {
-  "name": "@acme/integrations-resend",
+  "name": "@xentom/integrations-resend",
   "displayName": "Resend",
   "description": "Integrate Resend to trigger workflows from email events and send emails using the Resend API.",
   "version": "0.0.0",
@@ -11,21 +11,21 @@
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "typecheck": "tsc --noEmit",
     "clean": "git clean -xdf .cache .turbo node_modules build dist",
-    "dev": "acme dev",
-    "build": "acme build",
-    "publish": "acme publish"
+    "dev": "xentom dev",
+    "build": "xentom build",
+    "publish": "xentom publish"
   },
   "dependencies": {
-    "@acme/integration-framework": "catalog:",
+    "@xentom/integration-framework": "catalog:",
     "resend": "^4.6.0",
     "valibot": "catalog:"
   },
   "devDependencies": {
-    "@acme/style-guide": "catalog:",
+    "@xentom/style-guide": "catalog:",
     "@types/bun": "catalog:",
     "eslint": "catalog:",
     "prettier": "catalog:",
     "typescript": "catalog:"
   },
-  "prettier": "@acme/style-guide/prettier"
+  "prettier": "@xentom/style-guide/prettier"
 }

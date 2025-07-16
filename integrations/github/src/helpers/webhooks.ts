@@ -1,4 +1,4 @@
-import type * as i from '@acme/integration-framework';
+import type * as i from '@xentom/integration-framework';
 
 interface CreateRepositoryWebhookOptions {
   repository: string;

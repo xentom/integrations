@@ -8,7 +8,7 @@ import * as z from 'zod';
 
 // import {Responses} from 'openai/resources'
 
-import * as i from '@acme/integration-framework';
+import * as i from '@xentom/integration-framework';
 
 const category = {
   path: ['AI', 'Response'],

@@ -1,7 +1,7 @@
 {
-  "name": "@acme/integrations-testing",
+  "name": "@xentom/integrations-testing",
   "displayName": "Testing",
-  "description": "Toolkit for testing ACME integrations, including nodes, pins, and controls.",
+  "description": "Toolkit for testing Xentom integrations, including nodes, pins, and controls.",
   "version": "0.0.0",
   "type": "module",
   "icon": "./images/icon.png",
@@ -11,20 +11,20 @@
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "typecheck": "tsc --noEmit",
     "clean": "git clean -xdf .cache .turbo node_modules build dist",
-    "dev": "acme dev",
-    "build": "acme build",
-    "publish": "acme publish"
+    "dev": "xentom dev",
+    "build": "xentom build",
+    "publish": "xentom publish"
   },
   "dependencies": {
-    "@acme/integration-framework": "catalog:",
+    "@xentom/integration-framework": "catalog:",
     "valibot": "catalog:"
   },
   "devDependencies": {
-    "@acme/style-guide": "catalog:",
+    "@xentom/style-guide": "catalog:",
     "@types/bun": "catalog:",
     "eslint": "catalog:",
     "prettier": "catalog:",
     "typescript": "catalog:"
   },
-  "prettier": "@acme/style-guide/prettier"
+  "prettier": "@xentom/style-guide/prettier"
 }

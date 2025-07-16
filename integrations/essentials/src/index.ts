@@ -1,4 +1,4 @@
-import * as i from '@acme/integration-framework';
+import * as i from '@xentom/integration-framework';
 
 import * as nodes from './nodes';
 
