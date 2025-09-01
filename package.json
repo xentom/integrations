@@ -4,21 +4,19 @@
   "private": true,
   "packageManager": "bun@1.2.18",
   "scripts": {
-    "dev": "turbo run dev",
+    "clean": "turbo run clean && git clean -xdf node_modules",
     "lint": "turbo run lint --continue -- --cache --cache-location .cache/.eslintcache",
-    "format": "turbo run format --continue -- --cache --cache-location .cache/.prettiercache",
-    "format:fix": "bun run format --write",
     "typecheck": "turbo typecheck --continue",
-    "build": "turbo run build",
-    "clean": "turbo run clean && git clean -xdf node_modules"
+    "format": "turbo run format --continue -- --write --cache --cache-location .cache/.prettiercache",
+    "pack": "turbo run pack --"
   },
   "dependencies": {
     "@standard-schema/spec": "^1.0.0"
   },
   "devDependencies": {
     "@xentom/style-guide": "*",
-    "@types/bun": "latest",
-    "turbo": "^2.5.4",
+    "@types/bun": "1.2.21",
+    "turbo": "^2.5.6",
     "typescript": "catalog:"
   },
   "trustedDependencies": [
@@ -29,17 +27,17 @@
   },
   "workspaces": {
     "packages": [
-      "integrations/*",
+      "packages/*",
       "tooling/*"
     ],
     "catalog": {
       "@xentom/integration-framework": "link:@xentom/integration-framework",
       "@xentom/style-guide": "*",
-      "@types/bun": "^1.2.15",
+      "@types/bun": "^1.2.21",
       "valibot": "^1.1.0",
-      "eslint": "^9.29.0",
+      "eslint": "^9.34.0",
       "prettier": "^3.5.3",
-      "typescript": "^5"
+      "typescript": "^5.9.2"
     }
   },
   "prettier": "@xentom/style-guide/prettier"

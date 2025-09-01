@@ -1,0 +1,30 @@
+{
+  "name": "@xentom/integrations-template",
+  "displayName": "Template",
+  "description": "This is a template for creating new integrations in the Xentom ecosystem. It includes basic setup and configuration.",
+  "version": "0.0.0",
+  "type": "module",
+  "icon": "./images/icon.png",
+  "main": "./build/index.js",
+  "scripts": {
+    "lint": "eslint",
+    "format": "prettier --check . --ignore-path ../../.gitignore --ignore-path ../../.prettierignore",
+    "typecheck": "tsc --noEmit",
+    "clean": "git clean -xdf .cache .turbo node_modules build dist",
+    "dev": "xentom dev",
+    "pack": "xentom pack",
+    "publish": "xentom publish"
+  },
+  "dependencies": {
+    "@xentom/integration-framework": "catalog:",
+    "valibot": "catalog:"
+  },
+  "devDependencies": {
+    "@xentom/style-guide": "catalog:",
+    "@types/bun": "catalog:",
+    "eslint": "catalog:",
+    "prettier": "catalog:",
+    "typescript": "catalog:"
+  },
+  "prettier": "@xentom/style-guide/prettier"
+}

@@ -5,9 +5,9 @@
     "topo": {
       "dependsOn": ["^topo"]
     },
-    "build": {
-      "dependsOn": ["^build"],
-      "outputs": [".cache/tsbuildinfo.json", "dist/**"]
+    "pack": {
+      "dependsOn": ["^pack"],
+      "outputs": ["dist/**"]
     },
     "dev": {
       "dependsOn": ["^dev"],

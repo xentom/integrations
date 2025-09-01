@@ -182,7 +182,7 @@ outputs: {
 ## File Structure Patterns
 
 ```
-integrations/[name]/
+packages/[name]/
 ├── src/
 │   ├── index.ts              # Integration entry + client setup
 │   ├── nodes/

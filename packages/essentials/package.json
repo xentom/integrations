@@ -1,0 +1,31 @@
+{
+  "name": "@xentom/integrations-essentials",
+  "displayName": "Essentials",
+  "description": "Add essentials to trigger workflows on schedules or manual runs and perform core actions like sending emails, making HTTP requests, or manipulating data.",
+  "version": "0.0.13",
+  "type": "module",
+  "icon": "./images/icon.png",
+  "main": "./build/index.js",
+  "scripts": {
+    "lint": "eslint",
+    "format": "prettier --check . --ignore-path ../../.gitignore --ignore-path ../../.prettierignore",
+    "typecheck": "tsc --noEmit",
+    "clean": "git clean -xdf .cache .turbo node_modules build dist",
+    "dev": "xentom dev",
+    "pack": "xentom pack",
+    "publish": "xentom publish"
+  },
+  "dependencies": {
+    "@xentom/integration-framework": "catalog:",
+    "mime": "^4.0.7",
+    "valibot": "catalog:"
+  },
+  "devDependencies": {
+    "@xentom/style-guide": "catalog:",
+    "@types/bun": "catalog:",
+    "eslint": "catalog:",
+    "prettier": "catalog:",
+    "typescript": "catalog:"
+  },
+  "prettier": "@xentom/style-guide/prettier"
+}

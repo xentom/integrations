@@ -60,7 +60,7 @@ This is a comprehensive guide for building integrations using the Xentom integra
 
 ```
 .                                     # Root monorepo directory
-├── integrations/[name]/              # Individual integrations
+├── packages/[name]/                  # Individual integrations
 │   ├── src/
 │   │   ├── index.ts                  # Integration entry point
 │   │   ├── globals.d.ts              # TypeScript global declarations
@@ -97,7 +97,7 @@ This is a comprehensive guide for building integrations using the Xentom integra
 
 ### Creating a New Integration
 
-1. **Copy Template**: Start with `/integrations/template/` as base
+1. **Copy Template**: Start with `/packages/template/` as base
 2. **Update Package Info**: Modify `package.json` with integration name and dependencies
 3. **Add Icon**: Replace `images/icon.png` with integration-specific icon
 4. **Configure Environment**: Define required API keys and configuration in `src/index.ts`
@@ -617,21 +617,11 @@ const response: ChatPostMessageResponse =
 
 ### Commands
 
-**Root Level Commands:**
-
-```bash
-bun run dev        # Start development mode for all integrations
-bun run build      # Build all integrations with Turbo
-bun run lint       # Lint all packages
-bun run typecheck  # Type check all packages
-bun run format     # Format code with Prettier
-```
-
-**Integration Level Commands (within `/integrations/[name]/`):**
+**Integration Level Commands (within `/packages/[name]/`):**
 
 ```bash
 bun run dev        # Start development mode (xentom dev)
-bun run build      # Build integration (xentom build)
+bun run pack       # Pack integration (xentom pack)
 bun run publish    # Publish integration (xentom publish)
 bun run lint       # Lint integration code
 bun run typecheck  # Type check integration

@@ -2,31 +2,31 @@
   "folders": [
     {
       "name": "essentials",
-      "path": "integrations/essentials",
+      "path": "packages/essentials",
     },
     {
       "name": "github",
-      "path": "integrations/github",
+      "path": "packages/github",
     },
     {
       "name": "openai",
-      "path": "integrations/openai",
+      "path": "packages/openai",
     },
     {
       "name": "resend",
-      "path": "integrations/resend",
+      "path": "packages/resend",
     },
     {
       "name": "teamspeak",
-      "path": "integrations/teamspeak",
+      "path": "packages/teamspeak",
     },
     {
       "name": "template",
-      "path": "integrations/template",
+      "path": "packages/template",
     },
     {
       "name": "testing",
-      "path": "integrations/testing",
+      "path": "packages/testing",
     },
   ],
 }

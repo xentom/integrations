@@ -10,7 +10,7 @@ This is a **monorepo** containing multiple integrations and shared tooling:
 
 ```
 /                          # Root monorepo directory
-├── integrations/          # All service integrations
+├── packages/          # All service integrations
 │   ├── discord/           # Discord integration package
 │   ├── essentials/        # Core framework nodes package
 │   ├── github/            # GitHub integration package
@@ -66,10 +66,10 @@ To create a new integration, start by copying the existing template from within 
 
 ```bash
 # From monorepo root
-cp -r ./integrations/template ./integrations/$ARGUMENTS
+cp -r ./packages/template ./packages/$ARGUMENTS
 
 # Navigate to the new integration directory
-cd ./integrations/$ARGUMENTS
+cd ./packages/$ARGUMENTS
 ```
 
 ##### 1.2.2 Configure `package.json`
@@ -128,7 +128,7 @@ ls node_modules/@types/[package-name]/ # If separate types package
 
 #### 3.1 Working Directory Context
 
-**Current working directory:** `./integrations/$ARGUMENTS/`
+**Current working directory:** `./packages/$ARGUMENTS/`
 
 All subsequent file paths are relative to this integration directory unless otherwise specified.
 
@@ -147,7 +147,7 @@ Analyze the service API to create logical node categories within the integration
 **Standard Integration Structure:**
 
 ```
-./integrations/$ARGUMENTS/                  # Individual integration package
+./packages/$ARGUMENTS/                  # Individual integration package
 ├── src/
 │   ├── index.ts                          # Integration entry point
 │   ├── nodes/                            # All node implementations
@@ -190,7 +190,7 @@ src/
 
 ### Phase 4: Implementation
 
-**Current working directory:** `./integrations/$ARGUMENTS/`
+**Current working directory:** `./packages/$ARGUMENTS/`
 
 #### 4.1 Integration Entry Point (`src/index.ts`)
 
@@ -314,7 +314,7 @@ export const listUsers = i.nodes.callable({
 
 ### Phase 5: Quality Assurance
 
-**Current working directory:** `./integrations/$ARGUMENTS/`
+**Current working directory:** `./packages/$ARGUMENTS/`
 
 #### 5.1 Code Quality Checks
 
@@ -330,7 +330,7 @@ bun run lint
 
 #### 5.2 Documentation Creation
 
-Create `README.md` in integration root: `./integrations/$ARGUMENTS/README.md`
+Create `README.md` in integration root: `./packages/$ARGUMENTS/README.md`
 
 ```markdown
 # [Service Name] Integration
@@ -381,8 +381,8 @@ Brief description of the service and integration capabilities.
 
 **Project Structure:**
 
-- [ ] Integration directory created at `./integrations/$ARGUMENTS/`
-- [ ] All files copied from `./integrations/template/`
+- [ ] Integration directory created at `./packages/$ARGUMENTS/`
+- [ ] All files copied from `./packages/template/`
 - [ ] API client installed and configured
 - [ ] All necessary dependencies added
 
@@ -418,7 +418,7 @@ Brief description of the service and integration capabilities.
 
 **Documentation:**
 
-- [ ] README.md created at `./integrations/$ARGUMENTS/README.md`
+- [ ] README.md created at `./packages/$ARGUMENTS/README.md`
 - [ ] Environment variables documented
 - [ ] Available nodes listed
 - [ ] Getting started guide included
@@ -444,4 +444,4 @@ Brief description of the service and integration capabilities.
 
 - See `.cursorrules` for critical coding standards and quick reference
 - See `CLAUDE.md` for comprehensive documentation and examples
-- Reference existing integrations in `./integrations/` directory for patterns
+- Reference existing integrations in `./packages/` directory for patterns

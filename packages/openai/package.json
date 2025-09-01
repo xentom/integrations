@@ -1,0 +1,33 @@
+{
+  "name": "@xentom/integrations-openai",
+  "displayName": "OpenAI",
+  "description": "Integrate OpenAI to trigger workflows from prompts or data inputs and generate text, summaries, or code using AI-powered actions.",
+  "version": "0.0.4",
+  "type": "module",
+  "icon": "./images/icon.png",
+  "main": "./build/index.js",
+  "scripts": {
+    "lint": "eslint",
+    "format": "prettier --check . --ignore-path ../../.gitignore --ignore-path ../../.prettierignore",
+    "typecheck": "tsc --noEmit",
+    "clean": "git clean -xdf .cache .turbo node_modules build dist",
+    "dev": "xentom dev",
+    "pack": "xentom pack",
+    "publish": "xentom publish"
+  },
+  "dependencies": {
+    "@xentom/integration-framework": "catalog:",
+    "mime": "^4.0.7",
+    "openai": "^5.16.0",
+    "valibot": "catalog:",
+    "zod": "^4.1.5"
+  },
+  "devDependencies": {
+    "@xentom/style-guide": "catalog:",
+    "@types/bun": "catalog:",
+    "eslint": "catalog:",
+    "prettier": "catalog:",
+    "typescript": "catalog:"
+  },
+  "prettier": "@xentom/style-guide/prettier"
+}
