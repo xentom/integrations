@@ -1,6 +1,6 @@
-import * as pins from '@/pins';
-
 import * as i from '@xentom/integration-framework';
+
+import * as pins from '@/pins';
 
 const category = {
   path: ['HTTP'],

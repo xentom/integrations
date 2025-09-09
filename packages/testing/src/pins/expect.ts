@@ -1,6 +1,5 @@
-import * as v from 'valibot';
-
 import * as i from '@xentom/integration-framework';
+import * as v from 'valibot';
 
 export const actual = i.pins.data<unknown>({
   description: 'The actual value to assert',

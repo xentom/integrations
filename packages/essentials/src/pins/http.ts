@@ -1,7 +1,7 @@
-import { HTTP_REQUEST_METHODS } from '@/utils/web';
+import * as i from '@xentom/integration-framework';
 import * as v from 'valibot';
 
-import * as i from '@xentom/integration-framework';
+import { HTTP_REQUEST_METHODS } from '@/helpers/web';
 
 export const method = i.pins.data({
   schema: v.picklist(HTTP_REQUEST_METHODS),

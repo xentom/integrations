@@ -1,7 +1,7 @@
-import { Resend } from 'resend';
+import * as i from '@xentom/integration-framework';
 import * as v from 'valibot';
 
-import * as i from '@xentom/integration-framework';
+import { Resend } from 'resend';
 
 import * as nodes from './nodes';
 

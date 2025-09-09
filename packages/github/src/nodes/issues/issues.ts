@@ -1,8 +1,9 @@
-import { createRepositoryWebhook } from '@/helpers/webhooks';
-import { repositoryFullName } from '@/pins';
+import * as i from '@xentom/integration-framework';
+
 import { type EmitterWebhookEvent } from '@octokit/webhooks/types';
 
-import * as i from '@xentom/integration-framework';
+import { createRepositoryWebhook } from '@/helpers/webhooks';
+import * as pins from '@/pins';
 
 const category = {
   path: ['Issues'],
@@ -12,85 +13,8 @@ export const onIssue = i.generic(<
   I extends i.InferPinRecordOutput<typeof inputs>,
 >() => {
   const inputs = {
-    repository: repositoryFullName,
-    actionType: i.pins.data({
-      control: i.controls.select({
-        options: [
-          {
-            label: 'Assigned',
-            value: 'assigned',
-          },
-          {
-            label: 'Closed',
-            value: 'closed',
-          },
-          {
-            label: 'Deleted',
-            value: 'deleted',
-          },
-          {
-            label: 'Demilestoned',
-            value: 'demilestoned',
-          },
-          {
-            label: 'Edited',
-            value: 'edited',
-          },
-          {
-            label: 'Labeled',
-            value: 'labeled',
-          },
-          {
-            label: 'Locked',
-            value: 'locked',
-          },
-          {
-            label: 'Milestoned',
-            value: 'milestoned',
-          },
-          {
-            label: 'Opened',
-            value: 'opened',
-          },
-          {
-            label: 'Pinned',
-            value: 'pinned',
-          },
-          {
-            label: 'Reopened',
-            value: 'reopened',
-          },
-          {
-            label: 'Transferred',
-            value: 'transferred',
-          },
-          {
-            label: 'Typed',
-            value: 'typed',
-          },
-          {
-            label: 'Unassigned',
-            value: 'unassigned',
-          },
-          {
-            label: 'Unlabeled',
-            value: 'unlabeled',
-          },
-          {
-            label: 'Unlocked',
-            value: 'unlocked',
-          },
-          {
-            label: 'Unpinned',
-            value: 'unpinned',
-          },
-          {
-            label: 'Untyped',
-            value: 'untyped',
-          },
-        ],
-      }),
-    }),
+    repository: pins.repository.fullName,
+    actionType: pins.issue.actionType,
   };
 
   type IssueEvent = EmitterWebhookEvent<`issues.${I['actionType']}`>;

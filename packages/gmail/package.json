@@ -1,0 +1,32 @@
+{
+  "name": "@xentom/integrations-gmail",
+  "displayName": "Gmail",
+  "description": "Gmail integration for the Xentom workflow editor. Send, receive, and manage emails through Gmail's API with powerful workflow automation capabilities.",
+  "version": "0.0.5",
+  "type": "module",
+  "icon": "./images/icon.png",
+  "main": "./build/index.js",
+  "scripts": {
+    "lint": "eslint",
+    "format": "prettier --write . --ignore-path ../../.gitignore --ignore-path ../../.prettierignore",
+    "typecheck": "tsc --noEmit",
+    "clean": "git clean -xdf .cache .turbo node_modules build dist",
+    "dev": "xentom dev",
+    "pack": "xentom pack",
+    "publish": "xentom publish"
+  },
+  "dependencies": {
+    "@xentom/integration-framework": "catalog:",
+    "google-auth-library": "^10.3.0",
+    "googleapis": "^159.0.0",
+    "valibot": "catalog:"
+  },
+  "devDependencies": {
+    "@xentom/style-guide": "catalog:",
+    "@types/bun": "catalog:",
+    "eslint": "catalog:",
+    "prettier": "catalog:",
+    "typescript": "catalog:"
+  },
+  "prettier": "@xentom/style-guide/prettier"
+}

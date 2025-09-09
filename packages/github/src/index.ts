@@ -1,10 +1,10 @@
+import * as i from '@xentom/integration-framework';
+import * as v from 'valibot';
+
 import { randomBytes } from 'node:crypto';
 import { Webhooks } from '@octokit/webhooks';
 import { type EmitterWebhookEvent } from '@octokit/webhooks/types';
-import { Octokit, RequestError } from 'octokit';
-import * as v from 'valibot';
-
-import * as i from '@xentom/integration-framework';
+import { Octokit } from 'octokit';
 
 import * as nodes from './nodes';
 
@@ -22,42 +22,15 @@ export interface IntegrationState {
 export default i.integration({
   nodes,
 
-  env: {
-    GITHUB_TOKEN: i.env({
-      control: i.controls.text({
-        label: 'GitHub Token',
-        description:
-          'A personal access token with the necessary permissions to access your repositories.',
-        placeholder: 'ghp_...',
-        sensitive: true,
-      }),
-      schema: v.pipeAsync(
-        v.string(),
-        v.startsWith('ghp_'),
-        v.checkAsync(async (token) => {
-          const octokit = new Octokit({
-            auth: token,
-          });
-
-          try {
-            await octokit.rest.users.getAuthenticated();
-            return true;
-          } catch (error) {
-            console.error(
-              'GitHub token validation failed:',
-              error instanceof RequestError ? error.message : error,
-            );
-
-            return false;
-          }
-        }, 'Invalid GitHub token. Please check your token and permissions.'),
-      ),
-    }),
-  },
+  auth: i.auth.oauth2({
+    authUrl: 'https://github.com/login/oauth/authorize',
+    tokenUrl: 'https://github.com/login/oauth/access_token',
+    scopes: ['admin:repo_hook', 'admin:org', 'repo'],
+  }),
 
   start(opts) {
     opts.state.octokit = new Octokit({
-      auth: process.env.GITHUB_TOKEN,
+      auth: opts.auth.accessToken,
     });
 
     opts.state.webhookSecret = randomBytes(32).toString('hex');

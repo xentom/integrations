@@ -1,8 +1,8 @@
-import { QueryProtocol, TeamSpeak } from 'ts3-nodejs-library';
-import { type Whoami } from 'ts3-nodejs-library/lib/types/ResponseTypes';
+import * as i from '@xentom/integration-framework';
 import * as v from 'valibot';
 
-import * as i from '@xentom/integration-framework';
+import { QueryProtocol, TeamSpeak } from 'ts3-nodejs-library';
+import { type Whoami } from 'ts3-nodejs-library/lib/types/ResponseTypes';
 
 import * as nodes from './nodes';
 

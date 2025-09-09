@@ -1,14 +1,12 @@
-import * as customPins from '@/pins';
+import * as i from '@xentom/integration-framework';
+import * as z from 'zod';
+
 import {
-  type Response,
   type ResponseInput,
   type Tool,
 } from 'openai/resources/responses/responses';
-import * as z from 'zod';
 
-// import {Responses} from 'openai/resources'
-
-import * as i from '@xentom/integration-framework';
+import * as pins from '@/pins';
 
 const category = {
   path: ['AI', 'Response'],
@@ -82,7 +80,7 @@ export const createResponse = i.nodes.callable({
     }),
   },
   outputs: {
-    response: i.pins.data<Response>(),
+    response: pins.response.item,
   },
   async run(opts) {
     const tools: Tool[] = [];
@@ -109,16 +107,14 @@ export const createResponse = i.nodes.callable({
 export const getResponse = i.nodes.callable({
   category,
   inputs: {
-    responseId: customPins.responseId,
+    id: pins.response.id,
   },
   outputs: {
-    response: customPins.response,
+    response: pins.response.item,
   },
   async run(opts) {
     return opts.next({
-      response: await opts.state.client.responses.retrieve(
-        opts.inputs.responseId,
-      ),
+      response: await opts.state.client.responses.retrieve(opts.inputs.id),
     });
   },
 });
@@ -126,16 +122,14 @@ export const getResponse = i.nodes.callable({
 export const cancelResponse = i.nodes.callable({
   category,
   inputs: {
-    responseId: customPins.responseId,
+    id: pins.response.id,
   },
   outputs: {
-    response: customPins.response,
+    response: pins.response.item,
   },
   async run(opts) {
     return opts.next({
-      response: await opts.state.client.responses.cancel(
-        opts.inputs.responseId,
-      ),
+      response: await opts.state.client.responses.cancel(opts.inputs.id),
     });
   },
 });
@@ -143,10 +137,10 @@ export const cancelResponse = i.nodes.callable({
 export const deleteResponse = i.nodes.callable({
   category,
   inputs: {
-    responseId: customPins.responseId,
+    id: pins.response.id,
   },
   async run(opts) {
-    await opts.state.client.responses.delete(opts.inputs.responseId);
+    await opts.state.client.responses.delete(opts.inputs.id);
     return opts.next();
   },
 });

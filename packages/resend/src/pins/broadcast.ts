@@ -1,8 +1,19 @@
+import * as i from '@xentom/integration-framework';
 import * as v from 'valibot';
 
-import * as i from '@xentom/integration-framework';
-
 import * as common from './common';
+
+// TODO: Add proper types once merged (tracking PR: https://github.com/resend/resend-node/pull/547)
+export const item = i.pins.data({
+  description: 'A broadcast object containing all broadcast information.',
+  control: false,
+});
+
+// TODO: Add proper types once merged (tracking PR: https://github.com/resend/resend-node/pull/547)
+export const items = i.pins.data({
+  description: 'A list of broadcasts.',
+  control: false,
+});
 
 export const id = common.uuid.with({
   displayName: 'Domain ID',
@@ -43,14 +54,4 @@ export const status = i.pins.data({
     ],
   }),
   schema: v.picklist(['draft', 'sent', 'queued']),
-});
-
-export const object = i.pins.data({
-  description: 'A broadcast object containing all broadcast information.',
-  control: false,
-});
-
-export const list = i.pins.data({
-  description: 'A list of broadcasts.',
-  control: false,
 });

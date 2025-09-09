@@ -1,7 +1,7 @@
-import * as pins from '@/pins';
+import * as i from '@xentom/integration-framework';
 import * as v from 'valibot';
 
-import * as i from '@xentom/integration-framework';
+import * as pins from '@/pins';
 
 const category = {
   path: ['Channels'],
@@ -17,7 +17,7 @@ export const getChannelById = i.nodes.pure({
   },
 
   outputs: {
-    channel: pins.channel.object.output,
+    channel: pins.channel.item.output,
   },
 
   async run(opts) {
@@ -42,7 +42,7 @@ export const getChannelByName = i.nodes.pure({
   },
 
   outputs: {
-    channel: pins.channel.object.output,
+    channel: pins.channel.item.output,
   },
 
   async run(opts) {
@@ -116,7 +116,7 @@ export const createChannel = i.nodes.callable({
   },
 
   outputs: {
-    channel: pins.channel.object.output,
+    channel: pins.channel.item.output,
   },
 
   async run(opts) {
@@ -156,7 +156,7 @@ export const deleteChannel = i.nodes.callable({
   description: 'Delete a TeamSpeak channel',
 
   inputs: {
-    channel: pins.channel.object.input,
+    channel: pins.channel.item.input,
     force: i.pins.data({
       description: 'Whether to force the deletion of the channel',
       control: i.controls.switch(),

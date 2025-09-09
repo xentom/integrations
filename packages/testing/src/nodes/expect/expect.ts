@@ -1,7 +1,8 @@
-import * as pins from '@/pins';
+import * as i from '@xentom/integration-framework';
+
 import { expect } from 'bun:test';
 
-import * as i from '@xentom/integration-framework';
+import * as pins from '@/pins';
 
 const category = {
   path: ['Testing', 'Expect'],

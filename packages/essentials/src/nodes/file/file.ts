@@ -1,7 +1,7 @@
-import mime from 'mime';
+import * as i from '@xentom/integration-framework';
 import * as v from 'valibot';
 
-import * as i from '@xentom/integration-framework';
+import mime from 'mime';
 
 const category = {
   path: ['File'],

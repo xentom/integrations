@@ -1,10 +1,10 @@
-import { TeamSpeakChannel } from 'ts3-nodejs-library';
-import { type ChannelEntry } from 'ts3-nodejs-library/lib/types/ResponseTypes';
+import * as i from '@xentom/integration-framework';
 import * as v from 'valibot';
 
-import * as i from '@xentom/integration-framework';
+import { TeamSpeakChannel } from 'ts3-nodejs-library';
+import { type ChannelEntry } from 'ts3-nodejs-library/lib/types/ResponseTypes';
 
-export const object = {
+export const item = {
   input: i.pins.data({
     displayName: 'Channel',
     description: 'The details of a TeamSpeak channel',

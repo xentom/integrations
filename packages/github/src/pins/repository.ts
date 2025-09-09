@@ -1,8 +1,7 @@
+import * as i from '@xentom/integration-framework';
 import * as v from 'valibot';
 
-import * as i from '@xentom/integration-framework';
-
-export const repositoryFullName = i.pins.data({
+export const fullName = i.pins.data({
   description: 'The full name of the repository (e.g., octocat/Hello-World)',
   schema: v.pipe(v.string(), v.nonEmpty()),
   control: i.controls.select({

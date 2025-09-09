@@ -1,8 +1,9 @@
-import * as pins from '@/pins';
-import { type GetEmailResponseSuccess } from 'resend';
+import * as i from '@xentom/integration-framework';
 import * as v from 'valibot';
 
-import * as i from '@xentom/integration-framework';
+import { type GetEmailResponseSuccess } from 'resend';
+
+import * as pins from '@/pins';
 
 const category = {
   path: ['Emails'],

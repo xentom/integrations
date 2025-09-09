@@ -1,8 +1,8 @@
-import OpenAI from 'openai';
-import { type Model } from 'openai/resources';
+import * as i from '@xentom/integration-framework';
 import * as v from 'valibot';
 
-import * as i from '@xentom/integration-framework';
+import OpenAI from 'openai';
+import { type Model } from 'openai/resources';
 
 import * as nodes from './nodes';
 

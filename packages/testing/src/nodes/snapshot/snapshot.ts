@@ -1,9 +1,9 @@
-import * as pins from '@/pins';
-import { expect } from 'bun:test';
+import * as i from '@xentom/integration-framework';
 import * as v from 'valibot';
 
-import * as i from '@xentom/integration-framework';
+import { expect } from 'bun:test';
 
+import * as pins from '@/pins';
 import { writeSnapshots } from './utils';
 
 const category = {

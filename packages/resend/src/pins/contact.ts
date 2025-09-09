@@ -1,8 +1,17 @@
-import * as common from '@/pins/common';
-import { type GetContactResponseSuccess } from 'resend';
+import * as i from '@xentom/integration-framework';
 import * as v from 'valibot';
 
-import * as i from '@xentom/integration-framework';
+import { type GetContactResponseSuccess } from 'resend';
+
+import * as common from '@/pins/common';
+
+export const item = i.pins.data<GetContactResponseSuccess>({
+  description: 'Contact object.',
+});
+
+export const items = i.pins.data<Omit<GetContactResponseSuccess, 'object'>[]>({
+  description: 'Array of contact objects.',
+});
 
 export const id = common.uuid.with({
   displayName: 'Contact ID',
@@ -30,13 +39,3 @@ export const unsubscribed = i.pins.data({
   control: i.controls.switch(),
   schema: v.boolean(),
 });
-
-export const object = i.pins.data<GetContactResponseSuccess>({
-  description: 'Contact object.',
-});
-
-export const objects = i.pins.data<Omit<GetContactResponseSuccess, 'object'>[]>(
-  {
-    description: 'Array of contact objects.',
-  },
-);

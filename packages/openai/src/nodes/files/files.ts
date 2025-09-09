@@ -1,8 +1,9 @@
-import * as customPins from '@/pins';
-import { type FilePurpose } from 'openai/resources';
+import * as i from '@xentom/integration-framework';
 import * as z from 'zod';
 
-import * as i from '@xentom/integration-framework';
+import { type FilePurpose } from 'openai/resources';
+
+import * as pins from '@/pins';
 
 const category = {
   path: ['AI', 'Files'],
@@ -59,7 +60,7 @@ export const createFile = i.nodes.callable({
     }),
   },
   outputs: {
-    file: customPins.file,
+    file: pins.file.item,
   },
   async run(opts) {
     const file = await opts.state.client.files.create({
@@ -76,7 +77,7 @@ export const createFile = i.nodes.callable({
 export const deleteFile = i.nodes.callable({
   category,
   inputs: {
-    fileId: customPins.fileId,
+    fileId: pins.file.id,
   },
   async run(opts) {
     const file = await opts.state.client.files.delete(opts.inputs.fileId);
@@ -96,15 +97,14 @@ export const listFiles = i.nodes.callable({
         defaultValue: 10000,
       }),
     }),
-    after: i.pins.data({
+    after: pins.file.id.with({
       description:
         'The cursor for pagination, used to fetch the next set of files.',
-      schema: z.string().optional(),
-      control: customPins.fileId.control,
+      optional: true,
     }),
   },
   outputs: {
-    files: customPins.files,
+    files: pins.file.items,
     hasMore: i.pins.data({
       schema: z.boolean(),
       description: 'Indicates if there are more files to fetch.',
@@ -126,10 +126,10 @@ export const listFiles = i.nodes.callable({
 export const getFile = i.nodes.callable({
   category,
   inputs: {
-    fileId: customPins.fileId,
+    fileId: pins.file.id,
   },
   outputs: {
-    file: customPins.file,
+    file: pins.file.item,
   },
   async run(opts) {
     const file = await opts.state.client.files.retrieve(opts.inputs.fileId);
@@ -142,7 +142,7 @@ export const getFile = i.nodes.callable({
 export const fileContent = i.nodes.callable({
   category,
   inputs: {
-    fileId: customPins.fileId,
+    fileId: pins.file.id,
   },
   outputs: {
     content: i.pins.data({
@@ -161,7 +161,7 @@ export const fileContent = i.nodes.callable({
 export const waitForFileProcessing = i.nodes.callable({
   category,
   inputs: {
-    fileId: customPins.fileId,
+    fileId: pins.file.id,
     pollInterval: i.pins.data({
       schema: z.number().min(1000).default(5000),
       description: 'Polling interval in milliseconds.',
@@ -175,7 +175,7 @@ export const waitForFileProcessing = i.nodes.callable({
     }),
   },
   outputs: {
-    file: customPins.file,
+    file: pins.file.item,
   },
   async run(opts) {
     const file = await opts.state.client.files.waitForProcessing(

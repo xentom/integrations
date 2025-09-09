@@ -1,4 +1,5 @@
-import * as pins from '@/pins';
+import * as i from '@xentom/integration-framework';
+
 import {
   type CreateDomainResponseSuccess,
   type GetDomainResponseSuccess,
@@ -6,7 +7,7 @@ import {
   type VerifyDomainsResponseSuccess,
 } from 'resend';
 
-import * as i from '@xentom/integration-framework';
+import * as pins from '@/pins';
 
 const category = {
   path: ['Domains'],
@@ -31,7 +32,7 @@ export const createDomain = i.nodes.callable({
   },
 
   outputs: {
-    domain: pins.domain.object.with<CreateDomainResponseSuccess>({
+    domain: pins.domain.item.with<CreateDomainResponseSuccess>({
       description: 'The created domain object.',
     }),
   },
@@ -64,7 +65,7 @@ export const getDomain = i.nodes.callable({
   },
 
   outputs: {
-    domain: pins.domain.object.with<GetDomainResponseSuccess>({
+    domain: pins.domain.item.with<GetDomainResponseSuccess>({
       description: 'The domain object.',
     }),
   },
@@ -87,7 +88,7 @@ export const listDomains = i.nodes.callable({
   description: 'Retrieve a list of domains.',
 
   outputs: {
-    domains: pins.domain.list.with({
+    domains: pins.domain.items.with({
       description: 'The list of domains.',
     }),
   },
@@ -116,7 +117,7 @@ export const verifyDomain = i.nodes.callable({
   },
 
   outputs: {
-    domain: pins.domain.object.with<VerifyDomainsResponseSuccess>({
+    domain: pins.domain.item.with<VerifyDomainsResponseSuccess>({
       description: 'The verified domain object.',
     }),
   },

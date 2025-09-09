@@ -1,7 +1,7 @@
-import * as common from '@/pins/common';
+import * as i from '@xentom/integration-framework';
 import * as v from 'valibot';
 
-import * as i from '@xentom/integration-framework';
+import * as common from '@/pins/common';
 
 const EmailSchmea = v.pipe(v.string(), v.trim(), v.email());
 

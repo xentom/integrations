@@ -1,13 +1,21 @@
+import * as i from '@xentom/integration-framework';
+import * as v from 'valibot';
+
 import {
   type CreateDomainOptions,
   type GetDomainResponseSuccess,
   type ListDomainsResponseSuccess,
 } from 'resend';
-import * as v from 'valibot';
-
-import * as i from '@xentom/integration-framework';
 
 import * as common from './common';
+
+export const item = i.pins.data<GetDomainResponseSuccess>({
+  description: 'A domain object containing all domain information.',
+});
+
+export const items = i.pins.data<ListDomainsResponseSuccess>({
+  description: 'A list of domains.',
+});
 
 export const id = common.uuid.with({
   displayName: 'Domain ID',
@@ -41,12 +49,4 @@ export const returnPath = i.pins.data({
     placeholder: 'send',
   }),
   schema: v.pipe(v.string(), v.minLength(1)),
-});
-
-export const object = i.pins.data<GetDomainResponseSuccess>({
-  description: 'A domain object containing all domain information.',
-});
-
-export const list = i.pins.data<ListDomainsResponseSuccess>({
-  description: 'A list of domains.',
 });

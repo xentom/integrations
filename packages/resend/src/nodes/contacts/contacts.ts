@@ -1,6 +1,6 @@
-import * as pins from '@/pins';
-
 import * as i from '@xentom/integration-framework';
+
+import * as pins from '@/pins';
 
 const category = {
   path: ['Contacts'],
@@ -72,7 +72,7 @@ export const getContact = i.nodes.callable({
   },
 
   outputs: {
-    contact: pins.contact.object.with(),
+    contact: pins.contact.item.with(),
   },
 
   async run(opts) {
@@ -103,7 +103,7 @@ export const listContacts = i.nodes.callable({
   },
 
   outputs: {
-    contacts: pins.contact.objects,
+    contacts: pins.contact.items,
   },
 
   async run(opts) {

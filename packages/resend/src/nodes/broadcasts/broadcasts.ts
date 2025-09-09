@@ -1,7 +1,7 @@
-import * as pins from '@/pins';
+import * as i from '@xentom/integration-framework';
 import * as v from 'valibot';
 
-import * as i from '@xentom/integration-framework';
+import * as pins from '@/pins';
 
 const category = {
   path: ['Broadcasts'],
@@ -45,7 +45,7 @@ export const createBroadcast = i.nodes.callable({
   },
 
   outputs: {
-    broadcast: pins.broadcast.object.with({
+    broadcast: pins.broadcast.item.with({
       description: 'The created broadcast object.',
       control: false,
     }),
@@ -90,7 +90,7 @@ export const getBroadcast = i.nodes.callable({
   },
 
   outputs: {
-    broadcast: pins.broadcast.object.with({
+    broadcast: pins.broadcast.item.with({
       description: 'The broadcast object.',
       control: false,
     }),
@@ -114,7 +114,7 @@ export const listBroadcasts = i.nodes.callable({
   description: 'Retrieve a list of broadcasts.',
 
   outputs: {
-    broadcasts: pins.broadcast.list.with({
+    broadcasts: pins.broadcast.items.with({
       description: 'The list of broadcasts.',
       control: false,
     }),
@@ -176,7 +176,7 @@ export const updateBroadcast = i.nodes.callable({
   },
 
   outputs: {
-    broadcast: pins.broadcast.object.with({
+    broadcast: pins.broadcast.item.with({
       description: 'The updated broadcast object.',
       control: false,
     }),
@@ -224,7 +224,7 @@ export const sendBroadcast = i.nodes.callable({
   },
 
   outputs: {
-    broadcast: pins.broadcast.object.with({
+    broadcast: pins.broadcast.item.with({
       description: 'The sent broadcast object.',
       control: false,
     }),

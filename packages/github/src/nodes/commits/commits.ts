@@ -1,8 +1,9 @@
-import { createRepositoryWebhook } from '@/helpers/webhooks';
-import { repositoryFullName } from '@/pins';
+import * as i from '@xentom/integration-framework';
+
 import { type EmitterWebhookEvent } from '@octokit/webhooks/types';
 
-import * as i from '@xentom/integration-framework';
+import { createRepositoryWebhook } from '@/helpers/webhooks';
+import * as pins from '@/pins';
 
 const category = {
   path: ['Commits'],
@@ -11,7 +12,7 @@ const category = {
 export const onPush = i.nodes.trigger({
   category,
   inputs: {
-    repository: repositoryFullName,
+    repository: pins.repository.fullName,
   },
   outputs: {
     id: i.pins.data<EmitterWebhookEvent<'push'>['id']>(),
