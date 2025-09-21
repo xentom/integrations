@@ -37,7 +37,11 @@ Evaluate and select a library based on:
 ### 3. Clone Template Integration
 
 ```bash
-cp -r packages/template packages/<integration-name>
+# For Linux/macOS
+rsync -av --exclude='node_modules' packages/template/ packages/<integration-name>/
+
+# For Windows (PowerShell)
+powershell -Command "robocopy './packages/template' './packages/<integration-name>' /E /XD node_modules"
 ```
 
 ### 4. Update Package Metadata
@@ -57,7 +61,11 @@ bun add <selected-package-name>
 
 ### 6. Review Integration Framework
 
-Review the `node_modules/@xentom/integration-framework/src/**/*.ts` source files to understand:
+Review the source files of the integration framework in monorepo root
+`node_modules/@xentom/integration-framework/src/**/*.ts`
+or in the integration package root
+`packages/<integration-name>/node_modules/@xentom/integration-framework/src/**/*.ts`
+to gain a solid understanding of:
 
 - How the framework works and its core concepts
 - Proper usage patterns and best practices

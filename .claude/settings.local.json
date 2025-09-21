@@ -7,7 +7,11 @@
       "Bash(bun add:*)",
       "WebFetch(domain:googleapis.dev)",
       "Bash(bun run lint:*)",
-      "Bash(bun run:*)"
+      "Bash(bun run:*)",
+      "WebFetch(domain:discord.js.org)",
+      "WebFetch(domain:discordjs.guide)",
+      "Bash(cat:*)",
+      "Bash(powershell:*)"
     ],
     "deny": [],
     "ask": []
