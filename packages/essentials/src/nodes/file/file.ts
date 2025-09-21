@@ -24,9 +24,8 @@ export const file = i.nodes.pure({
     }),
   },
   outputs: {
-    file: i.pins.data({
+    file: i.pins.data<File>({
       description: 'File object created from the provided name and content',
-      schema: v.custom<File>(() => true),
     }),
   },
   run(opts) {
