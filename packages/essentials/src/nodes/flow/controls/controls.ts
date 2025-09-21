@@ -87,10 +87,9 @@ export const forEach = i.generic(<
         displayName: 'Loop Body',
         description: 'Triggered for each element in the array',
         outputs: {
-          element: i.pins.data({
+          element: i.pins.data<I['array'][number]>({
             displayName: 'Element',
             description: 'Current element in the array',
-            schema: v.custom<I['array'][number]>(() => true),
           }),
           index: i.pins.data({
             displayName: 'Index',

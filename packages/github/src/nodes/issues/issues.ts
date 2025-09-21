@@ -10,7 +10,7 @@ const category = {
 } satisfies i.NodeCategory;
 
 export const onIssue = i.generic(<
-  I extends i.InferPinRecordOutput<typeof inputs>,
+  I extends i.GenericInputs<typeof inputs>,
 >() => {
   const inputs = {
     repository: pins.repository.fullName,
