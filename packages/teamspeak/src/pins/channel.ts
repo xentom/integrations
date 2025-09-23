@@ -4,28 +4,28 @@ import * as v from 'valibot';
 import { TeamSpeakChannel } from 'ts3-nodejs-library';
 import { type ChannelEntry } from 'ts3-nodejs-library/lib/types/ResponseTypes';
 
-export const item = {
-  input: i.pins.data({
-    displayName: 'Channel',
-    description: 'The details of a TeamSpeak channel',
-    schema: ({ state }) =>
-      v.pipe(
-        v.custom<ChannelEntry>((value) => {
-          return !!value && typeof value === 'object' && 'cid' in value;
-        }),
-        v.transform((value) => new TeamSpeakChannel(state.teamspeak, value)),
-      ),
-  }),
+export const item = i.pins.data({
+  displayName: 'Channel',
+  description: 'The details of a TeamSpeak channel',
+});
 
-  output: i.pins.data({
-    displayName: 'Channel',
-    description: 'The details of a TeamSpeak channel',
-    schema: v.pipe(
-      v.custom<TeamSpeakChannel>((value) => value instanceof TeamSpeakChannel),
-      v.transform((value) => value.toJSON() as ChannelEntry),
-    ),
-  }),
-};
+export const itemInput = item.with({
+  schema({ state }) {
+    return v.pipe(
+      v.custom<ChannelEntry>((value) => {
+        return !!value && typeof value === 'object' && 'cid' in value;
+      }),
+      v.transform((value) => new TeamSpeakChannel(state.teamspeak, value)),
+    );
+  },
+});
+
+export const itemOutput = item.with({
+  schema: v.pipe(
+    v.custom<TeamSpeakChannel>((value) => value instanceof TeamSpeakChannel),
+    v.transform((value) => value.toJSON() as ChannelEntry),
+  ),
+});
 
 export const id = i.pins.data({
   displayName: 'ID',

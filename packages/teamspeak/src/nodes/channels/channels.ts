@@ -17,7 +17,7 @@ export const getChannelById = i.nodes.pure({
   },
 
   outputs: {
-    channel: pins.channel.item.output,
+    channel: pins.channel.itemOutput,
   },
 
   async run(opts) {
@@ -42,7 +42,7 @@ export const getChannelByName = i.nodes.pure({
   },
 
   outputs: {
-    channel: pins.channel.item.output,
+    channel: pins.channel.itemOutput,
   },
 
   async run(opts) {
@@ -116,7 +116,7 @@ export const createChannel = i.nodes.callable({
   },
 
   outputs: {
-    channel: pins.channel.item.output,
+    channel: pins.channel.itemOutput,
   },
 
   async run(opts) {
@@ -156,7 +156,7 @@ export const deleteChannel = i.nodes.callable({
   description: 'Delete a TeamSpeak channel',
 
   inputs: {
-    channel: pins.channel.item.input,
+    channel: pins.channel.itemInput,
     force: i.pins.data({
       description: 'Whether to force the deletion of the channel',
       control: i.controls.switch(),
