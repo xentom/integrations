@@ -11,7 +11,10 @@
       "WebFetch(domain:discord.js.org)",
       "WebFetch(domain:discordjs.guide)",
       "Bash(cat:*)",
-      "Bash(powershell:*)"
+      "Bash(powershell:*)",
+      "Read(//c/Users/Tobias/GitHub/xentom/xentom/packages/integration-framework/**)",
+      "Read(//c/Users/Tobias/GitHub/xentom/integrations/node_modules/@xentom/integration-framework/src/nodes/**)",
+      "Read(//c/Users/Tobias/GitHub/xentom/integrations/node_modules/@xentom/integration-framework/src/controls/**)"
     ],
     "deny": [],
     "ask": []

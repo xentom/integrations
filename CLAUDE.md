@@ -344,6 +344,161 @@ export const id = i.pins.data({
   ```
 - **❌ FORBIDDEN**: `v.optional()` within pin schemas (breaks pin typing)
 
+**Reusable Pin Definitions:**
+
+- **✅ REQUIRED**: Main definitions of reusable pins must not include `optional: true`:
+
+  ```typescript
+  // Correct: Reusable pin definition without optional
+  export const title = i.pins.data({
+    description: 'The title of the item',
+    schema: v.pipe(v.string(), v.nonEmpty()),
+  });
+
+  export const body = i.pins.data({
+    description: 'The body content',
+    schema: v.string(),
+  });
+  ```
+
+- **✅ REQUIRED**: Use `optional: true` only when extending pins with `.with()`:
+  ```typescript
+  // Correct: Optional specified when extending
+  i.nodes.callable({
+    inputs: {
+      title: pins.item.title,
+      body: pins.item.body.with({
+        optional: true,
+      }),
+    },
+  });
+  ```
+- **❌ FORBIDDEN**: Including `optional: true` in the main reusable pin definition:
+  ```typescript
+  // Incorrect: Optional in reusable pin definition
+  export const body = i.pins.data({
+    description: 'The body content',
+    schema: v.string(),
+    optional: true, // This breaks reusability
+  });
+  ```
+
+**Rationale**: Reusable pins should be defined as their canonical form without optionality constraints. The `optional: true` attribute should only be applied when extending pins through `.with()` method, allowing the same pin to be used as both required and optional in different contexts without duplication.
+
+**Pin Control Usage:**
+
+- **✅ REQUIRED**: Include meaningful controls for reusable pins when they enhance user experience:
+
+  ```typescript
+  // Correct: Text control for string inputs
+  export const title = i.pins.data({
+    description: 'The title of the item',
+    schema: v.pipe(v.string(), v.nonEmpty()),
+    control: i.controls.text(),
+  });
+
+  // Correct: Select control for enumerated values
+  export const status = i.pins.data({
+    description: 'The status of the item',
+    control: i.controls.select({
+      options: [
+        { label: 'Active', value: 'active' },
+        { label: 'Inactive', value: 'inactive' },
+      ],
+    }),
+  });
+
+  // Correct: Dynamic select for contextual options
+  export const repository = i.pins.data({
+    description: 'The repository to use',
+    schema: v.pipe(v.string(), v.nonEmpty()),
+    control: i.controls.select({
+      async options(opts) {
+        const repos = await opts.state.api.listRepositories();
+        return repos.data.map((repo) => ({
+          value: repo.fullName,
+          label: repo.name,
+        }));
+      },
+    }),
+  });
+
+  // Correct: Multi-select for arrays of selectable items
+  export const assignees = i.pins.data({
+    description: 'Users to assign',
+    schema: v.array(v.string()),
+    control: i.controls.select({
+      multiple: true,
+      async options(opts) {
+        const users = await opts.state.api.getUsers();
+        return users.data.map((user) => ({
+          value: user.id,
+          label: user.name,
+        }));
+      },
+    }),
+  });
+  ```
+
+- **✅ REQUIRED**: Include controls for user-input values, even numeric ones:
+
+  ```typescript
+  // Correct: Expression control for user-entered numeric values
+  export const issueNumber = i.pins.data({
+    description: 'The issue number',
+    schema: v.pipe(v.number(), v.integer(), v.minValue(1)),
+    control: i.controls.expression(),
+  });
+
+  // Correct: Switch control for boolean flags
+  export const isDraft = i.pins.data({
+    description: 'Whether the item is a draft',
+    schema: v.boolean(),
+    control: i.controls.switch(),
+  });
+  ```
+
+- **✅ PREFERRED**: Omit controls only for specific cases where they don't add value:
+
+  ```typescript
+  // Correct: No control for complex response objects
+  export const item = i.pins.data<ApiResponseType>({
+    displayName: 'User Data',
+  });
+
+  // Correct: No control for computed/derived data
+  export const searchResults = i.pins.data<SearchResult[]>({
+    displayName: 'Search Results',
+  });
+
+  // Correct: No control when dynamic options aren't feasible
+  export const tags = i.pins.data({
+    description: 'Custom tags to apply',
+    schema: v.array(v.string()),
+    // Omit control when options can't be determined dynamically
+  });
+  ```
+
+- **❌ FORBIDDEN**: Omitting controls for simple user-input pins:
+
+  ```typescript
+  // Incorrect: Missing control for user input
+  export const email = i.pins.data({
+    description: 'User email address',
+    schema: v.string(),
+    // Missing control - user needs to input this!
+  });
+
+  // Incorrect: Missing control for boolean input
+  export const enabled = i.pins.data({
+    description: 'Whether feature is enabled',
+    schema: v.boolean(),
+    // Missing switch control
+  });
+  ```
+
+**Rationale**: Controls should be included for any pin where users need to provide input values. Use `text` controls for strings, `expression` controls for numbers, `switch` controls for booleans, `select` controls for predefined options, and `select` with `multiple: true` for arrays where users choose from available options. Only omit controls for complex objects, output-only pins, or when dynamic options cannot be reasonably determined.
+
 **Schema Design:**
 
 - **✅ CORRECT**: For complex API responses, omit schema and use TypeScript generics:
@@ -354,6 +509,59 @@ export const id = i.pins.data({
   ```
 - **❌ FORBIDDEN**: `v.any()` schema (bypasses type safety)
 - **✅ REQUIRED**: Design schemas to match actual API contracts, not idealized versions
+
+**Serialization Compatibility:**
+
+- **❌ FORBIDDEN**: Passing class instances directly through pins without serialization:
+  ```typescript
+  // Incorrect: Class instances cannot be serialized by the editor
+  export const channel = i.pins.data<TeamSpeakChannel>({
+    displayName: 'Channel',
+    // No schema - class instance passed directly
+  });
+  ```
+- **✅ REQUIRED**: Implement proper serialization/deserialization for class instances:
+  ```typescript
+  // Correct: Base pin without class-specific schema
+  export const item = i.pins.data({
+    displayName: 'Channel',
+    description: 'The details of a TeamSpeak channel',
+  });
+
+  // Correct: Input pin that deserializes to class instance
+  export const itemInput = item.with({
+    schema({ state }) {
+      return v.pipe(
+        v.custom<ChannelEntry>((value) => {
+          return !!value && typeof value === 'object' && 'cid' in value;
+        }),
+        v.transform((value) => new TeamSpeakChannel(state.teamspeak, value)),
+      );
+    },
+  });
+
+  // Correct: Output pin that serializes class instance
+  export const itemOutput = item.with({
+    schema: v.pipe(
+      v.custom<TeamSpeakChannel>((value) => value instanceof TeamSpeakChannel),
+      v.transform((value) => value.toJSON() as ChannelEntry),
+    ),
+  });
+  ```
+- **✅ REQUIRED**: Use separate input/output pins when working with classes:
+  ```typescript
+  // Correct: Different pins for input and output handling
+  export const getChannel = i.nodes.callable({
+    inputs: {
+      channelData: pins.channel.itemInput, // Deserializes to class
+    },
+    outputs: {
+      channel: pins.channel.itemOutput, // Serializes from class
+    },
+  });
+  ```
+
+**Rationale**: The workflow editor requires all data to be serializable for persistence and state management. Classes must be properly transformed to/from serializable formats using `v.transform()` in separate input and output pin variants to maintain editor compatibility while preserving object-oriented functionality.
 
 **Pin Descriptions:**
 
@@ -483,6 +691,48 @@ export const id = i.pins.data({
 - **⚠️ AVOID**: Unnecessary destructuring: `const { messageId } = opts.inputs` when not beneficial
 - Maintains clarity about data sources and reduces variable declarations
 
+**Intermediate Variable Declarations:**
+
+- **✅ PREFERRED**: Use object properties directly where they are consumed:
+  ```typescript
+  // Correct: Direct property access
+  export const getMessage = i.nodes.callable({
+    handler: async (opts) => {
+      const response = await opts.state.client.messages.get(opts.inputs.messageId);
+      return { message: response.data };
+    },
+  });
+  ```
+- **❌ FORBIDDEN**: Unnecessary intermediate variables for simple property access:
+  ```typescript
+  // Incorrect: Unnecessary variable for single-use property
+  export const getMessage = i.nodes.callable({
+    handler: async (opts) => {
+      const client = opts.state.client; // Unnecessary intermediate variable
+      const messageId = opts.inputs.messageId; // Unnecessary intermediate variable
+      const response = await client.messages.get(messageId);
+      return { message: response.data };
+    },
+  });
+  ```
+- **✅ ACCEPTABLE**: Use intermediate variables only when they improve readability or are used multiple times:
+  ```typescript
+  // Acceptable: Variable used multiple times or complex expression
+  export const updateMessage = i.nodes.callable({
+    handler: async (opts) => {
+      const messageId = opts.inputs.messageId;
+
+      // Variable used multiple times - acceptable
+      await opts.state.client.messages.update(messageId, opts.inputs.content);
+      await opts.state.client.audit.log('message_updated', messageId);
+
+      return { success: true };
+    },
+  });
+  ```
+
+**Rationale**: Unnecessary intermediate variables add cognitive overhead and reduce code clarity when the original property access is already clear and concise. Reserve variable declarations for cases where they genuinely improve readability, reduce repetition, or clarify complex expressions.
+
 #### Display Names and Documentation
 
 **Display Name Rules:**
@@ -510,6 +760,7 @@ export const id = i.pins.data({
   });
   ```
 - **✅ REQUIRED**: Use `displayName` when export name conflicts with JavaScript keywords:
+
   ```typescript
   // Correct: Handle JavaScript keyword conflicts
   export const _while = i.nodes.callable({
@@ -522,6 +773,7 @@ export const id = i.pins.data({
     displayName: 'Delete', // Required for reserved word
   });
   ```
+
 - **❌ FORBIDDEN**: Using reserved words directly as export names:
   ```typescript
   // Incorrect: JavaScript keywords cannot be used as export names
