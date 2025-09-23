@@ -16,7 +16,8 @@ export const createResponse = i.nodes.callable({
   category,
   inputs: {
     model: i.pins.data({
-      control: i.controls.select({
+      schema: z.string().nonempty(),
+      control: i.controls.select<string>({
         defaultValue: 'gpt-4o',
         options(opts) {
           return opts.state.models
