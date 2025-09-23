@@ -1,24 +1,51 @@
 import * as i from '@xentom/integration-framework';
 
-export const actionType = i.pins.data({
-  description: 'The action type of the issue',
+import { type components } from '@octokit/openapi-types';
+
+export const item = i.pins.data<components['schemas']['discussion']>({
+  displayName: 'Discussion',
+});
+
+export type Action =
+  | 'answered'
+  | 'category_changed'
+  | 'closed'
+  | 'created'
+  | 'deleted'
+  | 'edited'
+  | 'labeled'
+  | 'locked'
+  | 'pinned'
+  | 'reopened'
+  | 'transferred'
+  | 'unanswered'
+  | 'unlabeled'
+  | 'unlocked'
+  | 'unpinned';
+
+export const action = i.pins.data<Action>({
+  description: 'The action type of the discussion',
   control: i.controls.select({
     options: [
       {
-        label: 'Assigned',
-        value: 'assigned',
+        label: 'Answered',
+        value: 'answered',
+      },
+      {
+        label: 'Category Changed',
+        value: 'category_changed',
       },
       {
         label: 'Closed',
         value: 'closed',
       },
       {
-        label: 'Deleted',
-        value: 'deleted',
+        label: 'Created',
+        value: 'created',
       },
       {
-        label: 'Demilestoned',
-        value: 'demilestoned',
+        label: 'Deleted',
+        value: 'deleted',
       },
       {
         label: 'Edited',
@@ -33,14 +60,6 @@ export const actionType = i.pins.data({
         value: 'locked',
       },
       {
-        label: 'Milestoned',
-        value: 'milestoned',
-      },
-      {
-        label: 'Opened',
-        value: 'opened',
-      },
-      {
         label: 'Pinned',
         value: 'pinned',
       },
@@ -53,12 +72,8 @@ export const actionType = i.pins.data({
         value: 'transferred',
       },
       {
-        label: 'Typed',
-        value: 'typed',
-      },
-      {
-        label: 'Unassigned',
-        value: 'unassigned',
+        label: 'Unanswered',
+        value: 'unanswered',
       },
       {
         label: 'Unlabeled',
@@ -72,10 +87,7 @@ export const actionType = i.pins.data({
         label: 'Unpinned',
         value: 'unpinned',
       },
-      {
-        label: 'Untyped',
-        value: 'untyped',
-      },
     ],
+    defaultValue: 'created',
   }),
 });

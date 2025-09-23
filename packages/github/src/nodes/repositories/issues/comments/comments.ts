@@ -1,24 +1,24 @@
 import * as i from '@xentom/integration-framework';
 
-import { type EmitterWebhookEvent } from '@octokit/webhooks/types';
+import { type EmitterWebhookEvent } from '@octokit/webhooks';
 
 import { extractOwnerAndRepo } from '@/helpers/options';
 import { createRepositoryWebhook } from '@/helpers/webhooks';
 import * as pins from '@/pins';
 
 const category = {
-  path: ['Repositories'],
+  path: ['Repositories', 'Issues', 'Comments'],
 } satisfies i.NodeCategory;
 
-export const onRepository = i.generic(<
+export const onIssueComment = i.generic(<
   I extends i.GenericInputs<typeof inputs>,
 >() => {
   const inputs = {
     repository: pins.repository.name,
-    action: pins.repository.action,
+    action: pins.issue.comment.action,
   };
 
-  type WebhookEvent = EmitterWebhookEvent<`repository.${I['action']}`>;
+  type WebhookEvent = EmitterWebhookEvent<`issue_comment.${I['action']}`>;
 
   return i.nodes.trigger({
     category,
@@ -29,7 +29,7 @@ export const onRepository = i.generic(<
     },
     async subscribe(opts) {
       opts.state.webhooks.on(
-        `repository.${opts.inputs.action}`,
+        `issue_comment.${opts.inputs.action}`,
         ({ id, payload }) => {
           if (payload.repository.full_name !== opts.inputs.repository) {
             return;
@@ -53,22 +53,26 @@ export const onRepository = i.generic(<
   });
 });
 
-export const getRepository = i.nodes.callable({
+export const addIssueComment = i.nodes.callable({
   category,
-  description: 'Get repository information',
+  description: 'Add a comment to an issue',
   inputs: {
     repository: pins.repository.name,
+    issueNumber: pins.issue.number,
+    body: pins.issue.comment.body,
   },
   outputs: {
-    repository: pins.repository.item,
+    comment: pins.issue.comment.item,
   },
   async run(opts) {
-    const repository = await opts.state.octokit.rest.repos.get({
+    const comment = await opts.state.octokit.rest.issues.createComment({
       ...extractOwnerAndRepo(opts.inputs.repository),
+      issue_number: opts.inputs.issueNumber,
+      body: opts.inputs.body,
     });
 
     return opts.next({
-      repository: repository.data,
+      comment: comment.data,
     });
   },
 });

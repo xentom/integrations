@@ -6,17 +6,19 @@ import { createRepositoryWebhook } from '@/helpers/webhooks';
 import * as pins from '@/pins';
 
 const category = {
-  path: ['Commits'],
+  path: ['Repositories', 'Commits'],
 } satisfies i.NodeCategory;
+
+type WebhookEvent = EmitterWebhookEvent<'push'>;
 
 export const onPush = i.nodes.trigger({
   category,
   inputs: {
-    repository: pins.repository.fullName,
+    repository: pins.repository.name,
   },
   outputs: {
-    id: i.pins.data<EmitterWebhookEvent<'push'>['id']>(),
-    payload: i.pins.data<EmitterWebhookEvent<'push'>['payload']>(),
+    id: i.pins.data<WebhookEvent['id']>(),
+    payload: i.pins.data<WebhookEvent['payload']>(),
   },
   async subscribe(opts) {
     opts.state.webhooks.on('push', ({ id, payload }) => {

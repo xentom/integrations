@@ -29,6 +29,7 @@ export default i.integration({
   }),
 
   start(opts) {
+    console.log('{GITHUB} Starting integration');
     opts.state.octokit = new Octokit({
       auth: opts.auth.accessToken,
     });
@@ -71,5 +72,7 @@ export default i.integration({
         payload: JSON.parse(payload) as unknown,
       } as EmitterWebhookEvent);
     });
+
+    console.log('{GITHUB} Integration started');
   },
 });

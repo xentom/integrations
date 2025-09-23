@@ -1,5 +1,7 @@
 import type * as i from '@xentom/integration-framework';
 
+import { extractOwnerAndRepo } from './options';
+
 interface CreateRepositoryWebhookOptions {
   repository: string;
   state: i.IntegrationState;
@@ -10,15 +12,19 @@ export async function createRepositoryWebhook(
   options: CreateRepositoryWebhookOptions,
 ) {
   try {
-    const [owner, repository] = options.repository.split('/') as [
-      string,
-      string,
-    ];
-
     await options.state.octokit.rest.repos.createWebhook({
-      owner: owner,
-      repo: repository,
-      events: ['push', 'repository', 'issues'],
+      ...extractOwnerAndRepo(options.repository),
+      events: [
+        'push',
+        'repository',
+        'issue_comment',
+        'issues',
+        'pull_request',
+        'discussion',
+        'discussion_comment',
+        'workflow_job',
+        'workflow_run',
+      ],
       config: {
         url: options.webhook.url,
         secret: options.state.webhookSecret,

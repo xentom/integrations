@@ -2,23 +2,22 @@ import * as i from '@xentom/integration-framework';
 
 import { type EmitterWebhookEvent } from '@octokit/webhooks/types';
 
-import { extractOwnerAndRepo } from '@/helpers/options';
 import { createRepositoryWebhook } from '@/helpers/webhooks';
 import * as pins from '@/pins';
 
 const category = {
-  path: ['Repositories'],
+  path: ['Repositories', 'Discussions'],
 } satisfies i.NodeCategory;
 
-export const onRepository = i.generic(<
+export const onDiscussion = i.generic(<
   I extends i.GenericInputs<typeof inputs>,
 >() => {
   const inputs = {
     repository: pins.repository.name,
-    action: pins.repository.action,
+    action: pins.discussion.action,
   };
 
-  type WebhookEvent = EmitterWebhookEvent<`repository.${I['action']}`>;
+  type WebhookEvent = EmitterWebhookEvent<`discussion.${I['action']}`>;
 
   return i.nodes.trigger({
     category,
@@ -29,7 +28,7 @@ export const onRepository = i.generic(<
     },
     async subscribe(opts) {
       opts.state.webhooks.on(
-        `repository.${opts.inputs.action}`,
+        `discussion.${opts.inputs.action}`,
         ({ id, payload }) => {
           if (payload.repository.full_name !== opts.inputs.repository) {
             return;
@@ -51,24 +50,4 @@ export const onRepository = i.generic(<
       });
     },
   });
-});
-
-export const getRepository = i.nodes.callable({
-  category,
-  description: 'Get repository information',
-  inputs: {
-    repository: pins.repository.name,
-  },
-  outputs: {
-    repository: pins.repository.item,
-  },
-  async run(opts) {
-    const repository = await opts.state.octokit.rest.repos.get({
-      ...extractOwnerAndRepo(opts.inputs.repository),
-    });
-
-    return opts.next({
-      repository: repository.data,
-    });
-  },
 });

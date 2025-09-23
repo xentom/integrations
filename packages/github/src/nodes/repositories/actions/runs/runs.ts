@@ -6,28 +6,29 @@ import { createRepositoryWebhook } from '@/helpers/webhooks';
 import * as pins from '@/pins';
 
 const category = {
-  path: ['Issues'],
+  path: ['Repositories', 'Actions', 'Runs'],
 } satisfies i.NodeCategory;
 
-export const onIssue = i.generic(<
+export const onActionRun = i.generic(<
   I extends i.GenericInputs<typeof inputs>,
 >() => {
   const inputs = {
-    repository: pins.repository.fullName,
-    actionType: pins.issue.actionType,
+    repository: pins.repository.name,
+    action: pins.action.run.action,
   };
 
-  type IssueEvent = EmitterWebhookEvent<`issues.${I['actionType']}`>;
+  type WebhookEvent = EmitterWebhookEvent<`workflow_run.${I['action']}`>;
+
   return i.nodes.trigger({
     category,
     inputs,
     outputs: {
-      id: i.pins.data<IssueEvent['id']>(),
-      payload: i.pins.data<IssueEvent['payload']>(),
+      id: i.pins.data<WebhookEvent['id']>(),
+      payload: i.pins.data<WebhookEvent['payload']>(),
     },
     async subscribe(opts) {
       opts.state.webhooks.on(
-        `issues.${opts.inputs.actionType}`,
+        `workflow_run.${opts.inputs.action}`,
         ({ id, payload }) => {
           if (payload.repository.full_name !== opts.inputs.repository) {
             return;
