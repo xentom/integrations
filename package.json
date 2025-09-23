@@ -10,9 +10,6 @@
     "format": "turbo run format --continue -- --write --cache --cache-location .cache/.prettiercache",
     "pack": "turbo run pack --"
   },
-  "dependencies": {
-    "@standard-schema/spec": "^1.0.0"
-  },
   "devDependencies": {
     "@xentom/style-guide": "*",
     "@types/bun": "1.2.21",
