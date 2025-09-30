@@ -100,6 +100,10 @@ export default i.integration({
   },
 
   async stop(opts) {
+    if (!opts.state.teamspeak) {
+      return;
+    }
+
     console.log('Stopping TeamSpeak 3 integration...');
     try {
       await opts.state.teamspeak.quit();

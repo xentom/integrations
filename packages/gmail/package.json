@@ -1,5 +1,5 @@
 {
-  "name": "@xentom/integrations-gmail",
+  "name": "@xentom/gmail",
   "displayName": "Gmail",
   "description": "Gmail integration for the Xentom workflow editor. Send, receive, and manage emails through Gmail's API with powerful workflow automation capabilities.",
   "version": "0.0.5",

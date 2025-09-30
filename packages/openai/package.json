@@ -1,5 +1,5 @@
 {
-  "name": "@xentom/integrations-openai",
+  "name": "@xentom/openai",
   "displayName": "OpenAI",
   "description": "Integrate OpenAI to trigger workflows from prompts or data inputs and generate text, summaries, or code using AI-powered actions.",
   "version": "0.0.4",

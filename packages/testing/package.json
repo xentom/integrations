@@ -1,5 +1,5 @@
 {
-  "name": "@xentom/integrations-testing",
+  "name": "@xentom/testing",
   "displayName": "Testing",
   "description": "Toolkit for testing Xentom integrations, including nodes, pins, and controls.",
   "version": "0.0.0",

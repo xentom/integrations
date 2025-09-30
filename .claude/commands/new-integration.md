@@ -1,122 +1,136 @@
-# new-integration
+---
+description: Create a new integration
+argument-hint: [integration-name]
+---
 
-Create a new integration for the xentom workflow editor.
-
-## Usage
-
-```
-/new-integration <integration-name>
-```
-
-## Arguments
-
-- `<integration-name>`: The name of the integration to create (e.g., "stripe", "github", "slack")
+# Create a new integration
 
 ## Description
 
-This command creates a new integration by following a systematic approach to research, implement, and integrate third-party services into the xentom workflow editor. The integration will be scaffolded from the template and customized based on the chosen TypeScript library.
+Create a new integration for the xentom workflow editor by systematically researching, implementing, and integrating a third-party service. The integration will be scaffolded from the template and customized using the selected TypeScript library.
 
-## Steps
+## Implementation Process
 
-### 1. Search for TypeScript Libraries
+### Phase 1: Research and Selection
 
-Search the web for existing TypeScript libraries for the specified integration:
+#### 1.1 Search for TypeScript Libraries
 
-- Look for official SDKs and community libraries
-- Research npm packages with TypeScript support
+Search the web for TypeScript libraries that support the specified integration:
 
-### 2. Choose the Best Library
+- Focus on official SDKs first, then community libraries
+- Search npm packages that explicitly mention TypeScript support
+- Record multiple options for comparison
 
-Evaluate and select a library based on:
+#### 1.2 Select Optimal Library
 
-- **Active maintenance**: Recent commits and releases
-- **Popularity**: GitHub stars, npm downloads
-- **TypeScript support**: Native TypeScript or quality type definitions
-- **Documentation quality**: API documentation and examples
+Evaluate discovered libraries using these criteria:
 
-### 3. Clone Template Integration
+- **Maintenance status**: Check for commits/releases within last 6 months
+- **Community adoption**: Review GitHub stars and npm weekly downloads
+- **TypeScript compatibility**: Verify native TypeScript or @types availability
+- **Documentation completeness**: Confirm API documentation and code examples exist
+
+Document your selection rationale.
+
+### Phase 2: Project Setup
+
+#### 2.1 Clone Template Integration
+
+Execute the appropriate command exactly as written for the user's operating system:
+
+**Linux/macOS:**
 
 ```bash
-# For Linux/macOS
-rsync -av --exclude='node_modules' packages/template/ packages/<integration-name>/
-
-# For Windows (PowerShell)
-powershell -Command "robocopy './packages/template' './packages/<integration-name>' /E /XD node_modules"
+rsync -av --exclude='node_modules' packages/template/ packages/$1/
 ```
 
-### 4. Update Package Metadata
+**Windows PowerShell:**
 
-Update the `name`, `displayName`, and `description` in the package configuration to reflect:
+```powershell
+powershell -Command "robocopy './packages/template' './packages/$1' /E /XD node_modules"
+```
 
-- The integration name
-- A user-friendly display name
-- A brief description of how the integration enhances the workflow
+#### 2.2 Configure Package Metadata
 
-### 5. Install the Library
+Modify the package configuration with:
+
+- `name`: Set to the integration identifier
+- `displayName`: Provide user-friendly integration name
+- `description`: Write concise explanation of workflow enhancement
+
+#### 2.3 Install Selected Library
+
+Navigate to the package directory and install:
 
 ```bash
-cd packages/<integration-name>
+cd packages/$1
 bun add <selected-package-name>
 ```
 
-### 6. Review Integration Framework
+### Phase 3: Implementation
 
-Review the source files of the integration framework in monorepo root
-`node_modules/@xentom/integration-framework/src/**/*.ts`
-or in the integration package root
-`packages/<integration-name>/node_modules/@xentom/integration-framework/src/**/*.ts`
-to gain a solid understanding of:
+#### 3.1 Load the integration framework files
 
-- How the framework works and its core concepts
-- Proper usage patterns and best practices
-- Available APIs and their correct implementation
-- Common pitfalls and how to avoid them
-
-### 7. Review the Library Documentation
-
-Study the installed library to understand:
-
-- Its API methods and functionality
-- Authentication requirements
-- Usage patterns and best practices
-- TypeScript type definitions
-
-### 8. Implement Integration Entrypoint (src/index.ts)
-
-Following the template structure:
-
-- Implement necessary integration environment variables
-- Implement integration lifecycle scripts for state initialization and connection setup
-
-### 9. Implement Integration Pins (src/pins/index.ts, src/pins/<category>.ts)
-
-Create common and reusable integration pins based on the template patterns and the library's capabilities.
-
-### 10. Implement Integration Nodes
-
-Develop the integration nodes that utilize the library's functionality, following the patterns established in the template.
-
-### 11. Quality Assurance
-
-Ensure the implementation meets quality standards:
+Run the following command to load the integration framework files into the context.
 
 ```bash
-# Run type checking
+find node_modules/@xentom/integration-framework/dist -name "*.d.ts" -type f -exec sh -c 'echo "=== $1 ==="; cat "$1"; echo' _ {} \;
+```
+
+#### 3.2 Analyze Library Documentation
+
+Review the installed library's documentation to understand:
+
+- Available API methods
+- Authentication mechanisms
+- Required configuration
+- TypeScript type definitions and interfaces
+
+#### 3.3 Implement Core Components
+
+**Integration Entrypoint (`src/index.ts`):**
+
+- Define required environment variables
+- Implement lifecycle scripts for state initialization
+- Configure connection setup procedures
+
+**Integration Pins (`src/pins/index.ts`, `src/pins/<category>.ts`):**
+
+- Create reusable pins following template patterns
+- Leverage library capabilities for pin functionality
+
+**Integration Nodes (`src/nodes/`):**
+
+- Develop nodes utilizing library functionality
+- Follow established template patterns
+- Ensure proper error handling
+
+### Phase 4: Quality Validation
+
+Execute all quality checks:
+
+```bash
+# Verify TypeScript compilation
 bun run typecheck
 
-# Run linting
+# Check code standards
 bun run lint
 
-# Run formatting
+# Apply consistent formatting
 bun run format
 ```
 
 ## Prerequisites
 
-Before running this command:
+Confirm before execution:
 
-- Understand the workflow editor's integration architecture
+- Understanding of xentom workflow editor's integration architecture is established
 
-## Output
+## Expected Output
 
-The command creates a new integration package at `packages/<integration-name>/` with all necessary files and dependencies, ready for implementation following the template structure.
+A complete integration package at `packages/$1/` containing:
+
+- Properly configured package files
+- Implemented integration components following template structure
+- Installed dependencies
+- Type-safe, linted, and formatted code ready for testing

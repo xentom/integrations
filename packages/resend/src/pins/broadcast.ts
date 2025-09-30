@@ -1,16 +1,16 @@
 import * as i from '@xentom/integration-framework';
 import * as v from 'valibot';
 
+import { type Broadcast } from 'resend';
+
 import * as common from './common';
 
-// TODO: Add proper types once merged (tracking PR: https://github.com/resend/resend-node/pull/547)
-export const item = i.pins.data({
+export const item = i.pins.data<Broadcast>({
   description: 'A broadcast object containing all broadcast information.',
   control: false,
 });
 
-// TODO: Add proper types once merged (tracking PR: https://github.com/resend/resend-node/pull/547)
-export const items = i.pins.data({
+export const items = i.pins.data<Broadcast[]>({
   description: 'A list of broadcasts.',
   control: false,
 });
@@ -18,6 +18,22 @@ export const items = i.pins.data({
 export const id = common.uuid.with({
   displayName: 'Domain ID',
   description: 'The unique identifier for the domain.',
+  control: i.controls.select({
+    async options({ state }) {
+      const response = await state.resend.broadcasts.list();
+      if (!response.data) {
+        return [];
+      }
+
+      return response.data.data.map((broadcast) => {
+        return {
+          value: broadcast.id,
+          label: broadcast.name,
+          suffix: broadcast.id,
+        };
+      });
+    },
+  }),
 });
 
 export const name = i.pins.data({
@@ -30,22 +46,23 @@ export const name = i.pins.data({
 
 export const subject = i.pins.data({
   description: 'The subject line of the broadcast.',
+  schema: v.pipe(v.string(), v.minLength(1)),
   control: i.controls.text({
     placeholder: 'Welcome to our newsletter',
   }),
-  schema: v.pipe(v.string(), v.minLength(1)),
 });
 
 export const content = i.pins.data({
   description: 'The HTML content of the broadcast.',
+  schema: v.pipe(v.string(), v.minLength(1)),
   control: i.controls.text({
     placeholder: '<h1>Hello World</h1>',
   }),
-  schema: v.pipe(v.string(), v.minLength(1)),
 });
 
 export const status = i.pins.data({
   description: 'The status of the broadcast.',
+  schema: v.picklist(['draft', 'sent', 'queued']),
   control: i.controls.select({
     options: [
       { label: 'Draft', value: 'draft' },
@@ -53,5 +70,4 @@ export const status = i.pins.data({
       { label: 'Queued', value: 'queued' },
     ],
   }),
-  schema: v.picklist(['draft', 'sent', 'queued']),
 });

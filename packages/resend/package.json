@@ -1,5 +1,5 @@
 {
-  "name": "@xentom/integrations-resend",
+  "name": "@xentom/resend",
   "displayName": "Resend",
   "description": "Integrate Resend to trigger workflows from email events and send emails using the Resend API.",
   "version": "0.0.0",
@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@xentom/integration-framework": "catalog:",
-    "resend": "^6.0.2",
+    "resend": "^6.1.1",
     "valibot": "catalog:"
   },
   "devDependencies": {

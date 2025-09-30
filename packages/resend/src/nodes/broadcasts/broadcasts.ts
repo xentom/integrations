@@ -1,6 +1,12 @@
 import * as i from '@xentom/integration-framework';
 import * as v from 'valibot';
 
+import {
+  type ListBroadcastsResponseSuccess,
+  type SendBroadcastResponseSuccess,
+  type UpdateBroadcastResponseSuccess,
+} from 'resend';
+
 import * as pins from '@/pins';
 
 const category = {
@@ -45,8 +51,8 @@ export const createBroadcast = i.nodes.callable({
   },
 
   outputs: {
-    broadcast: pins.broadcast.item.with({
-      description: 'The created broadcast object.',
+    id: pins.broadcast.id.with({
+      description: 'The ID of the created broadcast.',
       control: false,
     }),
   },
@@ -74,7 +80,7 @@ export const createBroadcast = i.nodes.callable({
     }
 
     return opts.next({
-      broadcast: response.data,
+      id: response.data.id,
     });
   },
 });
@@ -91,7 +97,6 @@ export const getBroadcast = i.nodes.callable({
 
   outputs: {
     broadcast: pins.broadcast.item.with({
-      description: 'The broadcast object.',
       control: false,
     }),
   },
@@ -114,8 +119,7 @@ export const listBroadcasts = i.nodes.callable({
   description: 'Retrieve a list of broadcasts.',
 
   outputs: {
-    broadcasts: pins.broadcast.items.with({
-      description: 'The list of broadcasts.',
+    broadcasts: pins.broadcast.items.with<ListBroadcastsResponseSuccess>({
       control: false,
     }),
   },
@@ -176,7 +180,7 @@ export const updateBroadcast = i.nodes.callable({
   },
 
   outputs: {
-    broadcast: pins.broadcast.item.with({
+    broadcast: pins.broadcast.item.with<UpdateBroadcastResponseSuccess>({
       description: 'The updated broadcast object.',
       control: false,
     }),
@@ -224,7 +228,7 @@ export const sendBroadcast = i.nodes.callable({
   },
 
   outputs: {
-    broadcast: pins.broadcast.item.with({
+    broadcast: pins.broadcast.item.with<SendBroadcastResponseSuccess>({
       description: 'The sent broadcast object.',
       control: false,
     }),
@@ -256,8 +260,8 @@ export const deleteBroadcast = i.nodes.callable({
   },
 
   outputs: {
-    result: i.pins.data({
-      description: 'The deletion result.',
+    id: pins.broadcast.id.with({
+      description: 'The ID of the deleted broadcast.',
       control: false,
     }),
   },
@@ -269,8 +273,12 @@ export const deleteBroadcast = i.nodes.callable({
       throw new Error(response.error.message);
     }
 
+    if (!response.data.deleted) {
+      throw new Error('Failed to delete broadcast');
+    }
+
     return opts.next({
-      result: response.data,
+      id: response.data.id,
     });
   },
 });

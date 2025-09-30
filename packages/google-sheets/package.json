@@ -1,7 +1,7 @@
 {
-  "name": "@xentom/template",
-  "displayName": "Template",
-  "description": "This is a template for creating new integrations in the Xentom ecosystem. It includes basic setup and configuration.",
+  "name": "@xentom/google-sheets",
+  "displayName": "Google Sheets",
+  "description": "Integration for Google Sheets to read, write, and manage spreadsheet data in workflows.",
   "version": "0.0.0",
   "type": "module",
   "icon": "./images/icon.png",
@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@xentom/integration-framework": "catalog:",
+    "googleapis": "^160.0.0",
     "valibot": "catalog:"
   },
   "devDependencies": {

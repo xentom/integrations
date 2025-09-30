@@ -1,5 +1,4 @@
 import * as i from '@xentom/integration-framework';
-import * as v from 'valibot';
 
 import * as pins from '@/pins';
 
@@ -22,10 +21,6 @@ export const createAudience = i.nodes.callable({
       description: 'The ID of the created audience.',
       control: false,
     }),
-    name: pins.audience.name.with({
-      description: 'The name of the created audience.',
-      control: false,
-    }),
   },
 
   async run(opts) {
@@ -39,7 +34,6 @@ export const createAudience = i.nodes.callable({
 
     return opts.next({
       id: response.data.id,
-      name: response.data.name,
     });
   },
 });
@@ -49,16 +43,8 @@ export const listAudiences = i.nodes.callable({
   description: 'List all audiences in Resend.',
 
   outputs: {
-    audiences: i.pins.data({
-      description: 'List of audiences',
+    audiences: pins.audience.items.with({
       control: false,
-      schema: v.array(
-        v.object({
-          id: v.string(),
-          name: v.string(),
-          created_at: v.string(),
-        }),
-      ),
     }),
   },
 
@@ -86,16 +72,7 @@ export const getAudience = i.nodes.callable({
   },
 
   outputs: {
-    id: pins.audience.id.with({
-      description: 'The ID of the audience.',
-      control: false,
-    }),
-    name: pins.audience.name.with({
-      description: 'The name of the audience.',
-      control: false,
-    }),
-    createdAt: pins.audience.createdAt.with({
-      description: 'When the audience was created.',
+    audience: pins.audience.item.with({
       control: false,
     }),
   },
@@ -108,9 +85,7 @@ export const getAudience = i.nodes.callable({
     }
 
     return opts.next({
-      id: response.data.id,
-      name: response.data.name,
-      createdAt: response.data.created_at,
+      audience: response.data,
     });
   },
 });

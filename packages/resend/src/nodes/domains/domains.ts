@@ -3,8 +3,7 @@ import * as i from '@xentom/integration-framework';
 import {
   type CreateDomainResponseSuccess,
   type GetDomainResponseSuccess,
-  type RemoveDomainsResponseSuccess,
-  type VerifyDomainsResponseSuccess,
+  type ListDomainsResponseSuccess,
 } from 'resend';
 
 import * as pins from '@/pins';
@@ -88,7 +87,7 @@ export const listDomains = i.nodes.callable({
   description: 'Retrieve a list of domains.',
 
   outputs: {
-    domains: pins.domain.items.with({
+    domains: pins.domain.items.with<ListDomainsResponseSuccess>({
       description: 'The list of domains.',
     }),
   },
@@ -117,8 +116,9 @@ export const verifyDomain = i.nodes.callable({
   },
 
   outputs: {
-    domain: pins.domain.item.with<VerifyDomainsResponseSuccess>({
-      description: 'The verified domain object.',
+    id: pins.domain.id.with({
+      description: 'The ID of the verified domain.',
+      control: false,
     }),
   },
 
@@ -130,7 +130,7 @@ export const verifyDomain = i.nodes.callable({
     }
 
     return opts.next({
-      domain: response.data,
+      id: response.data.id,
     });
   },
 });
@@ -146,8 +146,8 @@ export const deleteDomain = i.nodes.callable({
   },
 
   outputs: {
-    result: i.pins.data<RemoveDomainsResponseSuccess>({
-      description: 'The deletion result.',
+    id: pins.domain.id.with({
+      description: 'The ID of the deleted domain.',
       control: false,
     }),
   },
@@ -159,8 +159,12 @@ export const deleteDomain = i.nodes.callable({
       throw new Error(response.error.message);
     }
 
+    if (!response.data.deleted) {
+      throw new Error('Failed to delete domain');
+    }
+
     return opts.next({
-      result: response.data,
+      id: response.data.id,
     });
   },
 });

@@ -8,14 +8,30 @@ const EmailSchmea = v.pipe(v.string(), v.trim(), v.email());
 export const id = common.uuid.with({
   displayName: 'Email ID',
   description: 'The unique identifier for the email.',
+  control: i.controls.select({
+    async options({ state }) {
+      const response = await state.resend.emails.list();
+      if (!response.data) {
+        return [];
+      }
+
+      return response.data.data.map((email) => {
+        return {
+          value: email.id,
+          label: email.subject,
+          suffix: email.id,
+        };
+      });
+    },
+  }),
 });
 
 export const address = i.pins.data({
   description: 'An email address.',
+  schema: EmailSchmea,
   control: i.controls.text({
     placeholder: 'john.doe@example.com',
   }),
-  schema: EmailSchmea,
 });
 
 export const addressWithDisplayName = i.pins.data({

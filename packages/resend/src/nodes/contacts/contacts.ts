@@ -76,10 +76,16 @@ export const getContact = i.nodes.callable({
   },
 
   async run(opts) {
+    if (!opts.inputs.id && !opts.inputs.email) {
+      throw new Error('Either ID or email must be provided.');
+    }
+
     const response = await opts.state.resend.contacts.get({
       audienceId: opts.inputs.audienceId,
-      id: opts.inputs.id,
-      email: opts.inputs.email,
+      ...(opts.inputs.id
+        ? { id: opts.inputs.id }
+        : // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          { email: opts.inputs.email! }),
     });
 
     if (response.error) {
@@ -156,13 +162,20 @@ export const updateContact = i.nodes.callable({
   },
 
   async run(opts) {
+    if (!opts.inputs.id && !opts.inputs.email) {
+      throw new Error('Either ID or email must be provided.');
+    }
+
     const response = await opts.state.resend.contacts.update({
       audienceId: opts.inputs.audienceId,
-      id: opts.inputs.id,
-      email: opts.inputs.email,
       firstName: opts.inputs.firstName,
       lastName: opts.inputs.lastName,
       unsubscribed: opts.inputs.unsubscribed,
+
+      ...(opts.inputs.id
+        ? { id: opts.inputs.id }
+        : // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          { email: opts.inputs.email! }),
     });
 
     if (response.error) {

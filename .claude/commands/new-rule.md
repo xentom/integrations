@@ -1,135 +1,246 @@
-# new-rule
+---
+description: Create and integrate a new development rule into CLAUDE.md guidelines
+argument-hint: [description]
+---
 
-Create, refine, and integrate a new development rule into the CLAUDE.md guidelines to enhance code quality, consistency, and best practices for Xentom integrations.
+# Create a new development rule for CLAUDE.md
 
-## Usage
+## Description
+
+Create, refine, and integrate a new development rule into the CLAUDE.md guidelines to enhance code quality, consistency, and best practices for Xentom integrations. The rule will be systematically developed, categorized, and integrated into the existing documentation structure.
+
+## Rule Description
 
 ```
-/new-rule <detailed-rule-description>
+$ARGUMENTS
 ```
 
-**Examples:**
+## Rule Development Process
 
-```
-/new-rule Always validate API responses before processing data
-/new-rule Prefer composition over inheritance for integration components
-/new-rule Use consistent error message formats across all nodes
-```
+### Phase 1: Analysis and Research
 
-## Execution Steps
+#### 1.1 Document Analysis
 
-### 1. Analyze Current Documentation
+Thoroughly examine the current CLAUDE.md file:
 
-- Read the complete CLAUDE.md file to understand existing structure and patterns
-- Identify current rule categories and their organization
-- Note existing formatting conventions and language patterns
-- Review similar or related rules to avoid duplication
+- **Structure mapping**: Document all existing sections and subsections
+- **Rule inventory**: Catalog current rules and their categories
+- **Pattern recognition**: Identify formatting conventions and language patterns
+- **Gap analysis**: Find areas lacking guidance that the new rule could address
 
-### 2. Rule Development and Refinement
+#### 1.2 Duplication Check
 
-- Enhance the provided rule description for clarity and specificity
-- Ensure the rule addresses a genuine code quality or consistency need
-- Make the rule actionable with clear, measurable criteria
-- Verify the rule aligns with Xentom integration framework principles
+Verify the proposed rule's uniqueness:
 
-### 3. Categorization and Placement
+- Search for similar existing rules
+- Identify related guidelines that might overlap
+- Determine if the rule extends or replaces existing guidance
+- Document relationships to existing rules
 
-- Determine the most appropriate section for the new rule:
-  - **Code Quality Standards** - Type safety, imports, error handling
-  - **Integration Framework Usage** - Pin management, node architecture
-  - **Code Structure and Style** - Variable usage, naming, formatting
-  - **Integration Development Guidelines** - Patterns, authentication, workflows
-- Create a new subsection if the rule doesn't fit existing categories
-- Consider the logical flow and grouping with related rules
+### Phase 2: Rule Development
 
-### 4. Integration and Formatting
+#### 2.1 Rule Refinement
 
-- Write the rule using imperative language (e.g., "Use", "Avoid", "Ensure")
-- Follow the established format pattern:
-  - **✅ REQUIRED/PREFERRED**: Positive guidance with examples
-  - **❌ FORBIDDEN/AVOID**: Anti-patterns with explanations
-  - **⚠️ CAUTION**: Situational guidance
-- Include practical code examples that demonstrate the rule
-- Add rationale or context when the rule might not be obvious
+Transform the initial description into a comprehensive guideline:
 
-### 5. Quality Validation
+- **Clarity enhancement**: Rewrite for unambiguous understanding
+- **Specificity improvement**: Add measurable criteria and boundaries
+- **Actionability focus**: Ensure developers can directly apply the rule
+- **Context addition**: Include when and why the rule applies
 
-- Ensure the rule doesn't contradict existing guidelines
-- Verify examples compile and follow TypeScript best practices
-- Check that the rule is specific enough to be actionable
-- Confirm the rule enhances rather than complicates development
+#### 2.2 Framework Alignment Verification
 
-## Rule Quality Requirements
+Confirm compatibility with Xentom principles:
 
-### Content Standards
+- Validate against integration framework architecture
+- Ensure consistency with TypeScript best practices
+- Verify alignment with existing workflow patterns
+- Check compatibility with current tooling (bun, TypeScript, valibot)
 
-- **Specificity**: Rules must be concrete and actionable, not vague suggestions
-- **Measurability**: Include clear criteria for compliance (e.g., "zero errors", "no more than X lines")
-- **Relevance**: Address real issues encountered in Xentom integration development
-- **Consistency**: Align with existing framework patterns and conventions
+### Phase 3: Categorization and Structure
 
-### Formatting Standards
+#### 3.1 Section Selection
 
-- **Language**: Use imperative mood ("Use", "Avoid", "Ensure", "Implement")
-- **Examples**: Provide both positive (✅) and negative (❌) examples when helpful
-- **Context**: Include brief rationale for non-obvious rules
-- **References**: Link to relevant framework documentation when applicable
+Determine optimal placement within these categories:
 
-### Integration Standards
+**Code Quality Standards**
 
-- **Placement**: Position rules logically within existing section hierarchy
-- **Grouping**: Place related rules together for easier reference
-- **Cross-references**: Note relationships to other rules when relevant
-- **Versioning**: Maintain consistency with existing rule numbering or organization
+- Type safety requirements
+- Import management rules
+- Error handling patterns
+- Performance considerations
 
-## Example Rule Integration
+**Integration Framework Usage**
+
+- Pin management guidelines
+- Node architecture patterns
+- Lifecycle script requirements
+- State management rules
+
+**Code Structure and Style**
+
+- Variable naming conventions
+- Function organization
+- Module structure
+- Documentation requirements
+
+**Integration Development Guidelines**
+
+- Authentication patterns
+- API interaction standards
+- Testing requirements
+- Security considerations
+
+Create a new subsection if none fit appropriately.
+
+#### 3.2 Logical Positioning
+
+Strategic rule placement:
+
+- Position after related prerequisites
+- Place before dependent concepts
+- Group with similar complexity rules
+- Maintain reading flow continuity
+
+### Phase 4: Content Creation
+
+#### 4.1 Rule Formulation
+
+Write the rule following established patterns:
+
+**Required Format Structure:**
 
 ````markdown
-#### Pin Validation
+#### [Rule Category]
 
-**✅ REQUIRED**: Validate pin schemas match actual API contracts:
+**✅ REQUIRED/PREFERRED**: [Positive guidance statement]
 
 ```typescript
-// Correct: Schema matches API response structure
-export const user = i.pins.data({
-  schema: v.object({
-    id: v.string(),
-    email: v.string(),
-    name: v.string(),
-  }),
-});
+// Correct implementation example
+[code demonstrating proper usage]
 ```
 ````
 
-**❌ FORBIDDEN**: Over-specifying schemas for complex external APIs:
+**❌ FORBIDDEN/AVOID**: [Anti-pattern description]
 
 ```typescript
-// Incorrect: Brittle schema for complex API
-export const response = i.pins.data({
-  schema: v.object({
-    // 50+ fields trying to match every API variation
-  }),
-});
+// Incorrect implementation example
+[code showing what to avoid]
 ```
 
-**Rationale**: Pin schemas should provide type safety without becoming maintenance burdens when external APIs evolve.
+**⚠️ CAUTION**: [Situational guidance if applicable]
 
-```
+**Rationale**: [Brief explanation of why this rule exists]
 
-## Post-Integration Checklist
+````
 
-- [ ] Rule is placed in the most logical section
-- [ ] Formatting matches existing conventions (✅/❌ indicators, code blocks)
-- [ ] Examples are practical and relevant to Xentom development
-- [ ] Rule doesn't conflict with or duplicate existing guidelines
-- [ ] Language is clear, imperative, and actionable
-- [ ] Code examples follow TypeScript and framework best practices
-- [ ] Rule enhances code quality without adding unnecessary complexity
+#### 4.2 Example Development
+Create comprehensive code examples:
+- **Positive examples**: Show correct implementation
+- **Negative examples**: Demonstrate common mistakes
+- **Edge cases**: Include boundary condition handling
+- **Real-world scenarios**: Use practical Xentom integration contexts
 
-## Notes
+#### 4.3 Documentation Enhancement
+Add supporting information:
+- **Use cases**: When to apply the rule
+- **Exceptions**: Valid reasons to deviate
+- **Migration notes**: How to update existing code
+- **Performance impact**: If relevant
 
-- When modifying CLAUDE.md, preserve all existing content and structure
-- Ensure new rules integrate seamlessly with the existing flow
-- Consider how the rule will be discovered and referenced by developers
-- Validate that examples work with the current integration framework version
-```
+### Phase 5: Quality Assurance
+
+#### 5.1 Technical Validation
+```typescript
+// Verify all code examples:
+// - Compile without errors
+// - Follow TypeScript strict mode
+// - Use current framework APIs
+// - Demonstrate the rule clearly
+````
+
+#### 5.2 Content Review
+
+Ensure rule quality:
+
+- **Clarity**: Rule is immediately understandable
+- **Completeness**: All aspects are covered
+- **Consistency**: Aligns with existing guidelines
+- **Correctness**: Examples are accurate and functional
+
+#### 5.3 Integration Testing
+
+Validate documentation integration:
+
+- Rule flows naturally in its section
+- Cross-references are accurate
+- Formatting matches existing patterns
+- No conflicts with other rules
+
+### Phase 6: Final Integration
+
+#### 6.1 Documentation Update
+
+Integrate the rule into CLAUDE.md:
+
+- Preserve all existing content
+- Maintain document structure
+- Update table of contents if present
+- Ensure proper markdown formatting
+
+#### 6.2 Cross-Reference Updates
+
+Link related content:
+
+- Add references to related rules
+- Update dependent guidelines
+- Note in relevant sections
+- Maintain bidirectional references
+
+## Rule Quality Standards
+
+### Content Requirements
+
+- **Specificity**: Concrete, measurable criteria (e.g., "maximum 100 lines per function")
+- **Actionability**: Clear steps developers can follow
+- **Relevance**: Addresses actual Xentom development challenges
+- **Testability**: Compliance can be verified programmatically or through review
+
+### Language Standards
+
+- **Imperative mood**: "Use", "Implement", "Ensure", "Avoid"
+- **Active voice**: Direct and clear communication
+- **Technical precision**: Accurate terminology and concepts
+- **Accessibility**: Understandable by intermediate TypeScript developers
+
+### Example Requirements
+
+- **Compilation**: All code must be valid TypeScript
+- **Framework accuracy**: Use actual Xentom integration APIs
+- **Realism**: Examples from actual integration scenarios
+- **Completeness**: Show full context, not just fragments
+
+## Quality Checklist
+
+Before finalizing the rule, verify:
+
+- [ ] Rule addresses a genuine development need
+- [ ] No duplication with existing guidelines
+- [ ] Examples compile with TypeScript strict mode
+- [ ] Placement enhances document organization
+- [ ] Language is imperative and actionable
+- [ ] Both positive and negative examples provided
+- [ ] Rationale clearly explains the rule's importance
+- [ ] Format matches existing CLAUDE.md conventions
+- [ ] Cross-references to related rules included
+- [ ] Rule enhances rather than complicates development
+
+## Expected Output
+
+A seamlessly integrated new rule in CLAUDE.md that:
+
+- Enhances code quality and consistency
+- Provides clear, actionable guidance
+- Includes practical, compilable examples
+- Fits naturally within existing documentation structure
+- Improves the overall development experience for Xentom integrations

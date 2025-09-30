@@ -38,6 +38,8 @@ export default i.integration({
   },
 
   async stop(opts) {
-    await writeSnapshots(opts.state.snapshots);
+    if (opts.state.snapshots) {
+      await writeSnapshots(opts.state.snapshots);
+    }
   },
 });

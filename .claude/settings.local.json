@@ -14,7 +14,16 @@
       "Bash(powershell:*)",
       "Read(//c/Users/Tobias/GitHub/xentom/xentom/packages/integration-framework/**)",
       "Read(//c/Users/Tobias/GitHub/xentom/integrations/node_modules/@xentom/integration-framework/src/nodes/**)",
-      "Read(//c/Users/Tobias/GitHub/xentom/integrations/node_modules/@xentom/integration-framework/src/controls/**)"
+      "Read(//c/Users/Tobias/GitHub/xentom/integrations/node_modules/@xentom/integration-framework/src/controls/**)",
+      "Bash(Get-ChildItem -Path \"node_modules/@xentom/integration-framework/dist\" -Recurse -Filter \"*.d.ts\" -File)",
+      "Read(//c/Users/Tobias/GitHub/xentom/integrations/node_modules/@xentom/integration-framework/dist/**)",
+      "Read(//c/Users/Tobias/GitHub/xentom/integrations/node_modules/@xentom/integration-framework/dist/nodes/**)",
+      "Read(//c/Users/Tobias/GitHub/xentom/integrations/node_modules/@xentom/integration-framework/dist/pins/**)",
+      "Read(//c/Users/Tobias/GitHub/xentom/integrations/node_modules/@xentom/integration-framework/dist/controls/**)",
+      "WebFetch(domain:github.com)",
+      "Bash(robocopy:*)",
+      "WebFetch(domain:developers.google.com)",
+      "Bash(find:*)"
     ],
     "deny": [],
     "ask": []
