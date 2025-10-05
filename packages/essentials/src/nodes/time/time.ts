@@ -1,12 +1,9 @@
 import * as i from '@xentom/integration-framework';
 import * as v from 'valibot';
 
-const category = {
-  path: ['Time'],
-} satisfies i.NodeCategory;
+const nodes = i.nodes.group('Time');
 
-export const onInterval = i.nodes.trigger({
-  category,
+export const onInterval = nodes.trigger({
   inputs: {
     ms: i.pins.data({
       displayName: 'Milliseconds',
@@ -27,8 +24,7 @@ export const onInterval = i.nodes.trigger({
   },
 });
 
-export const sleep = i.nodes.callable({
-  category,
+export const sleep = nodes.callable({
   inputs: {
     duration: i.pins.data({
       schema: v.number(),

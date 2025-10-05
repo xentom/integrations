@@ -1,12 +1,9 @@
 import * as i from '@xentom/integration-framework';
 import * as v from 'valibot';
 
-const category = {
-  path: ['Debug'],
-} satisfies i.NodeCategory;
+const nodes = i.nodes.group('Debug');
 
-export const log = i.nodes.callable({
-  category,
+export const log = nodes.callable({
   inputs: {
     message: i.pins.data({
       schema: v.any(),
@@ -21,8 +18,7 @@ export const log = i.nodes.callable({
   },
 });
 
-export const error = i.nodes.callable({
-  category,
+export const error = nodes.callable({
   inputs: {
     message: i.pins.data({
       schema: v.string(),
@@ -36,8 +32,7 @@ export const error = i.nodes.callable({
   },
 });
 
-export const evaluate = i.nodes.callable({
-  category,
+export const evaluate = nodes.callable({
   inputs: {
     code: i.pins.data({
       displayName: false,

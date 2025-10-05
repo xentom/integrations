@@ -6,12 +6,9 @@ import { type components } from '@octokit/openapi-types';
 import { extractOwnerAndRepo } from '@/helpers/options';
 import * as pins from '@/pins';
 
-const category = {
-  path: ['Repositories', 'Releases'],
-} satisfies i.NodeCategory;
+const nodes = i.nodes.group('Repositories/Releases');
 
-export const createRelease = i.nodes.callable({
-  category,
+export const createRelease = nodes.callable({
   description: 'Create a new release',
   inputs: {
     repository: pins.repository.name,

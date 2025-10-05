@@ -6,9 +6,12 @@ import { sheets_v4 } from 'googleapis/build/src/apis/sheets/v4';
 
 import * as nodes from './nodes';
 
-export interface IntegrationState {
-  sheets: sheets_v4.Sheets;
-  drive: drive_v3.Drive;
+declare module '@xentom/integration-framework' {
+  interface IntegrationState {
+    auth: OAuth2Client;
+    sheets: sheets_v4.Sheets;
+    drive: drive_v3.Drive;
+  }
 }
 
 export default i.integration({
@@ -21,21 +24,26 @@ export default i.integration({
       'https://www.googleapis.com/auth/spreadsheets',
       'https://www.googleapis.com/auth/drive.readonly',
     ],
+    onAccessTokenUpdated(opts) {
+      opts.state.auth.setCredentials({
+        access_token: opts.auth.accessToken,
+      });
+    },
   }),
 
   start(opts) {
-    const auth = new OAuth2Client({
+    opts.state.auth = new OAuth2Client({
       credentials: {
         access_token: opts.auth.accessToken,
       },
     });
 
     opts.state.sheets = new sheets_v4.Sheets({
-      auth,
+      auth: opts.state.auth,
     });
 
     opts.state.drive = new drive_v3.Drive({
-      auth,
+      auth: opts.state.auth,
     });
   },
 });

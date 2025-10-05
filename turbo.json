@@ -5,6 +5,10 @@
     "topo": {
       "dependsOn": ["^topo"]
     },
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["build/**"]
+    },
     "pack": {
       "dependsOn": ["^pack"],
       "outputs": ["dist/**"]

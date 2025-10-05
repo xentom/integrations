@@ -6,9 +6,7 @@ import { extractOwnerAndRepo } from '@/helpers/options';
 import { createRepositoryWebhook } from '@/helpers/webhooks';
 import * as pins from '@/pins';
 
-const category = {
-  path: ['Repositories', 'Issues'],
-} satisfies i.NodeCategory;
+const nodes = i.nodes.group('Repositories/Issues');
 
 export const onIssue = i.generic(<
   I extends i.GenericInputs<typeof inputs>,
@@ -20,8 +18,7 @@ export const onIssue = i.generic(<
 
   type WebhookEvent = EmitterWebhookEvent<`issues.${I['action']}`>;
 
-  return i.nodes.trigger({
-    category,
+  return nodes.trigger({
     inputs,
     outputs: {
       id: i.pins.data<WebhookEvent['id']>(),
@@ -53,8 +50,7 @@ export const onIssue = i.generic(<
   });
 });
 
-export const getIssue = i.nodes.callable({
-  category,
+export const getIssue = nodes.callable({
   description: 'Get details of a specific issue',
   inputs: {
     repository: pins.repository.name,
@@ -75,8 +71,7 @@ export const getIssue = i.nodes.callable({
   },
 });
 
-export const createIssue = i.nodes.callable({
-  category,
+export const createIssue = nodes.callable({
   description: 'Create a new issue in a repository',
   inputs: {
     repository: pins.repository.name,
@@ -109,8 +104,7 @@ export const createIssue = i.nodes.callable({
   },
 });
 
-export const updateIssue = i.nodes.callable({
-  category,
+export const updateIssue = nodes.callable({
   description: 'Update an existing issue',
   inputs: {
     repository: pins.repository.name,

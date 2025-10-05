@@ -3,14 +3,10 @@ import * as v from 'valibot';
 
 import * as pins from '../../pins';
 
-const category = {
-  path: ['Drafts'],
-} satisfies i.NodeCategory;
+const nodes = i.nodes.group('Drafts');
 
-export const createDraft = i.nodes.callable({
-  category,
+export const createDraft = nodes.callable({
   description: 'Create a new draft email in Gmail',
-
   inputs: {
     to: pins.message.addresses,
     subject: pins.message.subject.with({
@@ -26,11 +22,9 @@ export const createDraft = i.nodes.callable({
       optional: true,
     }),
   },
-
   outputs: {
     draft: pins.draft.item,
   },
-
   async run(opts) {
     const headers = [
       `To: ${opts.inputs.to.join(', ')}`,
@@ -61,18 +55,14 @@ export const createDraft = i.nodes.callable({
   },
 });
 
-export const sendDraft = i.nodes.callable({
-  category,
+export const sendDraft = nodes.callable({
   description: 'Send an existing draft email',
-
   inputs: {
     id: pins.draft.id,
   },
-
   outputs: {
     message: pins.message.item,
   },
-
   async run(opts) {
     const response = await opts.state.gmail.users.drafts.send({
       userId: 'me',
@@ -87,18 +77,14 @@ export const sendDraft = i.nodes.callable({
   },
 });
 
-export const getDraft = i.nodes.callable({
-  category,
+export const getDraft = nodes.callable({
   description: 'Retrieve a specific draft by ID',
-
   inputs: {
     id: pins.draft.id,
   },
-
   outputs: {
     draft: pins.draft.item,
   },
-
   async run(opts) {
     const response = await opts.state.gmail.users.drafts.get({
       userId: 'me',
@@ -111,17 +97,14 @@ export const getDraft = i.nodes.callable({
   },
 });
 
-export const listDrafts = i.nodes.callable({
-  category,
+export const listDrafts = nodes.callable({
   description: 'Retrieve all draft emails',
-
   inputs: {
     maxResults: pins.query.maxResults.with({
       description: 'Maximum number of drafts to return',
       optional: true,
     }),
   },
-
   outputs: {
     drafts: i.pins.data({
       displayName: 'Drafts',
@@ -132,7 +115,6 @@ export const listDrafts = i.nodes.callable({
       schema: v.number(),
     }),
   },
-
   async run(opts) {
     const response = await opts.state.gmail.users.drafts.list({
       userId: 'me',
@@ -146,14 +128,11 @@ export const listDrafts = i.nodes.callable({
   },
 });
 
-export const deleteDraft = i.nodes.callable({
-  category,
+export const deleteDraft = nodes.callable({
   description: 'Delete a draft email',
-
   inputs: {
     id: pins.draft.id,
   },
-
   async run(opts) {
     await opts.state.gmail.users.drafts.delete({
       userId: 'me',

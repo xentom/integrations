@@ -5,14 +5,11 @@ import { type EmitterWebhookEvent } from '@octokit/webhooks/types';
 import { createRepositoryWebhook } from '@/helpers/webhooks';
 import * as pins from '@/pins';
 
-const category = {
-  path: ['Repositories', 'Commits'],
-} satisfies i.NodeCategory;
+const nodes = i.nodes.group('Repositories/Commits');
 
 type WebhookEvent = EmitterWebhookEvent<'push'>;
 
-export const onPush = i.nodes.trigger({
-  category,
+export const onPush = nodes.trigger({
   inputs: {
     repository: pins.repository.name,
   },

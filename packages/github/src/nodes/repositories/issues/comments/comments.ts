@@ -6,9 +6,7 @@ import { extractOwnerAndRepo } from '@/helpers/options';
 import { createRepositoryWebhook } from '@/helpers/webhooks';
 import * as pins from '@/pins';
 
-const category = {
-  path: ['Repositories', 'Issues', 'Comments'],
-} satisfies i.NodeCategory;
+const nodes = i.nodes.group('Repositories/Issues/Comments');
 
 export const onIssueComment = i.generic(<
   I extends i.GenericInputs<typeof inputs>,
@@ -20,8 +18,7 @@ export const onIssueComment = i.generic(<
 
   type WebhookEvent = EmitterWebhookEvent<`issue_comment.${I['action']}`>;
 
-  return i.nodes.trigger({
-    category,
+  return nodes.trigger({
     inputs,
     outputs: {
       id: i.pins.data<WebhookEvent['id']>(),
@@ -53,8 +50,7 @@ export const onIssueComment = i.generic(<
   });
 });
 
-export const addIssueComment = i.nodes.callable({
-  category,
+export const addIssueComment = nodes.callable({
   description: 'Add a comment to an issue',
   inputs: {
     repository: pins.repository.name,

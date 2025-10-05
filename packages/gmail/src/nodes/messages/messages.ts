@@ -3,12 +3,9 @@ import * as v from 'valibot';
 
 import * as pins from '../../pins';
 
-const category = {
-  path: ['Messages'],
-} satisfies i.NodeCategory;
+const nodes = i.nodes.group('Messages');
 
-// export const onMessage = i.nodes.trigger({
-//   category,
+// export const onMessage = nodes.trigger({
 //   description: 'Trigger when a new message is received',
 //   inputs: {
 //     projectId: i.pins.data({
@@ -111,10 +108,8 @@ const category = {
 //   },
 // });
 
-export const sendMessage = i.nodes.callable({
-  category,
+export const sendMessage = nodes.callable({
   description: 'Send an email message through Gmail',
-
   inputs: {
     to: pins.message.addresses,
     subject: pins.message.subject.with({
@@ -130,11 +125,9 @@ export const sendMessage = i.nodes.callable({
       optional: true,
     }),
   },
-
   outputs: {
     message: pins.message.item,
   },
-
   async run(opts) {
     const headers = [
       `To: ${opts.inputs.to.join(', ')}`,
@@ -163,21 +156,17 @@ export const sendMessage = i.nodes.callable({
   },
 });
 
-export const getMessage = i.nodes.callable({
-  category,
+export const getMessage = nodes.callable({
   description: 'Retrieve a specific Gmail message by ID',
-
   inputs: {
     id: pins.message.id,
     format: pins.query.messageFormat.with({
       optional: true,
     }),
   },
-
   outputs: {
     message: pins.message.item,
   },
-
   async run(opts) {
     const response = await opts.state.gmail.users.messages.get({
       userId: 'me',
@@ -191,10 +180,8 @@ export const getMessage = i.nodes.callable({
   },
 });
 
-export const listMessages = i.nodes.callable({
-  category,
+export const listMessages = nodes.callable({
   description: 'Search and retrieve Gmail messages',
-
   inputs: {
     query: pins.query.searchQuery.with({
       optional: true,
@@ -206,7 +193,6 @@ export const listMessages = i.nodes.callable({
       optional: true,
     }),
   },
-
   outputs: {
     messages: i.pins.data({
       displayName: 'Messages',
@@ -217,7 +203,6 @@ export const listMessages = i.nodes.callable({
       schema: v.number(),
     }),
   },
-
   async run(opts) {
     const response = await opts.state.gmail.users.messages.list({
       userId: 'me',
@@ -240,14 +225,11 @@ export const listMessages = i.nodes.callable({
   },
 });
 
-export const deleteMessage = i.nodes.callable({
-  category,
+export const deleteMessage = nodes.callable({
   description: 'Permanently delete a Gmail message',
-
   inputs: {
     id: pins.message.id,
   },
-
   async run(opts) {
     await opts.state.gmail.users.messages.delete({
       userId: 'me',

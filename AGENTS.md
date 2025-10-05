@@ -65,7 +65,6 @@ bun run clean      # Clean build artifacts and dependencies
 │       └── index.ts
 ├── images/
 │   └── icon.png                     # Integration icon (required)
-├── globals.d.ts
 ├── package.json
 ├── tsconfig.json
 └── eslint.config.mjs
@@ -155,25 +154,20 @@ const message = await client.messages.get(messageId);
 import * as i from '@xentom/integration-framework';
 
 // 1. Category metadata
-const category = {
-  path: ['Parent Category', 'Category Name'],
-} satisfies i.NodeCategory;
+const nodes = i.nodes.group('Parent Category/Category Name');
 
 // 2. Trigger nodes (event-driven)
-export const onEventName = i.nodes.trigger({
-  category,
+export const onEventName = nodes.trigger({
   // Implementation...
 });
 
 // 3. Callable nodes (actions)
-export const actionName = i.nodes.callable({
-  category,
+export const actionName = nodes.callable({
   // Implementation...
 });
 
 // 4. Pure nodes (transformations)
-export const transformName = i.nodes.pure({
-  category,
+export const transformName = nodes.pure({
   // Implementation...
 });
 ```
@@ -183,17 +177,17 @@ export const transformName = i.nodes.pure({
 **✅ REQUIRED: Specific, meaningful export names**
 
 ```typescript
-export const sendMessage = i.nodes.callable({...});
-export const updateChannel = i.nodes.callable({...});
-export const deleteUser = i.nodes.callable({...});
+export const sendMessage = nodes.callable({...});
+export const updateChannel = nodes.callable({...});
+export const deleteUser = nodes.callable({...});
 ```
 
 **❌ FORBIDDEN: Generic export names**
 
 ```typescript
-export const send = i.nodes.callable({...}); // Too generic
-export const update = i.nodes.callable({...}); // Missing context
-export const delete = i.nodes.callable({...}); // Ambiguous
+export const send = nodes.callable({...}); // Too generic
+export const update = nodes.callable({...}); // Missing context
+export const delete = nodes.callable({...}); // Ambiguous
 ```
 
 ### Display Names
@@ -205,14 +199,14 @@ export const delete = i.nodes.callable({...}); // Ambiguous
 
 ```typescript
 // Required for keyword conflicts
-export const _delete = i.nodes.callable({
-  category,
+export const _delete = nodes.callable({
+  group,
   displayName: 'Delete',
 });
 
 // Omit when auto-generation works
-export const sendMessage = i.nodes.callable({
-  category,
+export const sendMessage = nodes.callable({
+  group,
   // 'sendMessage' → 'Send Message' automatically
 });
 ```

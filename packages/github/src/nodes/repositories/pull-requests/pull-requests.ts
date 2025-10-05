@@ -8,9 +8,7 @@ import { extractOwnerAndRepo } from '@/helpers/options';
 import { createRepositoryWebhook } from '@/helpers/webhooks';
 import * as pins from '@/pins';
 
-const category = {
-  path: ['Repositories', 'Pull Requests'],
-} satisfies i.NodeCategory;
+const nodes = i.nodes.group('Repositories/Pull Requests');
 
 export const onPullRequest = i.generic(<
   I extends i.GenericInputs<typeof inputs>,
@@ -22,8 +20,7 @@ export const onPullRequest = i.generic(<
 
   type WebhookEvent = EmitterWebhookEvent<`pull_request.${I['action']}`>;
 
-  return i.nodes.trigger({
-    category,
+  return nodes.trigger({
     inputs,
     outputs: {
       id: i.pins.data<WebhookEvent['id']>(),
@@ -55,8 +52,7 @@ export const onPullRequest = i.generic(<
   });
 });
 
-export const createPullRequest = i.nodes.callable({
-  category,
+export const createPullRequest = nodes.callable({
   description: 'Create a new pull request',
   inputs: {
     repository: pins.repository.name,
@@ -89,8 +85,7 @@ export const createPullRequest = i.nodes.callable({
   },
 });
 
-export const updatePullRequest = i.nodes.callable({
-  category,
+export const updatePullRequest = nodes.callable({
   description: 'Update an existing pull request',
   inputs: {
     repository: pins.repository.name,
@@ -127,8 +122,7 @@ export const updatePullRequest = i.nodes.callable({
   },
 });
 
-export const getPullRequest = i.nodes.callable({
-  category,
+export const getPullRequest = nodes.callable({
   description: 'Get details of a specific pull request',
   inputs: {
     repository: pins.repository.name,
@@ -149,8 +143,7 @@ export const getPullRequest = i.nodes.callable({
   },
 });
 
-export const mergePullRequest = i.nodes.callable({
-  category,
+export const mergePullRequest = nodes.callable({
   description: 'Merge a pull request',
   inputs: {
     repository: pins.repository.name,

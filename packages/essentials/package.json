@@ -2,7 +2,7 @@
   "name": "@xentom/essentials",
   "displayName": "Essentials",
   "description": "Add essentials to trigger workflows on schedules or manual runs and perform core actions like sending emails, making HTTP requests, or manipulating data.",
-  "version": "0.0.17",
+  "version": "0.0.20",
   "type": "module",
   "icon": "./images/icon.png",
   "main": "./build/index.js",
@@ -12,6 +12,7 @@
     "typecheck": "tsc --noEmit",
     "clean": "git clean -xdf .cache .turbo node_modules build dist",
     "dev": "xentom dev",
+    "build": "xentom build",
     "pack": "xentom pack",
     "publish": "xentom publish"
   },

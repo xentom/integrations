@@ -24,6 +24,11 @@
     "noUncheckedIndexedAccess": true,
     "noImplicitOverride": true,
 
+    // Maintain TypeScript compiler performance in large monorepos
+    "incremental": true,
+    "disableSourceOfProjectReferenceRedirect": true,
+    "tsBuildInfoFile": "${configDir}/.cache/tsbuildinfo.json",
+
     // Some stricter flags (disabled by default)
     "noUnusedLocals": false,
     "noUnusedParameters": false,

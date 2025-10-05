@@ -3,25 +3,19 @@ import * as v from 'valibot';
 
 import * as pins from '@/pins';
 
-const category = {
-  path: ['Threads'],
-} satisfies i.NodeCategory;
+const nodes = i.nodes.group('Threads');
 
-export const getThread = i.nodes.callable({
-  category,
+export const getThread = nodes.callable({
   description: 'Retrieve a specific Gmail conversation thread by ID',
-
   inputs: {
     id: pins.thread.id,
     format: pins.query.messageFormat.with({
       optional: true,
     }),
   },
-
   outputs: {
     thread: pins.thread.item,
   },
-
   async run(opts) {
     const response = await opts.state.gmail.users.threads.get({
       userId: 'me',
@@ -35,10 +29,8 @@ export const getThread = i.nodes.callable({
   },
 });
 
-export const listThreads = i.nodes.callable({
-  category,
+export const listThreads = nodes.callable({
   description: 'Search and retrieve Gmail conversation threads',
-
   inputs: {
     maxResults: pins.query.maxResults,
     query: pins.query.searchQuery.with({
@@ -48,7 +40,6 @@ export const listThreads = i.nodes.callable({
       optional: true,
     }),
   },
-
   outputs: {
     threads: i.pins.data({
       schema: v.array(v.any()),
@@ -58,7 +49,6 @@ export const listThreads = i.nodes.callable({
       schema: v.number(),
     }),
   },
-
   async run(opts) {
     const response = await opts.state.gmail.users.threads.list({
       userId: 'me',
@@ -74,10 +64,8 @@ export const listThreads = i.nodes.callable({
   },
 });
 
-export const modifyThread = i.nodes.callable({
-  category,
+export const modifyThread = nodes.callable({
   description: 'Add or remove labels from all messages in a thread',
-
   inputs: {
     id: pins.thread.id,
     addLabelIds: pins.label.ids.with({
@@ -91,11 +79,9 @@ export const modifyThread = i.nodes.callable({
       optional: true,
     }),
   },
-
   outputs: {
     thread: pins.thread.item,
   },
-
   async run(opts) {
     const response = await opts.state.gmail.users.threads.modify({
       userId: 'me',
@@ -112,14 +98,11 @@ export const modifyThread = i.nodes.callable({
   },
 });
 
-export const deleteThread = i.nodes.callable({
-  category,
+export const deleteThread = nodes.callable({
   description: 'Permanently delete an entire conversation thread',
-
   inputs: {
     id: pins.thread.id,
   },
-
   async run(opts) {
     await opts.state.gmail.users.threads.delete({
       userId: 'me',

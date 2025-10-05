@@ -5,9 +5,7 @@ import { type EmitterWebhookEvent } from '@octokit/webhooks/types';
 import { createRepositoryWebhook } from '@/helpers/webhooks';
 import * as pins from '@/pins';
 
-const category = {
-  path: ['Repositories', 'Actions', 'Runs'],
-} satisfies i.NodeCategory;
+const nodes = i.nodes.group('Repositories/Actions/Runs');
 
 export const onActionRun = i.generic(<
   I extends i.GenericInputs<typeof inputs>,
@@ -19,8 +17,7 @@ export const onActionRun = i.generic(<
 
   type WebhookEvent = EmitterWebhookEvent<`workflow_run.${I['action']}`>;
 
-  return i.nodes.trigger({
-    category,
+  return nodes.trigger({
     inputs,
     outputs: {
       id: i.pins.data<WebhookEvent['id']>(),

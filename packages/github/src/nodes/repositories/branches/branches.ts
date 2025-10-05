@@ -5,12 +5,9 @@ import { type components } from '@octokit/openapi-types';
 import { extractOwnerAndRepo } from '@/helpers/options';
 import * as pins from '@/pins';
 
-const category = {
-  path: ['Repositories', 'Branches'],
-} satisfies i.NodeCategory;
+const nodes = i.nodes.group('Repositories/Branches');
 
-export const listBranches = i.nodes.callable({
-  category,
+export const listBranches = nodes.callable({
   description: 'List repository branches',
   inputs: {
     repository: pins.repository.name,

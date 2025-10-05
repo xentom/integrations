@@ -1,14 +1,11 @@
 import * as i from '@xentom/integration-framework';
 import * as v from 'valibot';
 
-const category = {
-  path: ['DataTypes', 'Primitives'],
-} satisfies i.NodeCategory;
+const nodes = i.nodes.group('Data types/Primitives');
 
-export const number = i.nodes.pure({
-  category,
+export const number = nodes.pure({
   outputs: {
-    value: i.pins.data({
+    number: i.pins.data({
       displayName: false,
       control: i.controls.expression({
         placeholder: 'Enter a number',
@@ -19,10 +16,9 @@ export const number = i.nodes.pure({
   },
 });
 
-export const string = i.nodes.pure({
-  category,
+export const string = nodes.pure({
   outputs: {
-    value: i.pins.data({
+    string: i.pins.data({
       displayName: false,
       control: i.controls.text({
         placeholder: 'Enter a string',
@@ -33,10 +29,9 @@ export const string = i.nodes.pure({
   },
 });
 
-export const boolean = i.nodes.pure({
-  category,
+export const boolean = nodes.pure({
   outputs: {
-    value: i.pins.data({
+    boolean: i.pins.data({
       displayName: false,
       control: i.controls.switch({
         defaultValue: true,

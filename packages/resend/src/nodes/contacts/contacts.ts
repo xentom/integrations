@@ -2,14 +2,10 @@ import * as i from '@xentom/integration-framework';
 
 import * as pins from '@/pins';
 
-const category = {
-  path: ['Contacts'],
-} satisfies i.NodeCategory;
+const nodes = i.nodes.group('Contacts');
 
-export const createContact = i.nodes.callable({
-  category,
+export const createContact = nodes.callable({
   description: 'Create a new contact in Resend.',
-
   inputs: {
     audienceId: pins.audience.id.with({
       description: 'The ID of the audience to add the contact to.',
@@ -27,14 +23,12 @@ export const createContact = i.nodes.callable({
       optional: true,
     }),
   },
-
   outputs: {
     id: pins.contact.id.with({
       description: 'The ID of the created contact.',
       control: false,
     }),
   },
-
   async run(opts) {
     const response = await opts.state.resend.contacts.create({
       email: opts.inputs.email,
@@ -54,10 +48,8 @@ export const createContact = i.nodes.callable({
   },
 });
 
-export const getContact = i.nodes.callable({
-  category,
+export const getContact = nodes.callable({
   description: 'Retrieve a contact by its ID.',
-
   inputs: {
     audienceId: pins.audience.id.with({
       description: 'The ID of the audience the contact belongs to.',
@@ -70,11 +62,9 @@ export const getContact = i.nodes.callable({
       optional: true,
     }),
   },
-
   outputs: {
     contact: pins.contact.item.with(),
   },
-
   async run(opts) {
     if (!opts.inputs.id && !opts.inputs.email) {
       throw new Error('Either ID or email must be provided.');
@@ -98,20 +88,16 @@ export const getContact = i.nodes.callable({
   },
 });
 
-export const listContacts = i.nodes.callable({
-  category,
+export const listContacts = nodes.callable({
   description: 'List all contacts in Resend.',
-
   inputs: {
     audienceId: pins.audience.id.with({
       description: 'The ID of the audience to list the contacts from.',
     }),
   },
-
   outputs: {
     contacts: pins.contact.items,
   },
-
   async run(opts) {
     const response = await opts.state.resend.contacts.list({
       audienceId: opts.inputs.audienceId,
@@ -127,10 +113,8 @@ export const listContacts = i.nodes.callable({
   },
 });
 
-export const updateContact = i.nodes.callable({
-  category,
+export const updateContact = nodes.callable({
   description: 'Update an existing contact by its ID.',
-
   inputs: {
     audienceId: pins.audience.id.with({
       description: 'The ID of the audience to update the contact in.',
@@ -153,14 +137,12 @@ export const updateContact = i.nodes.callable({
       optional: true,
     }),
   },
-
   outputs: {
     id: pins.contact.id.with({
       description: 'The ID of the updated contact.',
       control: false,
     }),
   },
-
   async run(opts) {
     if (!opts.inputs.id && !opts.inputs.email) {
       throw new Error('Either ID or email must be provided.');
@@ -188,24 +170,20 @@ export const updateContact = i.nodes.callable({
   },
 });
 
-export const deleteContact = i.nodes.callable({
-  category,
+export const deleteContact = nodes.callable({
   description: 'Delete a contact by its ID.',
-
   inputs: {
     audienceId: pins.audience.id.with({
       description: 'The ID of the audience to delete the contact from.',
     }),
     id: pins.contact.id,
   },
-
   outputs: {
     id: pins.contact.id.with({
       description: 'The ID of the deleted contact.',
       control: false,
     }),
   },
-
   async run(opts) {
     const response = await opts.state.resend.contacts.remove({
       audienceId: opts.inputs.audienceId,

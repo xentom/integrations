@@ -4,12 +4,9 @@ import { type sheets_v4 } from 'googleapis/build/src/apis/sheets/v4';
 
 import * as pins from '@/pins';
 
-const category = {
-  path: ['Values'],
-} satisfies i.NodeCategory;
+const nodes = i.nodes.group('Values');
 
-export const getValues = i.nodes.callable({
-  category,
+export const getValues = nodes.callable({
   displayName: 'Get Values',
   description: 'Read values from a specified range in a Google Sheet',
   inputs: {
@@ -36,8 +33,7 @@ export const getValues = i.nodes.callable({
   },
 });
 
-export const updateValues = i.nodes.callable({
-  category,
+export const updateValues = nodes.callable({
   displayName: 'Update Values',
   description: 'Write values to a specified range in a Google Sheet',
   inputs: {
@@ -67,8 +63,7 @@ export const updateValues = i.nodes.callable({
   },
 });
 
-export const appendValues = i.nodes.callable({
-  category,
+export const appendValues = nodes.callable({
   displayName: 'Append Values',
   description:
     'Append values to the end of a specified range in a Google Sheet',
@@ -99,8 +94,7 @@ export const appendValues = i.nodes.callable({
   },
 });
 
-export const clearValues = i.nodes.callable({
-  category,
+export const clearValues = nodes.callable({
   displayName: 'Clear Values',
   description: 'Clear values from a specified range in a Google Sheet',
   inputs: {

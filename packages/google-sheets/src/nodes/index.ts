@@ -1,3 +1,2 @@
-export * from './rows';
-export * from './spreadsheet';
+export * from './spreadsheets';
 export * from './values';

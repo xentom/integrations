@@ -1,7 +1,7 @@
 import * as i from '@xentom/integration-framework';
 import * as v from 'valibot';
 
-import { type gmail_v1 } from 'googleapis';
+import { type gmail_v1 } from 'googleapis/build/src/apis/gmail/v1';
 
 export const item = i.pins.data<gmail_v1.Schema$Draft>({
   description: 'A Gmail draft message',

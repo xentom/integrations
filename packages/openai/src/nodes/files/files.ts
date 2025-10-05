@@ -5,12 +5,9 @@ import { type FilePurpose } from 'openai/resources';
 
 import * as pins from '@/pins';
 
-const category = {
-  path: ['AI', 'Files'],
-} satisfies i.NodeCategory;
+const nodes = i.nodes.group('Files');
 
-export const createFile = i.nodes.callable({
-  category,
+export const createFile = nodes.callable({
   inputs: {
     file: i.pins.data<File>(),
     purpose: i.pins.data<FilePurpose>({
@@ -74,8 +71,7 @@ export const createFile = i.nodes.callable({
   },
 });
 
-export const deleteFile = i.nodes.callable({
-  category,
+export const deleteFile = nodes.callable({
   inputs: {
     fileId: pins.file.id,
   },
@@ -87,8 +83,7 @@ export const deleteFile = i.nodes.callable({
   },
 });
 
-export const listFiles = i.nodes.callable({
-  category,
+export const listFiles = nodes.callable({
   inputs: {
     limit: i.pins.data({
       description: 'The maximum number of files to return. Defaults to 10000.',
@@ -123,8 +118,7 @@ export const listFiles = i.nodes.callable({
   },
 });
 
-export const getFile = i.nodes.callable({
-  category,
+export const getFile = nodes.callable({
   inputs: {
     fileId: pins.file.id,
   },
@@ -139,8 +133,7 @@ export const getFile = i.nodes.callable({
   },
 });
 
-export const fileContent = i.nodes.callable({
-  category,
+export const fileContent = nodes.callable({
   inputs: {
     fileId: pins.file.id,
   },
@@ -158,8 +151,7 @@ export const fileContent = i.nodes.callable({
   },
 });
 
-export const waitForFileProcessing = i.nodes.callable({
-  category,
+export const waitForFileProcessing = nodes.callable({
   inputs: {
     fileId: pins.file.id,
     pollInterval: i.pins.data({

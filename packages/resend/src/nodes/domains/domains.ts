@@ -8,14 +8,10 @@ import {
 
 import * as pins from '@/pins';
 
-const category = {
-  path: ['Domains'],
-} satisfies i.NodeCategory;
+const nodes = i.nodes.group('Domains');
 
-export const createDomain = i.nodes.callable({
-  category,
+export const createDomain = nodes.callable({
   description: 'Create a new domain for sending emails.',
-
   inputs: {
     name: pins.domain.name.with({
       description: 'The domain name to create.',
@@ -29,13 +25,11 @@ export const createDomain = i.nodes.callable({
       optional: true,
     }),
   },
-
   outputs: {
     domain: pins.domain.item.with<CreateDomainResponseSuccess>({
       description: 'The created domain object.',
     }),
   },
-
   async run(opts) {
     const response = await opts.state.resend.domains.create({
       name: opts.inputs.name,
@@ -53,22 +47,18 @@ export const createDomain = i.nodes.callable({
   },
 });
 
-export const getDomain = i.nodes.callable({
-  category,
+export const getDomain = nodes.callable({
   description: 'Retrieve details of a domain by its ID.',
-
   inputs: {
     id: pins.domain.id.with({
       description: 'The ID of the domain to retrieve.',
     }),
   },
-
   outputs: {
     domain: pins.domain.item.with<GetDomainResponseSuccess>({
       description: 'The domain object.',
     }),
   },
-
   async run(opts) {
     const response = await opts.state.resend.domains.get(opts.inputs.id);
 
@@ -82,16 +72,13 @@ export const getDomain = i.nodes.callable({
   },
 });
 
-export const listDomains = i.nodes.callable({
-  category,
+export const listDomains = nodes.callable({
   description: 'Retrieve a list of domains.',
-
   outputs: {
     domains: pins.domain.items.with<ListDomainsResponseSuccess>({
       description: 'The list of domains.',
     }),
   },
-
   async run(opts) {
     const response = await opts.state.resend.domains.list();
 
@@ -105,23 +92,19 @@ export const listDomains = i.nodes.callable({
   },
 });
 
-export const verifyDomain = i.nodes.callable({
-  category,
+export const verifyDomain = nodes.callable({
   description: 'Verify a domain by checking its DNS records.',
-
   inputs: {
     id: pins.domain.id.with({
       description: 'The ID of the domain to verify.',
     }),
   },
-
   outputs: {
     id: pins.domain.id.with({
       description: 'The ID of the verified domain.',
       control: false,
     }),
   },
-
   async run(opts) {
     const response = await opts.state.resend.domains.verify(opts.inputs.id);
 
@@ -135,23 +118,19 @@ export const verifyDomain = i.nodes.callable({
   },
 });
 
-export const deleteDomain = i.nodes.callable({
-  category,
+export const deleteDomain = nodes.callable({
   description: 'Delete a domain by its ID.',
-
   inputs: {
     id: pins.domain.id.with({
       description: 'The ID of the domain to delete.',
     }),
   },
-
   outputs: {
     id: pins.domain.id.with({
       description: 'The ID of the deleted domain.',
       control: false,
     }),
   },
-
   async run(opts) {
     const response = await opts.state.resend.domains.remove(opts.inputs.id);
 

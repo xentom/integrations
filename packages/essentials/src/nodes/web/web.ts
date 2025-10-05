@@ -2,12 +2,9 @@ import * as i from '@xentom/integration-framework';
 
 import * as pins from '@/pins';
 
-const category = {
-  path: ['HTTP'],
-} satisfies i.NodeCategory;
+const nodes = i.nodes.group('Web');
 
-export const request = i.nodes.callable({
-  category,
+export const request = nodes.callable({
   description:
     'Make an HTTP request to a specified URL and return the response data.',
   inputs: {

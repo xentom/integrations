@@ -3,18 +3,13 @@ import * as v from 'valibot';
 
 import * as pins from '../../pins';
 
-const category = {
-  path: ['Labels'],
-} satisfies i.NodeCategory;
+const nodes = i.nodes.group('Labels');
 
-export const listLabels = i.nodes.callable({
-  category,
+export const listLabels = nodes.callable({
   description: 'Retrieve all Gmail labels',
-
   outputs: {
     labels: pins.label.items,
   },
-
   async run(opts) {
     const response = await opts.state.gmail.users.labels.list({
       userId: 'me',
@@ -26,18 +21,14 @@ export const listLabels = i.nodes.callable({
   },
 });
 
-export const getLabel = i.nodes.callable({
-  category,
+export const getLabel = nodes.callable({
   description: 'Retrieve a specific Gmail label by ID',
-
   inputs: {
     id: pins.label.id,
   },
-
   outputs: {
     label: pins.label.item,
   },
-
   async run(opts) {
     const response = await opts.state.gmail.users.labels.get({
       userId: 'me',
@@ -50,10 +41,8 @@ export const getLabel = i.nodes.callable({
   },
 });
 
-export const createLabel = i.nodes.callable({
-  category,
+export const createLabel = nodes.callable({
   description: 'Create a new Gmail label',
-
   inputs: {
     name: i.pins.data({
       displayName: 'Label Name',
@@ -89,11 +78,9 @@ export const createLabel = i.nodes.callable({
       optional: true,
     }),
   },
-
   outputs: {
     label: pins.label.item,
   },
-
   async run(opts) {
     const response = await opts.state.gmail.users.labels.create({
       userId: 'me',
@@ -110,14 +97,11 @@ export const createLabel = i.nodes.callable({
   },
 });
 
-export const deleteLabel = i.nodes.callable({
-  category,
+export const deleteLabel = nodes.callable({
   description: 'Delete a Gmail label (cannot delete system labels)',
-
   inputs: {
     id: pins.label.id,
   },
-
   async run(opts) {
     await opts.state.gmail.users.labels.delete({
       userId: 'me',
@@ -126,10 +110,8 @@ export const deleteLabel = i.nodes.callable({
   },
 });
 
-export const modifyMessageLabels = i.nodes.callable({
-  category,
+export const modifyMessageLabels = nodes.callable({
   description: 'Add or remove labels from a message',
-
   inputs: {
     id: pins.message.id,
     addLabelIds: pins.label.ids.with({
@@ -141,11 +123,9 @@ export const modifyMessageLabels = i.nodes.callable({
       optional: true,
     }),
   },
-
   outputs: {
     message: pins.message.item,
   },
-
   async run(opts) {
     const response = await opts.state.gmail.users.messages.modify({
       userId: 'me',

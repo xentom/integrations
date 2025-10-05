@@ -47,7 +47,7 @@ rsync -av --exclude='node_modules' packages/template/ packages/$1/
 **Windows PowerShell:**
 
 ```powershell
-powershell -Command "robocopy './packages/template' './packages/$1' /E /XD node_modules"
+powershell -Command "Copy-Item -Path 'packages/template' -Destination 'packages/$1' -Recurse -Exclude 'node_modules'"
 ```
 
 #### 2.2 Configure Package Metadata
@@ -71,7 +71,7 @@ bun add <selected-package-name>
 
 #### 3.1 Load the integration framework files
 
-Run the following command to load the integration framework files into the context.
+Run the following command in the monorepo root directory to load the integration framework files into the context.
 
 ```bash
 find node_modules/@xentom/integration-framework/dist -name "*.d.ts" -type f -exec sh -c 'echo "=== $1 ==="; cat "$1"; echo' _ {} \;

@@ -8,12 +8,9 @@ import {
 
 import * as pins from '@/pins';
 
-const category = {
-  path: ['AI', 'Response'],
-} satisfies i.NodeCategory;
+const nodes = i.nodes.group('Responses');
 
-export const createResponse = i.nodes.callable({
-  category,
+export const createResponse = nodes.callable({
   inputs: {
     model: i.pins.data({
       schema: z.string().nonempty(),
@@ -105,8 +102,7 @@ export const createResponse = i.nodes.callable({
   },
 });
 
-export const getResponse = i.nodes.callable({
-  category,
+export const getResponse = nodes.callable({
   inputs: {
     id: pins.response.id,
   },
@@ -120,8 +116,7 @@ export const getResponse = i.nodes.callable({
   },
 });
 
-export const cancelResponse = i.nodes.callable({
-  category,
+export const cancelResponse = nodes.callable({
   inputs: {
     id: pins.response.id,
   },
@@ -135,8 +130,7 @@ export const cancelResponse = i.nodes.callable({
   },
 });
 
-export const deleteResponse = i.nodes.callable({
-  category,
+export const deleteResponse = nodes.callable({
   inputs: {
     id: pins.response.id,
   },

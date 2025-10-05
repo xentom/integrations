@@ -9,7 +9,7 @@ export const method = i.pins.data({
     options: HTTP_REQUEST_METHODS.map((method) => ({
       value: method,
     })),
-    defaultValue: 'GET',
+    defaultValue: 'POST',
   }),
 });
 

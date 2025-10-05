@@ -4,28 +4,24 @@ import * as v from 'valibot';
 import { TeamSpeakChannel } from 'ts3-nodejs-library';
 import { type ChannelEntry } from 'ts3-nodejs-library/lib/types/ResponseTypes';
 
-export const item = i.pins.data({
-  displayName: 'Channel',
-  description: 'The details of a TeamSpeak channel',
-});
-
-export const itemInput = item.with({
-  schema({ state }) {
-    return v.pipe(
-      v.custom<ChannelEntry>((value) => {
-        return !!value && typeof value === 'object' && 'cid' in value;
-      }),
-      v.transform((value) => new TeamSpeakChannel(state.teamspeak, value)),
-    );
-  },
-});
-
-export const itemOutput = item.with({
-  schema: v.pipe(
-    v.custom<TeamSpeakChannel>((value) => value instanceof TeamSpeakChannel),
-    v.transform((value) => value.toJSON() as ChannelEntry),
-  ),
-});
+export const item = {
+  input: i.pins.data({
+    schema({ state }) {
+      return v.pipe(
+        v.custom<ChannelEntry>((value) => {
+          return !!value && typeof value === 'object' && 'cid' in value;
+        }),
+        v.transform((value) => new TeamSpeakChannel(state.teamspeak, value)),
+      );
+    },
+  }),
+  output: i.pins.data({
+    schema: v.pipe(
+      v.custom<TeamSpeakChannel>((value) => value instanceof TeamSpeakChannel),
+      v.transform((value) => value.toJSON() as ChannelEntry),
+    ),
+  }),
+};
 
 export const id = i.pins.data({
   displayName: 'ID',
@@ -40,12 +36,10 @@ export const idSelection = id.with({
   control: i.controls.select({
     async options(opts) {
       const channels = await opts.state.teamspeak.channelList();
-      return channels.map((channel) => {
-        return {
-          value: channel.cid,
-          label: `${channel.cid} (${channel.name})`,
-        };
-      });
+      return channels.map((channel) => ({
+        value: channel.cid,
+        suffix: channel.name,
+      }));
     },
   }),
 });
@@ -64,13 +58,14 @@ export const parentIdSelection = parentId.with({
     async options(opts) {
       const channels = await opts.state.teamspeak.channelList();
       return [
-        { value: '0', label: 'Root Level' },
-        ...channels.map((channel) => {
-          return {
-            value: channel.cid,
-            label: `${channel.cid} (${channel.name})`,
-          };
-        }),
+        {
+          value: '0',
+          suffix: 'Root Level',
+        },
+        ...channels.map((channel) => ({
+          value: channel.cid,
+          suffix: channel.name,
+        })),
       ];
     },
   }),

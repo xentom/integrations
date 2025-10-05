@@ -5,9 +5,7 @@ import { type EmitterWebhookEvent } from '@octokit/webhooks/types';
 import { createRepositoryWebhook } from '@/helpers/webhooks';
 import * as pins from '@/pins';
 
-const category = {
-  path: ['Repositories', 'Discussions', 'Comments'],
-} satisfies i.NodeCategory;
+const nodes = i.nodes.group('Repositories/Discussions/Comments');
 
 export const onDiscussionComment = i.generic(<
   I extends i.GenericInputs<typeof inputs>,
@@ -19,8 +17,7 @@ export const onDiscussionComment = i.generic(<
 
   type WebhookEvent = EmitterWebhookEvent<`discussion_comment.${I['action']}`>;
 
-  return i.nodes.trigger({
-    category,
+  return nodes.trigger({
     inputs,
     outputs: {
       id: i.pins.data<WebhookEvent['id']>(),

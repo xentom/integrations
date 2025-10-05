@@ -1,7 +1,9 @@
 import * as i from '@xentom/integration-framework';
 import * as v from 'valibot';
 
-import { google, type Auth, type gmail_v1, type pubsub_v1 } from 'googleapis';
+import { OAuth2Client } from 'google-auth-library';
+import { gmail_v1 } from 'googleapis/build/src/apis/gmail/v1';
+import { pubsub_v1 } from 'googleapis/build/src/apis/pubsub/v1';
 
 import * as nodes from './nodes';
 
@@ -10,10 +12,12 @@ v.setGlobalConfig({
   abortPipeEarly: true,
 });
 
-export interface IntegrationState {
-  auth: Auth.OAuth2Client;
-  gmail: gmail_v1.Gmail;
-  pubsub: pubsub_v1.Pubsub;
+declare module '@xentom/integration-framework' {
+  interface IntegrationState {
+    auth: OAuth2Client;
+    gmail: gmail_v1.Gmail;
+    pubsub: pubsub_v1.Pubsub;
+  }
 }
 
 export default i.integration({
@@ -39,25 +43,17 @@ export default i.integration({
   }),
 
   start(opts) {
-    opts.state.auth = new google.auth.OAuth2({
-      projectId: 'rock-arc-471517-m2',
-      project_id: 'rock-arc-471517-m2',
-      quotaProjectId: 'rock-arc-471517-m2',
-      quota_project_id: 'rock-arc-471517-m2',
-    });
-    opts.state.auth.setCredentials({
-      access_token: opts.auth.accessToken,
+    opts.state.auth = new OAuth2Client({
+      credentials: {
+        access_token: opts.auth.accessToken,
+      },
     });
 
-    console.log(opts.state.auth.projectId);
-
-    opts.state.gmail = google.gmail({
-      version: 'v1',
+    opts.state.gmail = new gmail_v1.Gmail({
       auth: opts.state.auth,
     });
 
-    opts.state.pubsub = google.pubsub({
-      version: 'v1',
+    opts.state.pubsub = new pubsub_v1.Pubsub({
       auth: opts.state.auth,
     });
   },

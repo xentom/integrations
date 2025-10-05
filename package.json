@@ -8,6 +8,7 @@
     "lint": "turbo run lint --continue -- --cache --cache-location .cache/.eslintcache",
     "typecheck": "turbo typecheck --continue",
     "format": "turbo run format --continue -- --write --cache --cache-location .cache/.prettiercache",
+    "build": "turbo run build --",
     "pack": "turbo run pack --"
   },
   "devDependencies": {

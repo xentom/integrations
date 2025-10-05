@@ -2,27 +2,21 @@ import * as i from '@xentom/integration-framework';
 
 import * as pins from '@/pins';
 
-const category = {
-  path: ['Audiences'],
-} satisfies i.NodeCategory;
+const nodes = i.nodes.group('Audiences');
 
-export const createAudience = i.nodes.callable({
-  category,
+export const createAudience = nodes.callable({
   description: 'Create a new audience in Resend.',
-
   inputs: {
     name: pins.audience.name.with({
       description: 'The name of the audience to create.',
     }),
   },
-
   outputs: {
     id: pins.audience.id.with({
       description: 'The ID of the created audience.',
       control: false,
     }),
   },
-
   async run(opts) {
     const response = await opts.state.resend.audiences.create({
       name: opts.inputs.name,
@@ -38,16 +32,13 @@ export const createAudience = i.nodes.callable({
   },
 });
 
-export const listAudiences = i.nodes.callable({
-  category,
+export const listAudiences = nodes.callable({
   description: 'List all audiences in Resend.',
-
   outputs: {
     audiences: pins.audience.items.with({
       control: false,
     }),
   },
-
   async run(opts) {
     const response = await opts.state.resend.audiences.list();
 
@@ -61,22 +52,18 @@ export const listAudiences = i.nodes.callable({
   },
 });
 
-export const getAudience = i.nodes.callable({
-  category,
+export const getAudience = nodes.callable({
   description: 'Get a specific audience by ID.',
-
   inputs: {
     id: pins.audience.id.with({
       description: 'The ID of the audience to retrieve.',
     }),
   },
-
   outputs: {
     audience: pins.audience.item.with({
       control: false,
     }),
   },
-
   async run(opts) {
     const response = await opts.state.resend.audiences.get(opts.inputs.id);
 
@@ -90,23 +77,19 @@ export const getAudience = i.nodes.callable({
   },
 });
 
-export const deleteAudience = i.nodes.callable({
-  category,
+export const deleteAudience = nodes.callable({
   description: 'Delete an audience by ID.',
-
   inputs: {
     id: pins.audience.id.with({
       description: 'The ID of the audience to delete.',
     }),
   },
-
   outputs: {
     id: pins.audience.id.with({
       description: 'The ID of the deleted audience.',
       control: false,
     }),
   },
-
   async run(opts) {
     const response = await opts.state.resend.audiences.remove(opts.inputs.id);
 

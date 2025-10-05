@@ -2,7 +2,7 @@
   "name": "@xentom/resend",
   "displayName": "Resend",
   "description": "Integrate Resend to trigger workflows from email events and send emails using the Resend API.",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "type": "module",
   "icon": "./images/icon.png",
   "main": "./build/index.js",
@@ -12,6 +12,7 @@
     "typecheck": "tsc --noEmit",
     "clean": "git clean -xdf .cache .turbo node_modules build dist",
     "dev": "xentom dev",
+    "build": "xentom build",
     "pack": "xentom pack",
     "publish": "xentom publish"
   },

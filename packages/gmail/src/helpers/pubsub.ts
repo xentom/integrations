@@ -1,4 +1,4 @@
-import { type pubsub_v1 } from 'googleapis';
+import { type pubsub_v1 } from 'googleapis/build/src/apis/pubsub/v1';
 
 import { isGaxiosError } from './response';
 

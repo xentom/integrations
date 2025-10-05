@@ -6,9 +6,7 @@ import { extractOwnerAndRepo } from '@/helpers/options';
 import { createRepositoryWebhook } from '@/helpers/webhooks';
 import * as pins from '@/pins';
 
-const category = {
-  path: ['Repositories'],
-} satisfies i.NodeCategory;
+const nodes = i.nodes.group('Repositories');
 
 export const onRepository = i.generic(<
   I extends i.GenericInputs<typeof inputs>,
@@ -20,8 +18,7 @@ export const onRepository = i.generic(<
 
   type WebhookEvent = EmitterWebhookEvent<`repository.${I['action']}`>;
 
-  return i.nodes.trigger({
-    category,
+  return nodes.trigger({
     inputs,
     outputs: {
       id: i.pins.data<WebhookEvent['id']>(),
@@ -53,8 +50,7 @@ export const onRepository = i.generic(<
   });
 });
 
-export const getRepository = i.nodes.callable({
-  category,
+export const getRepository = nodes.callable({
   description: 'Get repository information',
   inputs: {
     repository: pins.repository.name,

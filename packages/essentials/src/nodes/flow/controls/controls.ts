@@ -1,12 +1,9 @@
 import * as i from '@xentom/integration-framework';
 import * as v from 'valibot';
 
-const category = {
-  path: ['Flow', 'Controls'],
-} satisfies i.NodeCategory;
+const nodes = i.nodes.group('Flow/Controls');
 
-export const branch = i.nodes.callable({
-  category,
+export const branch = nodes.callable({
   inputs: {
     condition: i.pins.data({
       schema: v.boolean(),
@@ -24,9 +21,8 @@ export const branch = i.nodes.callable({
   },
 });
 
-export const repeat = i.nodes.callable({
+export const repeat = nodes.callable({
   description: 'Loop for a given number of times',
-  category,
   inputs: {
     count: i.pins.data({
       description: 'Number of iterations to perform',
@@ -75,8 +71,7 @@ export const forEach = i.generic(<
     }),
   };
 
-  return i.nodes.callable({
-    category,
+  return nodes.callable({
     description: 'Loops over a list of elements',
     inputs,
     outputs: {

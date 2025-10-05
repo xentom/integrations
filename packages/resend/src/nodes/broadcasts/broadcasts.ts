@@ -9,14 +9,10 @@ import {
 
 import * as pins from '@/pins';
 
-const category = {
-  path: ['Broadcasts'],
-} satisfies i.NodeCategory;
+const nodes = i.nodes.group('Broadcasts');
 
-export const createBroadcast = i.nodes.callable({
-  category,
+export const createBroadcast = nodes.callable({
   description: 'Create a new broadcast.',
-
   inputs: {
     audienceId: pins.audience.id.with({
       description: 'The ID of the audience to send the broadcast to.',
@@ -49,14 +45,12 @@ export const createBroadcast = i.nodes.callable({
       optional: true,
     }),
   },
-
   outputs: {
     id: pins.broadcast.id.with({
       description: 'The ID of the created broadcast.',
       control: false,
     }),
   },
-
   async run(opts) {
     // Validate that at least one EmailRenderOption is provided
     if (!opts.inputs.html && !opts.inputs.text) {
@@ -85,22 +79,18 @@ export const createBroadcast = i.nodes.callable({
   },
 });
 
-export const getBroadcast = i.nodes.callable({
-  category,
+export const getBroadcast = nodes.callable({
   description: 'Retrieve details of a broadcast by its ID.',
-
   inputs: {
     id: pins.broadcast.id.with({
       description: 'The ID of the broadcast to retrieve.',
     }),
   },
-
   outputs: {
     broadcast: pins.broadcast.item.with({
       control: false,
     }),
   },
-
   async run(opts) {
     const response = await opts.state.resend.broadcasts.get(opts.inputs.id);
 
@@ -114,16 +104,13 @@ export const getBroadcast = i.nodes.callable({
   },
 });
 
-export const listBroadcasts = i.nodes.callable({
-  category,
+export const listBroadcasts = nodes.callable({
   description: 'Retrieve a list of broadcasts.',
-
   outputs: {
     broadcasts: pins.broadcast.items.with<ListBroadcastsResponseSuccess>({
       control: false,
     }),
   },
-
   async run(opts) {
     const response = await opts.state.resend.broadcasts.list();
 
@@ -137,10 +124,8 @@ export const listBroadcasts = i.nodes.callable({
   },
 });
 
-export const updateBroadcast = i.nodes.callable({
-  category,
+export const updateBroadcast = nodes.callable({
   description: 'Update an existing broadcast.',
-
   inputs: {
     id: pins.broadcast.id.with({
       description: 'The ID of the broadcast to update.',
@@ -178,14 +163,12 @@ export const updateBroadcast = i.nodes.callable({
       optional: true,
     }),
   },
-
   outputs: {
     broadcast: pins.broadcast.item.with<UpdateBroadcastResponseSuccess>({
       description: 'The updated broadcast object.',
       control: false,
     }),
   },
-
   async run(opts) {
     const response = await opts.state.resend.broadcasts.update(opts.inputs.id, {
       name: opts.inputs.name,
@@ -208,10 +191,8 @@ export const updateBroadcast = i.nodes.callable({
   },
 });
 
-export const sendBroadcast = i.nodes.callable({
-  category,
+export const sendBroadcast = nodes.callable({
   description: 'Send a broadcast to its audience.',
-
   inputs: {
     id: pins.broadcast.id.with({
       description: 'The ID of the broadcast to send.',
@@ -226,14 +207,12 @@ export const sendBroadcast = i.nodes.callable({
       optional: true,
     }),
   },
-
   outputs: {
     broadcast: pins.broadcast.item.with<SendBroadcastResponseSuccess>({
       description: 'The sent broadcast object.',
       control: false,
     }),
   },
-
   async run(opts) {
     const response = await opts.state.resend.broadcasts.send(opts.inputs.id, {
       scheduledAt: opts.inputs.scheduledAt,
@@ -249,23 +228,19 @@ export const sendBroadcast = i.nodes.callable({
   },
 });
 
-export const deleteBroadcast = i.nodes.callable({
-  category,
+export const deleteBroadcast = nodes.callable({
   description: 'Delete a broadcast by its ID.',
-
   inputs: {
     id: pins.broadcast.id.with({
       description: 'The ID of the broadcast to delete.',
     }),
   },
-
   outputs: {
     id: pins.broadcast.id.with({
       description: 'The ID of the deleted broadcast.',
       control: false,
     }),
   },
-
   async run(opts) {
     const response = await opts.state.resend.broadcasts.remove(opts.inputs.id);
 

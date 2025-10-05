@@ -13,10 +13,12 @@ v.setGlobalConfig({
   abortPipeEarly: true,
 });
 
-export interface IntegrationState {
-  octokit: Octokit;
-  webhookSecret: string;
-  webhooks: Webhooks;
+declare module '@xentom/integration-framework' {
+  interface IntegrationState {
+    octokit: Octokit;
+    webhookSecret: string;
+    webhooks: Webhooks;
+  }
 }
 
 export default i.integration({

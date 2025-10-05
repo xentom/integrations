@@ -5,14 +5,10 @@ import { type GetEmailResponseSuccess } from 'resend';
 
 import * as pins from '@/pins';
 
-const category = {
-  path: ['Emails'],
-} satisfies i.NodeCategory;
+const nodes = i.nodes.group('Emails');
 
-export const sendEmail = i.nodes.callable({
-  category,
+export const sendEmail = nodes.callable({
   description: 'Send a simple email using Resend.',
-
   inputs: {
     from: pins.email.addressWithDisplayName.with({
       description:
@@ -68,14 +64,12 @@ export const sendEmail = i.nodes.callable({
       optional: true,
     }),
   },
-
   outputs: {
     id: pins.email.id.with({
       description: 'The ID of the sent email.',
       control: false,
     }),
   },
-
   async run(opts) {
     // Validate that at least one content type is provided
     if (!opts.inputs.html && !opts.inputs.text) {
@@ -113,20 +107,16 @@ export const sendEmail = i.nodes.callable({
   },
 });
 
-export const getEmail = i.nodes.callable({
-  category,
+export const getEmail = nodes.callable({
   description: 'Retrieve details of a sent email by its ID.',
-
   inputs: {
     id: pins.email.id.with({
       description: 'The ID of the email to retrieve.',
     }),
   },
-
   outputs: {
     email: i.pins.data<GetEmailResponseSuccess>(),
   },
-
   async run(opts) {
     const response = await opts.state.resend.emails.get(opts.inputs.id);
     if (response.error) {
@@ -139,10 +129,8 @@ export const getEmail = i.nodes.callable({
   },
 });
 
-export const updateEmail = i.nodes.callable({
-  category,
+export const updateEmail = nodes.callable({
   description: 'Update a scheduled email by its ID.',
-
   inputs: {
     id: pins.email.id.with({
       description: 'The ID of the email to update.',
@@ -155,14 +143,12 @@ export const updateEmail = i.nodes.callable({
       schema: v.pipe(v.string(), v.isoDateTime()),
     }),
   },
-
   outputs: {
     id: pins.email.id.with({
       description: 'The ID of the updated email.',
       control: false,
     }),
   },
-
   async run(opts) {
     const response = await opts.state.resend.emails.update({
       id: opts.inputs.id,
@@ -179,23 +165,19 @@ export const updateEmail = i.nodes.callable({
   },
 });
 
-export const cancelEmail = i.nodes.callable({
-  category,
+export const cancelEmail = nodes.callable({
   description: 'Cancel a previously sent email by its ID.',
-
   inputs: {
     id: pins.email.id.with({
       description: 'The ID of the email to cancel.',
     }),
   },
-
   outputs: {
     id: pins.email.id.with({
       description: 'The ID of the cancelled email.',
       control: false,
     }),
   },
-
   async run(opts) {
     const response = await opts.state.resend.emails.cancel(opts.inputs.id);
     if (response.error) {
