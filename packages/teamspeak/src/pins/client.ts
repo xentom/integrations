@@ -11,14 +11,33 @@ export const item = {
         v.custom<ClientEntry>((value) => {
           return !!value && typeof value === 'object' && 'cid' in value;
         }),
-        v.transform((value) => new TeamSpeakClient(state.teamspeak, value)),
+        v.transform((data) => new TeamSpeakClient(state.teamspeak, data)),
       );
     },
   }),
   output: i.pins.data({
     schema: v.pipe(
-      v.custom<TeamSpeakClient>((value) => value instanceof TeamSpeakClient),
-      v.transform((value) => value.toJSON() as ClientEntry),
+      v.custom<TeamSpeakClient>((value) => {
+        return value instanceof TeamSpeakClient;
+      }),
+      v.transform((value) => {
+        return value.toJSON() as ClientEntry;
+      }),
+    ),
+  }),
+};
+
+export const items = {
+  output: i.pins.data({
+    schema: v.pipe(
+      v.array(
+        v.custom<TeamSpeakClient>((value) => {
+          return value instanceof TeamSpeakClient;
+        }),
+      ),
+      v.transform((clients) => {
+        return clients.map((client) => client.toJSON() as ClientEntry);
+      }),
     ),
   }),
 };

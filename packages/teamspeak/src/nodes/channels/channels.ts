@@ -67,6 +67,16 @@ export const getChannelByName = nodes.pure({
   },
 });
 
+export const listChannels = nodes.pure({
+  description: 'List all TeamSpeak channels',
+  outputs: {
+    channels: pins.channel.items.output,
+  },
+  async run(opts) {
+    opts.outputs.channels = await opts.state.teamspeak.channelList();
+  },
+});
+
 export const createChannel = nodes.callable({
   description: 'Create a new TeamSpeak channel',
   inputs: {
