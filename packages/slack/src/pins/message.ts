@@ -1,7 +1,7 @@
 import * as i from '@xentom/integration-framework';
 import * as v from 'valibot';
 
-import { type AnyBlock } from '@slack/web-api';
+import { type AnyBlock, type MessageEvent } from '@slack/web-api';
 import { type ChatPostMessageResponseMessage } from '@slack/web-api/dist/types/response/ChatPostMessageResponse';
 
 export const item = i.pins.data<ChatPostMessageResponseMessage>({
@@ -83,5 +83,77 @@ export const threadTs = i.pins.data({
   ),
   control: i.controls.text({
     placeholder: '1700000000.000000',
+  }),
+});
+
+export const eventSubtype = i.pins.data<MessageEvent['subtype']>({
+  description: 'The subtype of message to trigger on.',
+  control: i.controls.select({
+    options: [
+      {
+        label: 'Bot Message',
+        value: 'bot_message',
+      },
+      {
+        label: 'Channel Archive',
+        value: 'channel_archive',
+      },
+      {
+        label: 'Channel Join',
+        value: 'channel_join',
+      },
+      {
+        label: 'Channel Leave',
+        value: 'channel_leave',
+      },
+      {
+        label: 'Channel Name',
+        value: 'channel_name',
+      },
+      {
+        label: 'Channel Posting Permissions',
+        value: 'channel_posting_permissions',
+      },
+      {
+        label: 'Channel Purpose',
+        value: 'channel_purpose',
+      },
+      {
+        label: 'Channel Topic',
+        value: 'channel_topic',
+      },
+      {
+        label: 'Channel Unarchive',
+        value: 'channel_unarchive',
+      },
+      {
+        label: 'EKMAccess Denied',
+        value: 'ekm_access_denied',
+      },
+      {
+        label: 'File Share',
+        value: 'file_share',
+      },
+      {
+        label: 'Me Message',
+        value: 'me_message',
+      },
+      {
+        label: 'Message Changed',
+        value: 'message_changed',
+      },
+      {
+        label: 'Message Deleted',
+        value: 'message_deleted',
+      },
+      {
+        label: 'Message Replied',
+        value: 'message_replied',
+      },
+      {
+        label: 'Thread Broadcast',
+        value: 'thread_broadcast',
+      },
+    ],
   }),
 });

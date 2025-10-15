@@ -17,6 +17,7 @@
     "publish": "xentom publish"
   },
   "dependencies": {
+    "@slack/socket-mode": "^2.0.5",
     "@slack/web-api": "^7.10.0",
     "@xentom/integration-framework": "catalog:",
     "valibot": "catalog:"
