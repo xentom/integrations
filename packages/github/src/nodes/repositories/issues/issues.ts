@@ -54,7 +54,7 @@ export const getIssue = nodes.callable({
   description: 'Get details of a specific issue',
   inputs: {
     repository: pins.repository.name,
-    issueNumber: pins.issue.number,
+    number: pins.issue.number,
   },
   outputs: {
     issue: pins.issue.item,
@@ -62,7 +62,7 @@ export const getIssue = nodes.callable({
   async run(opts) {
     const issue = await opts.state.octokit.rest.issues.get({
       ...extractOwnerAndRepo(opts.inputs.repository),
-      issue_number: opts.inputs.issueNumber,
+      issue_number: opts.inputs.number,
     });
 
     return opts.next({
@@ -108,7 +108,7 @@ export const updateIssue = nodes.callable({
   description: 'Update an existing issue',
   inputs: {
     repository: pins.repository.name,
-    issueNumber: pins.issue.number,
+    number: pins.issue.number,
     title: pins.issue.title.with({
       optional: true,
     }),
@@ -131,7 +131,7 @@ export const updateIssue = nodes.callable({
   async run(opts) {
     const issues = await opts.state.octokit.rest.issues.update({
       ...extractOwnerAndRepo(opts.inputs.repository),
-      issue_number: opts.inputs.issueNumber,
+      issue_number: opts.inputs.number,
       labels: opts.inputs.labels,
       assignees: opts.inputs.assignees,
       title: opts.inputs.title,

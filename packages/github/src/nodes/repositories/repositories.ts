@@ -53,14 +53,14 @@ export const onRepository = i.generic(<
 export const getRepository = nodes.callable({
   description: 'Get repository information',
   inputs: {
-    repository: pins.repository.name,
+    name: pins.repository.name,
   },
   outputs: {
     repository: pins.repository.item,
   },
   async run(opts) {
     const repository = await opts.state.octokit.rest.repos.get({
-      ...extractOwnerAndRepo(opts.inputs.repository),
+      ...extractOwnerAndRepo(opts.inputs.name),
     });
 
     return opts.next({

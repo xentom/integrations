@@ -126,7 +126,7 @@ export const getPullRequest = nodes.callable({
   description: 'Get details of a specific pull request',
   inputs: {
     repository: pins.repository.name,
-    pullNumber: pins.pullRequest.number,
+    number: pins.pullRequest.number,
   },
   outputs: {
     pullRequest: pins.pullRequest.item,
@@ -134,7 +134,7 @@ export const getPullRequest = nodes.callable({
   async run(opts) {
     const pulls = await opts.state.octokit.rest.pulls.get({
       ...extractOwnerAndRepo(opts.inputs.repository),
-      pull_number: opts.inputs.pullNumber,
+      pull_number: opts.inputs.number,
     });
 
     return opts.next({
