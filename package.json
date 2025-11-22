@@ -3,6 +3,7 @@
   "type": "module",
   "private": true,
   "packageManager": "bun@1.2.18",
+  "license": "Apache-2.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/xentom/integrations.git"
