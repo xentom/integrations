@@ -1,8 +1,21 @@
 {
+  "$schema": "https://assets.xentom.com/schemas/package.json",
   "name": "@xentom/essentials",
+  "version": "0.0.2",
   "displayName": "Essentials",
   "description": "Add essentials to trigger workflows on schedules or manual runs and perform core actions like sending emails, making HTTP requests, or manipulating data.",
-  "version": "0.0.20",
+  "categories": [
+    "Utilities"
+  ],
+  "homepage": "https://xentom.com/integrations/xentom/essentials",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xentom/integrations.git",
+    "directory": "packages/essentials"
+  },
+  "bugs": {
+    "url": "https://github.com/xentom/integrations/issues"
+  },
   "type": "module",
   "icon": "./images/icon.png",
   "main": "./build/index.js",
@@ -18,7 +31,7 @@
   },
   "dependencies": {
     "@xentom/integration-framework": "catalog:",
-    "mime": "^4.0.7",
+    "mime": "4.1.0",
     "valibot": "catalog:"
   },
   "devDependencies": {

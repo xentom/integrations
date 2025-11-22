@@ -1,8 +1,21 @@
 {
+  "$schema": "https://assets.xentom.com/schemas/package.json",
   "name": "@xentom/openai",
+  "version": "0.0.2",
   "displayName": "OpenAI",
   "description": "Integrate OpenAI to trigger workflows from prompts or data inputs and generate text, summaries, or code using AI-powered actions.",
-  "version": "0.0.5",
+  "categories": [
+    "AI"
+  ],
+  "homepage": "https://xentom.com/integrations/xentom/openai",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xentom/integrations.git",
+    "directory": "packages/openai"
+  },
+  "bugs": {
+    "url": "https://github.com/xentom/integrations/issues"
+  },
   "type": "module",
   "icon": "./images/icon.png",
   "main": "./build/index.js",
@@ -18,10 +31,10 @@
   },
   "dependencies": {
     "@xentom/integration-framework": "catalog:",
-    "mime": "^4.0.7",
-    "openai": "^5.16.0",
+    "mime": "4.1.0",
+    "openai": "^6.9.0",
     "valibot": "catalog:",
-    "zod": "^4.1.5"
+    "zod": "^4.1.12"
   },
   "devDependencies": {
     "@xentom/style-guide": "catalog:",

@@ -1,8 +1,21 @@
 {
+  "$schema": "https://assets.xentom.com/schemas/package.json",
   "name": "@xentom/teamspeak",
+  "version": "0.0.2",
   "displayName": "TeamSpeak",
   "description": "Connect to TeamSpeak servers to manage channels, users, and server settings programmatically.",
-  "version": "0.0.2",
+  "categories": [
+    "Messaging"
+  ],
+  "homepage": "https://xentom.com/integrations/xentom/teamspeak",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xentom/integrations.git",
+    "directory": "packages/teamspeak"
+  },
+  "bugs": {
+    "url": "https://github.com/xentom/integrations/issues"
+  },
   "type": "module",
   "icon": "./images/icon.png",
   "main": "./build/index.js",
@@ -24,7 +37,7 @@
   "devDependencies": {
     "@xentom/style-guide": "catalog:",
     "@types/bun": "catalog:",
-    "@types/node": "^24.3.0",
+    "@types/node": "^24.10.1",
     "eslint": "catalog:",
     "prettier": "catalog:",
     "typescript": "catalog:"

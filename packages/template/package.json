@@ -1,8 +1,19 @@
 {
+  "$schema": "https://assets.xentom.com/schemas/package.json",
   "name": "@xentom/template",
+  "version": "0.0.1",
   "displayName": "Template",
   "description": "This is a template for creating new integrations in the Xentom ecosystem. It includes basic setup and configuration.",
-  "version": "0.0.1",
+  "categories": [],
+  "homepage": "https://xentom.com/integrations/xentom/template",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xentom/integrations.git",
+    "directory": "packages/template"
+  },
+  "bugs": {
+    "url": "https://github.com/xentom/integrations/issues"
+  },
   "type": "module",
   "icon": "./images/icon.png",
   "main": "./build/index.js",

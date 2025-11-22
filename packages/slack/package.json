@@ -1,8 +1,21 @@
 {
+  "$schema": "https://assets.xentom.com/schemas/package.json",
   "name": "@xentom/slack",
+  "version": "0.0.2",
   "displayName": "Slack",
   "description": "Automate Slack messaging workflows and manage workspace content from Xentom.",
-  "version": "0.0.1",
+  "categories": [
+    "Messaging"
+  ],
+  "homepage": "https://xentom.com/integrations/xentom/slack",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xentom/integrations.git",
+    "directory": "packages/slack"
+  },
+  "bugs": {
+    "url": "https://github.com/xentom/integrations/issues"
+  },
   "type": "module",
   "icon": "./images/icon.png",
   "main": "./build/index.js",
@@ -18,7 +31,7 @@
   },
   "dependencies": {
     "@slack/socket-mode": "^2.0.5",
-    "@slack/web-api": "^7.10.0",
+    "@slack/web-api": "^7.12.0",
     "@xentom/integration-framework": "catalog:",
     "valibot": "catalog:"
   },

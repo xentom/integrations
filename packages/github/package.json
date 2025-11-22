@@ -1,8 +1,21 @@
 {
+  "$schema": "https://assets.xentom.com/schemas/package.json",
   "name": "@xentom/github",
+  "version": "0.0.2",
   "displayName": "GitHub",
   "description": "Integrate GitHub to trigger workflows from issues, pull requests or commits and automate actions like creating issues or commenting on pull requests.",
-  "version": "0.0.4",
+  "categories": [
+    "Developer Tools"
+  ],
+  "homepage": "https://xentom.com/integrations/xentom/github",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xentom/integrations.git",
+    "directory": "packages/github"
+  },
+  "bugs": {
+    "url": "https://github.com/xentom/integrations/issues"
+  },
   "type": "module",
   "icon": "./images/icon.png",
   "main": "./build/index.js",
@@ -19,7 +32,7 @@
   "dependencies": {
     "@octokit/webhooks": "^14.1.3",
     "@xentom/integration-framework": "catalog:",
-    "octokit": "^5.0.3",
+    "octokit": "^5.0.5",
     "valibot": "catalog:"
   },
   "devDependencies": {

@@ -11,6 +11,9 @@
     },
     "pack": {
       "dependsOn": ["^pack"],
+      "outputs": ["build/**"]
+    },
+    "publish": {
       "outputs": ["dist/**"]
     },
     "dev": {

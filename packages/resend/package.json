@@ -1,8 +1,21 @@
 {
+  "$schema": "https://assets.xentom.com/schemas/package.json",
   "name": "@xentom/resend",
+  "version": "0.0.1",
   "displayName": "Resend",
   "description": "Integrate Resend to trigger workflows from email events and send emails using the Resend API.",
-  "version": "0.0.1",
+  "categories": [
+    "Messaging"
+  ],
+  "homepage": "https://xentom.com/integrations/xentom/resend",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xentom/integrations.git",
+    "directory": "packages/resend"
+  },
+  "bugs": {
+    "url": "https://github.com/xentom/integrations/issues"
+  },
   "type": "module",
   "icon": "./images/icon.png",
   "main": "./build/index.js",
@@ -13,12 +26,11 @@
     "clean": "git clean -xdf .cache .turbo node_modules build dist",
     "dev": "xentom dev",
     "build": "xentom build",
-    "pack": "xentom pack",
-    "publish": "xentom publish"
+    "pack": "xentom pack"
   },
   "dependencies": {
     "@xentom/integration-framework": "catalog:",
-    "resend": "^6.1.1",
+    "resend": "^6.4.2",
     "valibot": "catalog:"
   },
   "devDependencies": {

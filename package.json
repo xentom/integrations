@@ -3,23 +3,29 @@
   "type": "module",
   "private": true,
   "packageManager": "bun@1.2.18",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xentom/integrations.git"
+  },
+  "bugs": {
+    "url": "https://github.com/xentom/integrations/issues"
+  },
   "scripts": {
     "clean": "turbo run clean && git clean -xdf node_modules",
     "lint": "turbo run lint --continue -- --cache --cache-location .cache/.eslintcache",
     "typecheck": "turbo typecheck --continue",
     "format": "turbo run format --continue -- --write --cache --cache-location .cache/.prettiercache",
     "build": "turbo run build --",
-    "pack": "turbo run pack --"
+    "pack": "turbo run pack --",
+    "publish": "turbo run publish --",
+    "update": "bun update -i -r"
   },
   "devDependencies": {
     "@xentom/style-guide": "*",
-    "@types/bun": "1.2.21",
-    "turbo": "^2.5.6",
+    "@types/bun": "catalog:",
+    "turbo": "^2.6.1",
     "typescript": "catalog:"
   },
-  "trustedDependencies": [
-    "@xentom/integration-framework"
-  ],
   "patchedDependencies": {
     "cpu-features@0.0.10": "patches/cpu-features@0.0.10.patch"
   },
@@ -29,13 +35,15 @@
       "tooling/*"
     ],
     "catalog": {
-      "@xentom/integration-framework": "link:@xentom/integration-framework",
+      "@xentom/integration-framework": "^0.0.4",
       "@xentom/style-guide": "*",
-      "@types/bun": "^1.2.21",
+      "@types/bun": "^1.3.2",
+      "mime": "^4.0.7",
+      "googleapis": "^166.0.0",
       "valibot": "^1.1.0",
-      "eslint": "^9.34.0",
+      "eslint": "^9.39.1",
       "prettier": "^3.5.3",
-      "typescript": "^5.9.2"
+      "typescript": "^5.9.3"
     }
   },
   "prettier": "@xentom/style-guide/prettier"
