@@ -1,5 +1,3 @@
-# Slack Integration
-
 ## Overview
 
 The Slack integration allows you to send messages to Slack channels and groups.
