@@ -15,7 +15,7 @@
     "url": "https://github.com/xentom/integrations/issues"
   },
   "type": "module",
-  "icon": "./images/icon.png",
+  "icon": "./assets/icon.png",
   "main": "./build/index.js",
   "scripts": {
     "lint": "eslint",

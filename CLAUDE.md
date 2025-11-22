@@ -63,7 +63,7 @@ bun run clean      # Clean build artifacts and dependencies
 │   └── pins/                        # Reusable data types
 │       ├── [category].ts
 │       └── index.ts
-├── images/
+├── assets/
 │   └── icon.png                     # Integration icon (required)
 ├── package.json
 ├── tsconfig.json
