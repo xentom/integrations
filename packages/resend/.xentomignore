@@ -1,1 +1,3 @@
-/src/**
+src/**
+**/*.afdesign
+eslint.config.mjs
