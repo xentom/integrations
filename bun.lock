@@ -111,7 +111,7 @@
     },
     "packages/resend": {
       "name": "@xentom/resend",
-      "version": "0.0.1",
+      "version": "0.0.2",
       "dependencies": {
         "@xentom/integration-framework": "catalog:",
         "resend": "^6.4.2",
