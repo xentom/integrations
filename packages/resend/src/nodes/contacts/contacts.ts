@@ -7,9 +7,6 @@ const nodes = i.nodes.group('Contacts')
 export const createContact = nodes.callable({
   description: 'Create a new contact in Resend.',
   inputs: {
-    audienceId: pins.audience.id.with({
-      description: 'The ID of the audience to add the contact to.',
-    }),
     email: pins.email.address.with({
       description: 'The email address of the contact.',
     }),
@@ -35,7 +32,6 @@ export const createContact = nodes.callable({
       firstName: opts.inputs.firstName,
       lastName: opts.inputs.lastName,
       unsubscribed: opts.inputs.unsubscribed,
-      audienceId: opts.inputs.audienceId,
     })
 
     if (response.error) {
@@ -51,9 +47,6 @@ export const createContact = nodes.callable({
 export const getContact = nodes.callable({
   description: 'Retrieve a contact by its ID.',
   inputs: {
-    audienceId: pins.audience.id.with({
-      description: 'The ID of the audience the contact belongs to.',
-    }),
     id: pins.contact.id.with({
       optional: true,
     }),
@@ -70,13 +63,12 @@ export const getContact = nodes.callable({
       throw new Error('Either ID or email must be provided.')
     }
 
-    const response = await opts.state.resend.contacts.get({
-      audienceId: opts.inputs.audienceId,
-      ...(opts.inputs.id
+    const response = await opts.state.resend.contacts.get(
+      opts.inputs.id
         ? { id: opts.inputs.id }
         : // biome-ignore lint/style/noNonNullAssertion: <email is guaranteed to be provided>
-          { email: opts.inputs.email! }),
-    })
+          { email: opts.inputs.email! },
+    )
 
     if (response.error) {
       throw new Error(response.error.message)
@@ -90,18 +82,11 @@ export const getContact = nodes.callable({
 
 export const listContacts = nodes.callable({
   description: 'List all contacts in Resend.',
-  inputs: {
-    audienceId: pins.audience.id.with({
-      description: 'The ID of the audience to list the contacts from.',
-    }),
-  },
   outputs: {
     contacts: pins.contact.items,
   },
   async run(opts) {
-    const response = await opts.state.resend.contacts.list({
-      audienceId: opts.inputs.audienceId,
-    })
+    const response = await opts.state.resend.contacts.list()
 
     if (response.error) {
       throw new Error(response.error.message)
@@ -116,9 +101,6 @@ export const listContacts = nodes.callable({
 export const updateContact = nodes.callable({
   description: 'Update an existing contact by its ID.',
   inputs: {
-    audienceId: pins.audience.id.with({
-      description: 'The ID of the audience to update the contact in.',
-    }),
     id: pins.contact.id,
     email: pins.email.address.with({
       description: 'The email address of the contact.',
@@ -149,7 +131,6 @@ export const updateContact = nodes.callable({
     }
 
     const response = await opts.state.resend.contacts.update({
-      audienceId: opts.inputs.audienceId,
       firstName: opts.inputs.firstName,
       lastName: opts.inputs.lastName,
       unsubscribed: opts.inputs.unsubscribed,
@@ -173,9 +154,6 @@ export const updateContact = nodes.callable({
 export const deleteContact = nodes.callable({
   description: 'Delete a contact by its ID.',
   inputs: {
-    audienceId: pins.audience.id.with({
-      description: 'The ID of the audience to delete the contact from.',
-    }),
     id: pins.contact.id,
   },
   outputs: {
@@ -186,12 +164,15 @@ export const deleteContact = nodes.callable({
   },
   async run(opts) {
     const response = await opts.state.resend.contacts.remove({
-      audienceId: opts.inputs.audienceId,
       id: opts.inputs.id,
     })
 
     if (response.error) {
       throw new Error(response.error.message)
+    }
+
+    if (!response.data) {
+      throw new Error('Failed to delete contact.')
     }
 
     return opts.next({

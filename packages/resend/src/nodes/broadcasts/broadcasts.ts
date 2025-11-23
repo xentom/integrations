@@ -14,8 +14,8 @@ const nodes = i.nodes.group('Broadcasts')
 export const createBroadcast = nodes.callable({
   description: 'Create a new broadcast.',
   inputs: {
-    audienceId: pins.audience.id.with({
-      description: 'The ID of the audience to send the broadcast to.',
+    segmentId: pins.segment.id.with({
+      description: 'The ID of the segment to send the broadcast to.',
     }),
     from: pins.email.addressWithDisplayName.with({
       description:
@@ -58,7 +58,7 @@ export const createBroadcast = nodes.callable({
     }
 
     const response = await opts.state.resend.broadcasts.create({
-      audienceId: opts.inputs.audienceId,
+      segmentId: opts.inputs.segmentId,
       from: opts.inputs.from,
       subject: opts.inputs.subject,
       html: opts.inputs.html,
@@ -134,8 +134,8 @@ export const updateBroadcast = nodes.callable({
       description: 'The name of the broadcast.',
       optional: true,
     }),
-    audienceId: pins.audience.id.with({
-      description: 'The ID of the audience to send the broadcast to.',
+    segmentId: pins.segment.id.with({
+      description: 'The ID of the segment to send the broadcast to.',
       optional: true,
     }),
     from: pins.email.addressWithDisplayName.with({
@@ -172,7 +172,7 @@ export const updateBroadcast = nodes.callable({
   async run(opts) {
     const response = await opts.state.resend.broadcasts.update(opts.inputs.id, {
       name: opts.inputs.name,
-      audienceId: opts.inputs.audienceId,
+      segmentId: opts.inputs.segmentId,
       from: opts.inputs.from,
       subject: opts.inputs.subject,
       html: opts.inputs.html,
@@ -192,7 +192,7 @@ export const updateBroadcast = nodes.callable({
 })
 
 export const sendBroadcast = nodes.callable({
-  description: 'Send a broadcast to its audience.',
+  description: 'Send a broadcast to its segment.',
   inputs: {
     id: pins.broadcast.id.with({
       description: 'The ID of the broadcast to send.',

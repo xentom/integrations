@@ -1,7 +1,7 @@
 {
   "$schema": "https://assets.xentom.com/schemas/package.json",
   "name": "@xentom/resend",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "displayName": "Resend",
   "description": "Integrate Resend to trigger workflows from email events and send emails using the Resend API.",
   "categories": [

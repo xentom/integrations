@@ -17,24 +17,18 @@ export const id = common.uuid.with({
   displayName: 'Contact ID',
   description: 'The unique identifier for the contact.',
   control: i.controls.select({
-    async options({ state, node }) {
-      if (!node.inputs.audienceId) {
-        return []
-      }
-
-      const response = await state.resend.contacts.list({
-        audienceId: node.inputs.audienceId as string,
-      })
+    async options({ state }) {
+      const response = await state.resend.contacts.list()
 
       if (!response.data) {
         return []
       }
 
-      return response.data.data.map((audience) => {
+      return response.data.data.map((contact) => {
         return {
-          value: audience.id,
-          label: audience.email,
-          suffix: audience.id,
+          value: contact.id,
+          label: contact.email,
+          suffix: contact.id,
         }
       })
     },
