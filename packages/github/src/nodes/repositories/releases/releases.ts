@@ -94,3 +94,106 @@ export const updateRelease = nodes.callable({
     });
   },
 });
+
+export const getRelease = nodes.callable({
+  description: 'Get a release by ID',
+  inputs: {
+    repository: pins.repository.name,
+    releaseId: pins.release.id,
+  },
+  outputs: {
+    release: pins.release.item,
+  },
+  async run(opts) {
+    const release = await opts.state.octokit.rest.repos.getRelease({
+      ...extractOwnerAndRepo(opts.inputs.repository),
+      release_id: opts.inputs.releaseId,
+    });
+
+    return opts.next({
+      release: release.data,
+    });
+  },
+});
+
+export const getReleaseByTag = nodes.callable({
+  description: 'Get a release by tag name',
+  inputs: {
+    repository: pins.repository.name,
+    tagName: pins.release.tagName,
+  },
+  outputs: {
+    release: pins.release.item,
+  },
+  async run(opts) {
+    const release = await opts.state.octokit.rest.repos.getReleaseByTag({
+      ...extractOwnerAndRepo(opts.inputs.repository),
+      tag: opts.inputs.tagName,
+    });
+
+    return opts.next({
+      release: release.data,
+    });
+  },
+});
+
+export const getLatestRelease = nodes.callable({
+  description: 'Get the latest non-prerelease, non-draft release',
+  inputs: {
+    repository: pins.repository.name,
+  },
+  outputs: {
+    release: pins.release.item,
+  },
+  async run(opts) {
+    const release = await opts.state.octokit.rest.repos.getLatestRelease({
+      ...extractOwnerAndRepo(opts.inputs.repository),
+    });
+
+    return opts.next({
+      release: release.data,
+    });
+  },
+});
+
+export const listReleases = nodes.callable({
+  description: 'List all releases for a repository',
+  inputs: {
+    repository: pins.repository.name,
+  },
+  outputs: {
+    releases: pins.release.items,
+  },
+  async run(opts) {
+    const releases = await opts.state.octokit.rest.repos.listReleases({
+      ...extractOwnerAndRepo(opts.inputs.repository),
+    });
+
+    return opts.next({
+      releases: releases.data,
+    });
+  },
+});
+
+export const deleteRelease = nodes.callable({
+  description: 'Delete a release',
+  inputs: {
+    repository: pins.repository.name,
+    releaseId: pins.release.id,
+  },
+  outputs: {
+    deleted: i.pins.data<boolean>({
+      description: 'Whether the release was deleted',
+    }),
+  },
+  async run(opts) {
+    await opts.state.octokit.rest.repos.deleteRelease({
+      ...extractOwnerAndRepo(opts.inputs.repository),
+      release_id: opts.inputs.releaseId,
+    });
+
+    return opts.next({
+      deleted: true,
+    });
+  },
+});

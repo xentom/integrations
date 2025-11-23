@@ -9,6 +9,10 @@ export const item = i.pins.data<components['schemas']['release']>({
   displayName: 'Release',
 });
 
+export const items = i.pins.data<components['schemas']['release'][]>({
+  displayName: 'Releases',
+});
+
 export const id = i.pins.data({
   description: 'The ID of the release',
   schema: v.pipe(v.number(), v.integer(), v.minValue(1)),
