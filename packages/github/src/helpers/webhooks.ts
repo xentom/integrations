@@ -17,6 +17,7 @@ export async function createRepositoryWebhook(
       events: [
         'push',
         'repository',
+        'release',
         'issue_comment',
         'issues',
         'pull_request',

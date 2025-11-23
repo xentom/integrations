@@ -1,9 +1,55 @@
 import * as i from '@xentom/integration-framework';
 
+import { type EmitterWebhookEvent } from '@octokit/webhooks/types';
+
 import { extractOwnerAndRepo } from '@/helpers/options';
+import { createRepositoryWebhook } from '@/helpers/webhooks';
 import * as pins from '@/pins';
 
 const nodes = i.nodes.group('Repositories/Releases');
+
+export const onRelease = i.generic(<
+  I extends i.GenericInputs<typeof inputs>,
+>() => {
+  const inputs = {
+    repository: pins.repository.name,
+    action: pins.release.action,
+  };
+
+  type WebhookEvent = EmitterWebhookEvent<`release.${I['action']}`>;
+
+  return nodes.trigger({
+    inputs,
+    outputs: {
+      id: i.pins.data<WebhookEvent['id']>(),
+      payload: i.pins.data<WebhookEvent['payload']>(),
+    },
+    async subscribe(opts) {
+      opts.state.webhooks.on(
+        `release.${opts.inputs.action}`,
+        ({ id, payload }) => {
+          console.log('subscribed to release', payload);
+          if (payload.repository.full_name !== opts.inputs.repository) {
+            return;
+          }
+
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+          void opts.next({
+            id,
+            payload,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          } as any);
+        },
+      );
+
+      await createRepositoryWebhook({
+        repository: opts.inputs.repository,
+        webhook: opts.webhook,
+        state: opts.state,
+      });
+    },
+  });
+});
 
 export const createRelease = nodes.callable({
   description: 'Create a new release',

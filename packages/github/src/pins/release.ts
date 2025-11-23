@@ -13,6 +13,29 @@ export const items = i.pins.data<components['schemas']['release'][]>({
   displayName: 'Releases',
 });
 
+export type Action =
+  | 'published'
+  | 'unpublished'
+  | 'created'
+  | 'edited'
+  | 'deleted'
+  | 'prereleased';
+
+export const action = i.pins.data<Action>({
+  description: 'The action type of the release',
+  control: i.controls.select({
+    options: [
+      { label: 'Published', value: 'published' },
+      { label: 'Unpublished', value: 'unpublished' },
+      { label: 'Created', value: 'created' },
+      { label: 'Edited', value: 'edited' },
+      { label: 'Deleted', value: 'deleted' },
+      { label: 'Prereleased', value: 'prereleased' },
+    ],
+    defaultValue: 'published',
+  }),
+});
+
 export const id = i.pins.data({
   description: 'The ID of the release',
   schema: v.pipe(v.number(), v.integer(), v.minValue(1)),
