@@ -8,6 +8,15 @@ export const item = i.pins.data<sheets_v4.Schema$Spreadsheet>({
   description: 'The Google Spreadsheet',
 })
 
+export const title = i.pins.data({
+  displayName: 'Spreadsheet Title',
+  description: 'The title of the Google Spreadsheet',
+  schema: v.pipe(v.string(), v.nonEmpty()),
+  control: i.controls.text({
+    placeholder: 'Team Roadmap',
+  }),
+})
+
 export const id = i.pins.data({
   displayName: 'Spreadsheet ID',
   description: 'The unique identifier of the Google Spreadsheet',

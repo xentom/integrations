@@ -27,7 +27,7 @@ export const getValues = nodes.callable({
       range: addSheetNameToRange(opts.inputs),
     })
 
-    await opts.next({
+    return opts.next({
       values: response.data.values ?? [],
     })
   },
@@ -57,7 +57,7 @@ export const updateValues = nodes.callable({
       },
     })
 
-    await opts.next({
+    return opts.next({
       response: response.data,
     })
   },
@@ -88,7 +88,7 @@ export const appendValues = nodes.callable({
       },
     })
 
-    await opts.next({
+    return opts.next({
       response: response.data,
     })
   },
@@ -113,7 +113,7 @@ export const clearValues = nodes.callable({
       range: addSheetNameToRange(opts.inputs),
     })
 
-    await opts.next({
+    return opts.next({
       response: response.data,
     })
   },
