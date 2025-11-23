@@ -226,19 +226,12 @@ export const deleteRelease = nodes.callable({
     repository: pins.repository.name,
     releaseId: pins.release.id,
   },
-  outputs: {
-    deleted: i.pins.data<boolean>({
-      description: 'Whether the release was deleted',
-    }),
-  },
   async run(opts) {
     await opts.state.octokit.rest.repos.deleteRelease({
       ...extractOwnerAndRepo(opts.inputs.repository),
       release_id: opts.inputs.releaseId,
     })
 
-    return opts.next({
-      deleted: true,
-    })
+    return opts.next()
   },
 })

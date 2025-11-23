@@ -110,7 +110,7 @@ export const branch = nodes.callable({
       reason?: string
     }
 
-    return await opts.next(`${result.condition}`, {
+    return opts.next(`${result.condition}`, {
       reason: result.reason,
     })
   },
