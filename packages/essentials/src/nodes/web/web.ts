@@ -1,5 +1,7 @@
 import * as i from '@xentom/integration-framework';
 
+import { type BodyInit } from 'bun';
+
 import * as pins from '@/pins';
 
 const nodes = i.nodes.group('Web');
@@ -32,7 +34,7 @@ export const request = nodes.callable({
   async run(opts) {
     const requestMethod = opts.inputs.method ?? 'GET';
 
-    let requestBody;
+    let requestBody: BodyInit | null | undefined;
     if (
       !['GET', 'HEAD', 'OPTIONS'].includes(requestMethod) &&
       opts.inputs.body !== undefined
@@ -56,7 +58,7 @@ export const request = nodes.callable({
 
     const contentType = response.headers.get('content-type');
 
-    let responseBody;
+    let responseBody: unknown;
     switch (contentType?.split(';')[0]) {
       case 'application/json': {
         responseBody = await response.json();

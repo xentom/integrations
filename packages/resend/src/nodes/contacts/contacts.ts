@@ -74,7 +74,7 @@ export const getContact = nodes.callable({
       audienceId: opts.inputs.audienceId,
       ...(opts.inputs.id
         ? { id: opts.inputs.id }
-        : // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        : // biome-ignore lint/style/noNonNullAssertion: <email is guaranteed to be provided>
           { email: opts.inputs.email! }),
     });
 
@@ -156,7 +156,7 @@ export const updateContact = nodes.callable({
 
       ...(opts.inputs.id
         ? { id: opts.inputs.id }
-        : // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        : // biome-ignore lint/style/noNonNullAssertion: <email is guaranteed to be provided>
           { email: opts.inputs.email! }),
     });
 
