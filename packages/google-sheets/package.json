@@ -21,8 +21,8 @@
   "icon": "./assets/icon.png",
   "main": "./build/index.js",
   "scripts": {
-    "lint": "biome lint --config-path ../../biome.json .",
-    "format": "biome format --config-path ../../biome.json --write .",
+    "lint": "biome lint .",
+    "format": "biome format --write .",
     "typecheck": "tsc --noEmit",
     "clean": "git clean -xdf .cache .turbo node_modules build dist",
     "dev": "xentom dev",
