@@ -1,5 +1,7 @@
 import * as i from '@xentom/integration-framework';
 
+import * as general from '@/pins/general';
+
 export type Action = 'created' | 'deleted' | 'edited';
 
 export const action = i.pins.data<Action>({
@@ -20,4 +22,8 @@ export const action = i.pins.data<Action>({
       },
     ],
   }),
+});
+
+export const body = general.markdown.with({
+  description: 'The body content of the discussion comment',
 });

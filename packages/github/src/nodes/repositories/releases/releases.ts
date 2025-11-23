@@ -28,7 +28,6 @@ export const onRelease = i.generic(<
       opts.state.webhooks.on(
         `release.${opts.inputs.action}`,
         ({ id, payload }) => {
-          console.log('subscribed to release', payload);
           if (payload.repository.full_name !== opts.inputs.repository) {
             return;
           }

@@ -2,6 +2,7 @@ import * as i from '@xentom/integration-framework';
 
 import { type EmitterWebhookEvent } from '@octokit/webhooks/types';
 
+import { extractOwnerAndRepo } from '@/helpers/options';
 import { createRepositoryWebhook } from '@/helpers/webhooks';
 import * as pins from '@/pins';
 
@@ -47,4 +48,25 @@ export const onActionJob = i.generic(<
       });
     },
   });
+});
+
+export const listWorkflowJobs = nodes.callable({
+  description: 'List jobs for a workflow run',
+  inputs: {
+    repository: pins.repository.name,
+    runId: pins.action.workflow.runId,
+  },
+  outputs: {
+    jobs: pins.action.job.items,
+  },
+  async run(opts) {
+    const jobs = await opts.state.octokit.rest.actions.listJobsForWorkflowRun({
+      ...extractOwnerAndRepo(opts.inputs.repository),
+      run_id: opts.inputs.runId,
+    });
+
+    return opts.next({
+      jobs: jobs.data.jobs,
+    });
+  },
 });

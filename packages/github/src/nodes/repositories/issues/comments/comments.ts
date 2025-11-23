@@ -72,3 +72,25 @@ export const addIssueComment = nodes.callable({
     });
   },
 });
+
+export const listIssueComments = nodes.callable({
+  description: 'List comments for an issue',
+  inputs: {
+    repository: pins.repository.name,
+    issueNumber: pins.issue.number,
+  },
+  outputs: {
+    comments: pins.issue.comment.items,
+  },
+  async run(opts) {
+    const comments =
+      await opts.state.octokit.rest.issues.listComments({
+        ...extractOwnerAndRepo(opts.inputs.repository),
+        issue_number: opts.inputs.issueNumber,
+      });
+
+    return opts.next({
+      comments: comments.data,
+    });
+  },
+});

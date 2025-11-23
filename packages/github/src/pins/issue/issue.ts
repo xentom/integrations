@@ -10,6 +10,10 @@ export const item = i.pins.data<components['schemas']['issue']>({
   displayName: 'Issue',
 });
 
+export const items = i.pins.data<components['schemas']['issue'][]>({
+  displayName: 'Issues',
+});
+
 export type Action =
   | 'assigned'
   | 'closed'

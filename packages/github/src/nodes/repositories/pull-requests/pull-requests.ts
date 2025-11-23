@@ -203,3 +203,31 @@ export const mergePullRequest = nodes.callable({
     });
   },
 });
+
+export const listPullRequests = nodes.callable({
+  description: 'List pull requests in a repository',
+  inputs: {
+    repository: pins.repository.name,
+    state: pins.pullRequest.state.with({
+      optional: true,
+    }),
+    base: pins.pullRequest.base.with({
+      description: 'Filter by base branch',
+      optional: true,
+    }),
+  },
+  outputs: {
+    pullRequests: pins.pullRequest.items,
+  },
+  async run(opts) {
+    const pullRequests = await opts.state.octokit.rest.pulls.list({
+      ...extractOwnerAndRepo(opts.inputs.repository),
+      state: opts.inputs.state,
+      base: opts.inputs.base,
+    });
+
+    return opts.next({
+      pullRequests: pullRequests.data,
+    });
+  },
+});

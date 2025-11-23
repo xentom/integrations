@@ -2,6 +2,7 @@ import * as i from '@xentom/integration-framework';
 
 import { type EmitterWebhookEvent } from '@octokit/webhooks/types';
 
+import { extractOwnerAndRepo } from '@/helpers/options';
 import { createRepositoryWebhook } from '@/helpers/webhooks';
 import * as pins from '@/pins';
 
@@ -33,6 +34,51 @@ export const onPush = nodes.trigger({
       repository: opts.inputs.repository,
       webhook: opts.webhook,
       state: opts.state,
+    });
+  },
+});
+
+export const listCommits = nodes.callable({
+  description: 'List recent commits for a repository',
+  inputs: {
+    repository: pins.repository.name,
+    branch: pins.branch.name.with({
+      description: 'Branch to list commits for',
+      optional: true,
+    }),
+  },
+  outputs: {
+    commits: pins.commit.items,
+  },
+  async run(opts) {
+    const commits = await opts.state.octokit.rest.repos.listCommits({
+      ...extractOwnerAndRepo(opts.inputs.repository),
+      sha: opts.inputs.branch,
+    });
+
+    return opts.next({
+      commits: commits.data,
+    });
+  },
+});
+
+export const getCommit = nodes.callable({
+  description: 'Get details for a commit',
+  inputs: {
+    repository: pins.repository.name,
+    sha: pins.commit.sha,
+  },
+  outputs: {
+    commit: pins.commit.item,
+  },
+  async run(opts) {
+    const commit = await opts.state.octokit.rest.repos.getCommit({
+      ...extractOwnerAndRepo(opts.inputs.repository),
+      ref: opts.inputs.sha,
+    });
+
+    return opts.next({
+      commit: commit.data,
     });
   },
 });

@@ -144,3 +144,31 @@ export const updateIssue = nodes.callable({
     });
   },
 });
+
+export const listIssues = nodes.callable({
+  description: 'List issues in a repository',
+  inputs: {
+    repository: pins.repository.name,
+    state: pins.issue.state.with({
+      optional: true,
+    }),
+    labels: pins.issue.labels.with({
+      description: 'Filter by labels (matches all)',
+      optional: true,
+    }),
+  },
+  outputs: {
+    issues: pins.issue.items,
+  },
+  async run(opts) {
+    const issues = await opts.state.octokit.rest.issues.listForRepo({
+      ...extractOwnerAndRepo(opts.inputs.repository),
+      state: opts.inputs.state,
+      labels: opts.inputs.labels?.join(','),
+    });
+
+    return opts.next({
+      issues: issues.data,
+    });
+  },
+});

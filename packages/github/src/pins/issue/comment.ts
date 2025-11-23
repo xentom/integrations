@@ -31,6 +31,10 @@ export const item = i.pins.data<components['schemas']['issue-comment']>({
   displayName: 'Comment',
 });
 
+export const items = i.pins.data<components['schemas']['issue-comment'][]>({
+  displayName: 'Comments',
+});
+
 export const body = general.markdown.with({
   description: 'The body content of the issue comment',
 });

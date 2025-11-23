@@ -73,6 +73,10 @@ export const item = i.pins.data<components['schemas']['pull-request']>({
   displayName: 'Pull Request',
 });
 
+export const items = i.pins.data<components['schemas']['pull-request-simple'][]>({
+  displayName: 'Pull Requests',
+});
+
 export type Action =
   | 'assigned'
   | 'auto_merge_disabled'
