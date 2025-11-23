@@ -1,9 +1,9 @@
-import * as i from '@xentom/integration-framework';
-import * as v from 'valibot';
+import * as i from '@xentom/integration-framework'
+import * as v from 'valibot'
 
-import { responses } from '../webhooks.utils';
+import { responses } from '../webhooks.utils'
 
-const nodes = i.nodes.group('Webhooks/Responses');
+const nodes = i.nodes.group('Webhooks/Responses')
 
 export const textWebhookResponse = nodes.callable({
   displayName: 'Webhook Response (Text)',
@@ -19,7 +19,7 @@ export const textWebhookResponse = nodes.callable({
     if (!opts.ctx.requestId) {
       throw new Error(
         'This action can only be called within the context of a webhook trigger.',
-      );
+      )
     }
 
     responses.emit(
@@ -29,11 +29,11 @@ export const textWebhookResponse = nodes.callable({
           'Content-Type': 'text/plain',
         },
       }),
-    );
+    )
 
-    return opts.next();
+    return opts.next()
   },
-});
+})
 
 export const jsonWebhookResponse = nodes.callable({
   displayName: 'Webhook Response (JSON)',
@@ -49,14 +49,14 @@ export const jsonWebhookResponse = nodes.callable({
     if (!opts.ctx.requestId) {
       throw new Error(
         'This action can only be called within the context of a webhook trigger.',
-      );
+      )
     }
 
-    responses.emit(opts.ctx.requestId, Response.json(opts.inputs.body));
+    responses.emit(opts.ctx.requestId, Response.json(opts.inputs.body))
 
-    return opts.next();
+    return opts.next()
   },
-});
+})
 
 export const redirectWebhookResponse = nodes.callable({
   displayName: 'Webhook Response (Redirect)',
@@ -75,10 +75,10 @@ export const redirectWebhookResponse = nodes.callable({
     if (!opts.ctx.requestId) {
       throw new Error(
         'This action can only be called within the context of a webhook trigger.',
-      );
+      )
     }
 
-    responses.emit(opts.ctx.requestId, Response.redirect(opts.inputs.url, 302));
-    return opts.next();
+    responses.emit(opts.ctx.requestId, Response.redirect(opts.inputs.url, 302))
+    return opts.next()
   },
-});
+})

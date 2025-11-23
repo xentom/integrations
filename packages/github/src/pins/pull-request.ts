@@ -1,21 +1,21 @@
-import * as i from '@xentom/integration-framework';
-import * as v from 'valibot';
+import * as i from '@xentom/integration-framework'
+import * as v from 'valibot'
 
-import { type components } from '@octokit/openapi-types';
+import { type components } from '@octokit/openapi-types'
 
-import { extractOwnerAndRepo, hasRepositoryNameInput } from '@/helpers/options';
-import * as branch from '@/pins/branch';
-import * as general from '@/pins/general';
+import { extractOwnerAndRepo, hasRepositoryNameInput } from '@/helpers/options'
+import * as branch from '@/pins/branch'
+import * as general from '@/pins/general'
 
 export const title = i.pins.data({
   description: 'The title of the pull request',
   schema: v.pipe(v.string(), v.nonEmpty()),
   control: i.controls.text(),
-});
+})
 
 export const body = general.markdown.with({
   description: 'The body content of the pull request',
-});
+})
 
 export const number = i.pins.data({
   description: 'The pull request number',
@@ -23,28 +23,28 @@ export const number = i.pins.data({
   control: i.controls.select({
     async options(opts) {
       if (!hasRepositoryNameInput(opts)) {
-        return [];
+        return []
       }
 
       const pullRequests = await opts.state.octokit.rest.pulls.list({
         ...extractOwnerAndRepo(opts.node.inputs.repository),
-      });
+      })
 
       return pullRequests.data.map((pullRequest) => ({
         value: pullRequest.number,
         suffix: pullRequest.title,
-      }));
+      }))
     },
   }),
-});
+})
 
 export const head = branch.name.with({
   description: 'The head branch name (source branch)',
-});
+})
 
 export const base = branch.name.with({
   description: 'The base branch name (target branch)',
-});
+})
 
 export const state = i.pins.data({
   description: 'The state of the pull request',
@@ -61,21 +61,23 @@ export const state = i.pins.data({
       },
     ],
   }),
-});
+})
 
 export const draft = i.pins.data({
   description: 'Whether the pull request is a draft',
   schema: v.boolean(),
   control: i.controls.switch(),
-});
+})
 
 export const item = i.pins.data<components['schemas']['pull-request']>({
   displayName: 'Pull Request',
-});
+})
 
-export const items = i.pins.data<components['schemas']['pull-request-simple'][]>({
+export const items = i.pins.data<
+  components['schemas']['pull-request-simple'][]
+>({
   displayName: 'Pull Requests',
-});
+})
 
 export type Action =
   | 'assigned'
@@ -94,7 +96,7 @@ export type Action =
   | 'synchronize'
   | 'unassigned'
   | 'unlabeled'
-  | 'unlocked';
+  | 'unlocked'
 
 export const action = i.pins.data<Action>({
   description: 'The action type of the pull request',
@@ -170,4 +172,4 @@ export const action = i.pins.data<Action>({
       },
     ],
   }),
-});
+})

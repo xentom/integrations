@@ -1,10 +1,10 @@
-import { type pubsub_v1 } from 'googleapis/build/src/apis/pubsub/v1';
+import { type pubsub_v1 } from 'googleapis/build/src/apis/pubsub/v1'
 
-import { isGaxiosError } from './response';
+import { isGaxiosError } from './response'
 
 export interface CreateTopicOptions {
-  projectId: string;
-  topicName: string;
+  projectId: string
+  topicName: string
 }
 
 /**
@@ -16,19 +16,19 @@ export async function createTopic(
   pubsub: pubsub_v1.Pubsub,
   options: CreateTopicOptions,
 ): Promise<string> {
-  const topicPath = `projects/${options.projectId}/topics/${options.topicName}`;
+  const topicPath = `projects/${options.projectId}/topics/${options.topicName}`
 
   try {
     // Check if topic already exists
-    await pubsub.projects.topics.get({ topic: topicPath });
-    console.log(`Topic ${options.topicName} already exists`);
+    await pubsub.projects.topics.get({ topic: topicPath })
+    console.log(`Topic ${options.topicName} already exists`)
 
     // Still need to ensure Gmail service account has permissions
-    await setTopicPermissions(pubsub, { topicPath });
-    return topicPath;
+    await setTopicPermissions(pubsub, { topicPath })
+    return topicPath
   } catch (error) {
     if (!isGaxiosError(error)) {
-      throw error;
+      throw error
     }
 
     if (error.code === 404) {
@@ -37,15 +37,15 @@ export async function createTopic(
         await pubsub.projects.topics.create({
           name: topicPath,
           requestBody: {},
-        });
-        console.log(`Topic ${options.topicName} created successfully`);
+        })
+        console.log(`Topic ${options.topicName} created successfully`)
 
         // Set permissions for Gmail service account
-        await setTopicPermissions(pubsub, { topicPath });
-        return topicPath;
+        await setTopicPermissions(pubsub, { topicPath })
+        return topicPath
       } catch (error) {
         if (!isGaxiosError(error)) {
-          throw error;
+          throw error
         }
 
         if (
@@ -53,19 +53,19 @@ export async function createTopic(
         ) {
           throw new Error(
             'The project was recently created, please wait a few minutes and try again...',
-          );
+          )
         }
 
-        throw new Error(`Failed to create topic: ${error.message}`);
+        throw new Error(`Failed to create topic: ${error.message}`)
       }
     } else {
-      throw error;
+      throw error
     }
   }
 }
 
 export interface SetTopicPermissionsOptions {
-  topicPath: string;
+  topicPath: string
 }
 
 /**
@@ -77,21 +77,21 @@ export async function setTopicPermissions(
   pubsub: pubsub_v1.Pubsub,
   options: SetTopicPermissionsOptions,
 ): Promise<void> {
-  const GMAIL_SERVICE_ACCOUNT = 'gmail-api-push@system.gserviceaccount.com';
-  const PUBLISHER_ROLE = 'roles/pubsub.publisher';
+  const GMAIL_SERVICE_ACCOUNT = 'gmail-api-push@system.gserviceaccount.com'
+  const PUBLISHER_ROLE = 'roles/pubsub.publisher'
 
   try {
     // Get current IAM policy
     const response = await pubsub.projects.topics.getIamPolicy({
       resource: options.topicPath,
-    });
+    })
 
-    const policy = response.data;
+    const policy = response.data
 
     // Check if Gmail service account already has publisher role
     const existingBinding = policy.bindings?.find(
       (binding) => binding.role === PUBLISHER_ROLE,
-    );
+    )
 
     if (existingBinding) {
       // Check if Gmail service account is already in the members
@@ -100,19 +100,19 @@ export async function setTopicPermissions(
           `serviceAccount:${GMAIL_SERVICE_ACCOUNT}`,
         )
       ) {
-        existingBinding.members = existingBinding.members || [];
-        existingBinding.members.push(`serviceAccount:${GMAIL_SERVICE_ACCOUNT}`);
+        existingBinding.members = existingBinding.members || []
+        existingBinding.members.push(`serviceAccount:${GMAIL_SERVICE_ACCOUNT}`)
       } else {
-        console.log('Gmail service account already has publisher permissions');
-        return;
+        console.log('Gmail service account already has publisher permissions')
+        return
       }
     } else {
       // Create new binding for publisher role
-      policy.bindings = policy.bindings || [];
+      policy.bindings = policy.bindings || []
       policy.bindings.push({
         role: PUBLISHER_ROLE,
         members: [`serviceAccount:${GMAIL_SERVICE_ACCOUNT}`],
-      });
+      })
     }
 
     // Set the updated IAM policy
@@ -121,25 +121,25 @@ export async function setTopicPermissions(
       requestBody: {
         policy: policy,
       },
-    });
+    })
 
     console.log(
       `Gmail service account granted publisher permissions on ${options.topicPath}`,
-    );
+    )
   } catch (error) {
     if (!isGaxiosError(error)) {
-      throw error;
+      throw error
     }
 
-    throw new Error(`Failed to set topic permissions: ${error.message}`);
+    throw new Error(`Failed to set topic permissions: ${error.message}`)
   }
 }
 
 export interface CreateSubscriptionOptions {
-  projectId: string;
-  subscriptionName: string;
-  topicPath: string;
-  pushEndpoint: string;
+  projectId: string
+  subscriptionName: string
+  topicPath: string
+  pushEndpoint: string
 }
 
 /**
@@ -151,16 +151,16 @@ export async function createSubscription(
   pubsub: pubsub_v1.Pubsub,
   options: CreateSubscriptionOptions,
 ): Promise<string> {
-  const subscriptionPath = `projects/${options.projectId}/subscriptions/${options.subscriptionName}`;
+  const subscriptionPath = `projects/${options.projectId}/subscriptions/${options.subscriptionName}`
 
   try {
     // Check if subscription already exists
-    await pubsub.projects.subscriptions.get({ subscription: subscriptionPath });
-    console.log(`Subscription ${options.subscriptionName} already exists`);
-    return subscriptionPath;
+    await pubsub.projects.subscriptions.get({ subscription: subscriptionPath })
+    console.log(`Subscription ${options.subscriptionName} already exists`)
+    return subscriptionPath
   } catch (error) {
     if (!isGaxiosError(error)) {
-      throw error;
+      throw error
     }
 
     if (error.code === 404) {
@@ -174,21 +174,21 @@ export async function createSubscription(
               pushEndpoint: options.pushEndpoint,
             },
           },
-        });
+        })
 
         console.log(
           `Subscription ${options.subscriptionName} created successfully`,
-        );
-        return subscriptionPath;
+        )
+        return subscriptionPath
       } catch (error) {
         if (!isGaxiosError(error)) {
-          throw error;
+          throw error
         }
 
-        throw new Error(`Failed to create subscription: ${error.message}`);
+        throw new Error(`Failed to create subscription: ${error.message}`)
       }
     } else {
-      throw error;
+      throw error
     }
   }
 }

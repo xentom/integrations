@@ -1,11 +1,11 @@
-import * as i from '@xentom/integration-framework';
-import * as v from 'valibot';
+import * as i from '@xentom/integration-framework'
+import * as v from 'valibot'
 
-import { type ModelInfo } from '@anthropic-ai/sdk/resources';
+import { type ModelInfo } from '@anthropic-ai/sdk/resources'
 
-import * as pins from '@/pins';
+import * as pins from '@/pins'
 
-const nodes = i.nodes.group('Models');
+const nodes = i.nodes.group('Models')
 
 export const getModels = nodes.pure({
   inputs: {
@@ -33,8 +33,8 @@ export const getModels = nodes.pure({
       limit: opts.inputs.limit,
       after_id: opts.inputs.afterId,
       before_id: opts.inputs.beforeId,
-    });
+    })
 
-    opts.outputs.models = models.data;
+    opts.outputs.models = models.data
   },
-});
+})

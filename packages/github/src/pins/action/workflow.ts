@@ -1,17 +1,17 @@
-import * as i from '@xentom/integration-framework';
-import * as v from 'valibot';
+import * as i from '@xentom/integration-framework'
+import * as v from 'valibot'
 
-import { type components } from '@octokit/openapi-types';
+import { type components } from '@octokit/openapi-types'
 
-import { extractOwnerAndRepo, hasRepositoryNameInput } from '@/helpers/options';
+import { extractOwnerAndRepo, hasRepositoryNameInput } from '@/helpers/options'
 
 export const run = i.pins.data<components['schemas']['workflow-run']>({
   displayName: 'Workflow Run',
-});
+})
 
 export const runs = i.pins.data<components['schemas']['workflow-run'][]>({
   displayName: 'Workflow Runs',
-});
+})
 
 export const workflowId = i.pins.data({
   description: 'The workflow ID or filename (e.g., ci.yml)',
@@ -23,21 +23,23 @@ export const workflowId = i.pins.data({
     placeholder: 'ci.yml',
     async options(opts) {
       if (!hasRepositoryNameInput(opts)) {
-        return [];
+        return []
       }
 
-      const workflows = await opts.state.octokit.rest.actions.listRepoWorkflows({
-        ...extractOwnerAndRepo(opts.node.inputs.repository),
-      });
+      const workflows = await opts.state.octokit.rest.actions.listRepoWorkflows(
+        {
+          ...extractOwnerAndRepo(opts.node.inputs.repository),
+        },
+      )
 
       return workflows.data.workflows.map((workflow) => ({
         label: workflow.name,
         value: workflow.id,
         suffix: workflow.path,
-      }));
+      }))
     },
   }),
-});
+})
 
 export const runId = i.pins.data({
   description: 'The workflow run ID',
@@ -46,17 +48,18 @@ export const runId = i.pins.data({
     placeholder: '123456789',
     async options(opts) {
       if (!hasRepositoryNameInput(opts)) {
-        return [];
+        return []
       }
 
-      const runs = await opts.state.octokit.rest.actions.listWorkflowRunsForRepo({
-        ...extractOwnerAndRepo(opts.node.inputs.repository),
-      });
+      const runs =
+        await opts.state.octokit.rest.actions.listWorkflowRunsForRepo({
+          ...extractOwnerAndRepo(opts.node.inputs.repository),
+        })
 
       return runs.data.workflow_runs.map((run) => ({
         value: run.id,
         suffix: `${run.name ?? 'Workflow'} #${run.run_number}`,
-      }));
+      }))
     },
   }),
-});
+})

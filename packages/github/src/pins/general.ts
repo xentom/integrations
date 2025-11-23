@@ -1,5 +1,5 @@
-import * as i from '@xentom/integration-framework';
-import * as v from 'valibot';
+import * as i from '@xentom/integration-framework'
+import * as v from 'valibot'
 
 export const markdown = i.pins.data({
   description: 'The markdown content',
@@ -9,4 +9,4 @@ export const markdown = i.pins.data({
     placeholder: 'Markdown content',
     rows: 2,
   }),
-});
+})

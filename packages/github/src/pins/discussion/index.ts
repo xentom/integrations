@@ -1,2 +1,2 @@
-export * as comment from './comment';
-export * from './discussion';
+export * as comment from './comment'
+export * from './discussion'

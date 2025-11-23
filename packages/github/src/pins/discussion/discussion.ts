@@ -1,10 +1,10 @@
-import * as i from '@xentom/integration-framework';
+import * as i from '@xentom/integration-framework'
 
-import { type components } from '@octokit/openapi-types';
+import { type components } from '@octokit/openapi-types'
 
 export const item = i.pins.data<components['schemas']['discussion']>({
   displayName: 'Discussion',
-});
+})
 
 export type Action =
   | 'answered'
@@ -21,7 +21,7 @@ export type Action =
   | 'unanswered'
   | 'unlabeled'
   | 'unlocked'
-  | 'unpinned';
+  | 'unpinned'
 
 export const action = i.pins.data<Action>({
   description: 'The action type of the discussion',
@@ -90,4 +90,4 @@ export const action = i.pins.data<Action>({
     ],
     defaultValue: 'created',
   }),
-});
+})

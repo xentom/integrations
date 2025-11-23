@@ -1,18 +1,18 @@
-import * as i from '@xentom/integration-framework';
-import * as v from 'valibot';
+import * as i from '@xentom/integration-framework'
+import * as v from 'valibot'
 
-import { Resend } from 'resend';
+import { Resend } from 'resend'
 
-import * as nodes from './nodes';
+import * as nodes from './nodes'
 
 v.setGlobalConfig({
   abortEarly: true,
   abortPipeEarly: true,
-});
+})
 
 declare module '@xentom/integration-framework' {
   interface IntegrationState {
-    resend: Resend;
+    resend: Resend
   }
 }
 
@@ -30,28 +30,28 @@ export default i.integration({
       v.string(),
       v.startsWith('re_'),
       v.checkAsync(async (token) => {
-        const resend = new Resend(token);
+        const resend = new Resend(token)
 
         try {
-          const { error } = await resend.apiKeys.list();
+          const { error } = await resend.apiKeys.list()
           if (error) {
-            throw new Error(error.message);
+            throw new Error(error.message)
           }
 
-          return true;
+          return true
         } catch (error) {
           console.error(
             'Resend API key validation failed:',
             error instanceof Error ? error.message : error,
-          );
+          )
 
-          return false;
+          return false
         }
       }, 'Invalid Resend API key. Please check your key and permissions.'),
     ),
   }),
 
   start(opts) {
-    opts.state.resend = new Resend(opts.auth.token);
+    opts.state.resend = new Resend(opts.auth.token)
   },
-});
+})

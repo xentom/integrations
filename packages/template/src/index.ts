@@ -1,6 +1,6 @@
-import * as i from '@xentom/integration-framework';
+import * as i from '@xentom/integration-framework'
 
-import * as nodes from './nodes';
+import * as nodes from './nodes'
 
 declare module '@xentom/integration-framework' {
   // eslint-disable-next-line @typescript-eslint/no-empty-object-type
@@ -9,4 +9,4 @@ declare module '@xentom/integration-framework' {
 
 export default i.integration({
   nodes,
-});
+})

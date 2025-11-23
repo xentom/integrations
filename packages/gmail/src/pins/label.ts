@@ -1,15 +1,15 @@
-import * as i from '@xentom/integration-framework';
-import * as v from 'valibot';
+import * as i from '@xentom/integration-framework'
+import * as v from 'valibot'
 
-import { type gmail_v1 } from 'googleapis/build/src/apis/gmail/v1';
+import { type gmail_v1 } from 'googleapis/build/src/apis/gmail/v1'
 
 export const item = i.pins.data<gmail_v1.Schema$Label>({
   description: 'A Gmail label for organizing emails',
-});
+})
 
 export const items = i.pins.data<gmail_v1.Schema$Label[]>({
   description: 'A list of Gmail labels for organizing emails',
-});
+})
 
 export const id = i.pins.data({
   displayName: 'Label ID',
@@ -29,7 +29,7 @@ export const id = i.pins.data({
       value: 'Label_123',
     },
   ],
-});
+})
 
 export const ids = i.pins.data({
   displayName: 'Label IDs',
@@ -44,4 +44,4 @@ export const ids = i.pins.data({
       value: ['INBOX', 'IMPORTANT', 'Label_123'],
     },
   ],
-});
+})

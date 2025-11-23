@@ -1,9 +1,9 @@
-import * as i from '@xentom/integration-framework';
-import * as v from 'valibot';
+import * as i from '@xentom/integration-framework'
+import * as v from 'valibot'
 
-import mime from 'mime';
+import mime from 'mime'
 
-const nodes = i.nodes.group('Files');
+const nodes = i.nodes.group('Files')
 
 export const file = nodes.pure({
   inputs: {
@@ -28,6 +28,6 @@ export const file = nodes.pure({
   run(opts) {
     opts.outputs.file = new File([opts.inputs.content], opts.inputs.name, {
       type: mime.getType(opts.inputs.name) ?? undefined,
-    });
+    })
   },
-});
+})

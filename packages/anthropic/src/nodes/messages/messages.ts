@@ -1,9 +1,9 @@
-import * as i from '@xentom/integration-framework';
-import * as v from 'valibot';
+import * as i from '@xentom/integration-framework'
+import * as v from 'valibot'
 
-import * as pins from '@/pins';
+import * as pins from '@/pins'
 
-const nodes = i.nodes.group('Messages');
+const nodes = i.nodes.group('Messages')
 
 export const createMessage = nodes.callable({
   description:
@@ -62,13 +62,13 @@ export const createMessage = nodes.callable({
       top_k: inputs.topK,
       top_p: inputs.topP,
       stop_sequences: inputs.stopSequences,
-    });
+    })
 
     return await next({
       message,
-    });
+    })
   },
-});
+})
 
 export const countMessageTokens = nodes.callable({
   description:
@@ -109,13 +109,13 @@ export const countMessageTokens = nodes.callable({
             budget_tokens: inputs.thinkingBudgetTokens ?? 1024,
           }
         : { type: 'disabled' },
-    });
+    })
 
     await next({
       inputTokens: tokenCount.input_tokens,
-    });
+    })
   },
-});
+})
 
 export const messageText = nodes.pure({
   description: 'Get the text content of a message',
@@ -131,6 +131,6 @@ export const messageText = nodes.pure({
   },
   run({ inputs, outputs }) {
     outputs.text =
-      inputs.message.content.find((block) => block.type === 'text')?.text ?? '';
+      inputs.message.content.find((block) => block.type === 'text')?.text ?? ''
   },
-});
+})

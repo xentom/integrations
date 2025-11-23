@@ -1,18 +1,18 @@
-import * as i from '@xentom/integration-framework';
-import * as v from 'valibot';
+import * as i from '@xentom/integration-framework'
+import * as v from 'valibot'
 
-import { type components } from '@octokit/openapi-types';
+import { type components } from '@octokit/openapi-types'
 
-import { extractOwnerAndRepo, hasRepositoryNameInput } from '@/helpers/options';
-import * as general from '@/pins/general';
+import { extractOwnerAndRepo, hasRepositoryNameInput } from '@/helpers/options'
+import * as general from '@/pins/general'
 
 export const item = i.pins.data<components['schemas']['issue']>({
   displayName: 'Issue',
-});
+})
 
 export const items = i.pins.data<components['schemas']['issue'][]>({
   displayName: 'Issues',
-});
+})
 
 export type Action =
   | 'assigned'
@@ -32,7 +32,7 @@ export type Action =
   | 'unlabeled'
   | 'unlocked'
   | 'unpinned'
-  | 'untyped';
+  | 'untyped'
 
 export const action = i.pins.data<Action>({
   description: 'The action type of the issue',
@@ -113,7 +113,7 @@ export const action = i.pins.data<Action>({
     ],
     defaultValue: 'opened',
   }),
-});
+})
 
 export const title = i.pins.data({
   description: 'The title of the issue',
@@ -121,17 +121,17 @@ export const title = i.pins.data({
   control: i.controls.text({
     placeholder: 'Issue title',
   }),
-});
+})
 
 export const body = general.markdown.with({
   description: 'The body content of the issue',
-});
+})
 
 export const number = i.pins.data({
   description: 'The issue number',
   schema: v.pipe(v.number(), v.integer(), v.minValue(1)),
   control: i.controls.expression(),
-});
+})
 
 export const labels = i.pins.data({
   description: 'Labels to assign to the issue',
@@ -140,20 +140,20 @@ export const labels = i.pins.data({
     multiple: true,
     async options(opts) {
       if (!hasRepositoryNameInput(opts)) {
-        return [];
+        return []
       }
 
       const labels = await opts.state.octokit.rest.issues.listLabelsForRepo({
         ...extractOwnerAndRepo(opts.node.inputs.repository),
-      });
+      })
 
       return labels.data.map((label) => ({
         label: label.name,
         value: label.name,
-      }));
+      }))
     },
   }),
-});
+})
 
 export const assignees = i.pins.data({
   description: 'Users to assign to the issue',
@@ -162,21 +162,21 @@ export const assignees = i.pins.data({
     multiple: true,
     async options(opts) {
       if (!hasRepositoryNameInput(opts)) {
-        return [];
+        return []
       }
 
       const collaborators =
         await opts.state.octokit.rest.repos.listCollaborators({
           ...extractOwnerAndRepo(opts.node.inputs.repository),
-        });
+        })
 
       return collaborators.data.map((user) => ({
         label: user.login,
         value: user.login,
-      }));
+      }))
     },
   }),
-});
+})
 
 export const state = i.pins.data({
   description: 'The state of the issue',
@@ -193,4 +193,4 @@ export const state = i.pins.data({
       },
     ],
   }),
-});
+})

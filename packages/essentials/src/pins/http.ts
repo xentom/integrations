@@ -1,7 +1,7 @@
-import * as i from '@xentom/integration-framework';
-import * as v from 'valibot';
+import * as i from '@xentom/integration-framework'
+import * as v from 'valibot'
 
-import { HTTP_REQUEST_METHODS } from '@/helpers/web';
+import { HTTP_REQUEST_METHODS } from '@/helpers/web'
 
 export const method = i.pins.data({
   schema: v.picklist(HTTP_REQUEST_METHODS),
@@ -11,7 +11,7 @@ export const method = i.pins.data({
     })),
     defaultValue: 'POST',
   }),
-});
+})
 
 export const url = i.pins.data({
   displayName: 'URL',
@@ -19,7 +19,7 @@ export const url = i.pins.data({
   control: i.controls.text({
     placeholder: 'https://example.com',
   }),
-});
+})
 
 export const headers = i.pins.data({
   schema: v.union([
@@ -29,14 +29,14 @@ export const headers = i.pins.data({
   control: i.controls.expression({
     placeholder: `{\n  'Authorization': 'Bearer token',\n}`,
   }),
-});
+})
 
 export const body = i.pins.data({
   schema: v.union([v.any(), v.blob(), v.file()]),
   control: i.controls.expression({
     placeholder: `{\n  name: 'John Doe',\n  email: 'john.doe@example.com',\n}`,
   }),
-});
+})
 
 export const response = i.pins.data({
   schema: v.object({
@@ -44,7 +44,7 @@ export const response = i.pins.data({
     headers: v.record(v.string(), v.string()),
     body: v.union([v.any(), v.blob(), v.file()]),
   }),
-});
+})
 
 export const request = i.pins.data({
   schema: v.object({
@@ -53,4 +53,4 @@ export const request = i.pins.data({
     body: v.union([v.any(), v.blob(), v.file()]),
     headers: v.record(v.string(), v.string()),
   }),
-});
+})

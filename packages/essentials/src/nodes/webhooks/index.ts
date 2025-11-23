@@ -1,2 +1,2 @@
-export * from './webhooks';
-export * from './responses';
+export * from './webhooks'
+export * from './responses'

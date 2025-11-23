@@ -1,6 +1,6 @@
-import { EventEmitter } from 'node:events';
+import { EventEmitter } from 'node:events'
 
-export const responses = new EventEmitter<Record<string, [Response]>>();
+export const responses = new EventEmitter<Record<string, [Response]>>()
 
 const mimeToExtension: Record<string, string> = {
   // Images
@@ -56,11 +56,11 @@ const mimeToExtension: Record<string, string> = {
 
   // Other
   'application/octet-stream': '.bin',
-};
+}
 
 export function getExtensionFromMimeType(mimeType: string): string {
-  const cleanMimeType = mimeType.split(';')[0]?.trim().toLowerCase() || '';
-  return mimeToExtension[cleanMimeType] || '.bin';
+  const cleanMimeType = mimeType.split(';')[0]?.trim().toLowerCase() || ''
+  return mimeToExtension[cleanMimeType] || '.bin'
 }
 
 export async function parseRequestBody(
@@ -68,21 +68,21 @@ export async function parseRequestBody(
   headers: Record<string, string>,
 ) {
   const contentType =
-    headers['content-type']?.toLowerCase() || 'application/octet-stream';
+    headers['content-type']?.toLowerCase() || 'application/octet-stream'
   try {
     if (contentType.includes('application/json')) {
-      return await request.json();
+      return await request.json()
     }
 
     if (
       contentType.includes('application/x-www-form-urlencoded') ||
       contentType.includes('multipart/form-data')
     ) {
-      return Object.fromEntries((await request.formData()).entries());
+      return Object.fromEntries((await request.formData()).entries())
     }
 
     if (contentType.includes('text/')) {
-      return await request.text();
+      return await request.text()
     }
 
     // Fallback for binary data
@@ -90,13 +90,13 @@ export async function parseRequestBody(
       [await request.arrayBuffer()],
       generateUniqueFilename(headers, contentType),
       { type: contentType },
-    );
+    )
   } catch (error) {
     throw new Error(
       `Failed to parse request body: ${
         error instanceof Error ? error.message : String(error)
       }`,
-    );
+    )
   }
 }
 
@@ -104,6 +104,6 @@ function generateUniqueFilename(
   headers: Record<string, string>,
   contentType: string,
 ): string {
-  const filename = headers['x-filename'] || `${Bun.randomUUIDv7()}`;
-  return `${filename}${getExtensionFromMimeType(contentType)}`;
+  const filename = headers['x-filename'] || `${Bun.randomUUIDv7()}`
+  return `${filename}${getExtensionFromMimeType(contentType)}`
 }

@@ -1,56 +1,56 @@
-import * as i from '@xentom/integration-framework';
-import * as v from 'valibot';
+import * as i from '@xentom/integration-framework'
+import * as v from 'valibot'
 
-import { type components } from '@octokit/openapi-types';
-import { type EmitterWebhookEvent } from '@octokit/webhooks/types';
+import { type components } from '@octokit/openapi-types'
+import { type EmitterWebhookEvent } from '@octokit/webhooks/types'
 
-import { extractOwnerAndRepo } from '@/helpers/options';
-import { createRepositoryWebhook } from '@/helpers/webhooks';
-import * as pins from '@/pins';
+import { extractOwnerAndRepo } from '@/helpers/options'
+import { createRepositoryWebhook } from '@/helpers/webhooks'
+import * as pins from '@/pins'
 
-const nodes = i.nodes.group('Repositories/Pull Requests');
+const nodes = i.nodes.group('Repositories/Pull Requests')
 
-export const onPullRequest = i.generic(<
-  I extends i.GenericInputs<typeof inputs>,
->() => {
-  const inputs = {
-    repository: pins.repository.name,
-    action: pins.pullRequest.action,
-  };
+export const onPullRequest = i.generic(
+  <I extends i.GenericInputs<typeof inputs>>() => {
+    const inputs = {
+      repository: pins.repository.name,
+      action: pins.pullRequest.action,
+    }
 
-  type WebhookEvent = EmitterWebhookEvent<`pull_request.${I['action']}`>;
+    type WebhookEvent = EmitterWebhookEvent<`pull_request.${I['action']}`>
 
-  return nodes.trigger({
-    inputs,
-    outputs: {
-      id: i.pins.data<WebhookEvent['id']>(),
-      payload: i.pins.data<WebhookEvent['payload']>(),
-    },
-    async subscribe(opts) {
-      opts.state.webhooks.on(
-        `pull_request.${opts.inputs.action}`,
-        ({ id, payload }) => {
-          if (payload.repository.full_name !== opts.inputs.repository) {
-            return;
-          }
+    return nodes.trigger({
+      inputs,
+      outputs: {
+        id: i.pins.data<WebhookEvent['id']>(),
+        payload: i.pins.data<WebhookEvent['payload']>(),
+      },
+      async subscribe(opts) {
+        opts.state.webhooks.on(
+          `pull_request.${opts.inputs.action}`,
+          ({ id, payload }) => {
+            if (payload.repository.full_name !== opts.inputs.repository) {
+              return
+            }
 
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-          void opts.next({
-            id,
-            payload,
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          } as any);
-        },
-      );
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+            void opts.next({
+              id,
+              payload,
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            } as any)
+          },
+        )
 
-      await createRepositoryWebhook({
-        repository: opts.inputs.repository,
-        webhook: opts.webhook,
-        state: opts.state,
-      });
-    },
-  });
-});
+        await createRepositoryWebhook({
+          repository: opts.inputs.repository,
+          webhook: opts.webhook,
+          state: opts.state,
+        })
+      },
+    })
+  },
+)
 
 export const createPullRequest = nodes.callable({
   description: 'Create a new pull request',
@@ -77,13 +77,13 @@ export const createPullRequest = nodes.callable({
       head: opts.inputs.head,
       base: opts.inputs.base,
       draft: opts.inputs.draft,
-    });
+    })
 
     return opts.next({
       pullRequest: pulls.data,
-    });
+    })
   },
-});
+})
 
 export const updatePullRequest = nodes.callable({
   description: 'Update an existing pull request',
@@ -114,13 +114,13 @@ export const updatePullRequest = nodes.callable({
       body: opts.inputs.body,
       state: opts.inputs.state,
       base: opts.inputs.base,
-    });
+    })
 
     return opts.next({
       pullRequest: pulls.data,
-    });
+    })
   },
-});
+})
 
 export const getPullRequest = nodes.callable({
   description: 'Get details of a specific pull request',
@@ -135,13 +135,13 @@ export const getPullRequest = nodes.callable({
     const pulls = await opts.state.octokit.rest.pulls.get({
       ...extractOwnerAndRepo(opts.inputs.repository),
       pull_number: opts.inputs.number,
-    });
+    })
 
     return opts.next({
       pullRequest: pulls.data,
-    });
+    })
   },
-});
+})
 
 export const mergePullRequest = nodes.callable({
   description: 'Merge a pull request',
@@ -196,13 +196,13 @@ export const mergePullRequest = nodes.callable({
       commit_title: opts.inputs.commitTitle,
       commit_message: opts.inputs.commitMessage,
       merge_method: opts.inputs.mergeMethod,
-    });
+    })
 
     return opts.next({
       merge: pulls.data,
-    });
+    })
   },
-});
+})
 
 export const listPullRequests = nodes.callable({
   description: 'List pull requests in a repository',
@@ -224,10 +224,10 @@ export const listPullRequests = nodes.callable({
       ...extractOwnerAndRepo(opts.inputs.repository),
       state: opts.inputs.state,
       base: opts.inputs.base,
-    });
+    })
 
     return opts.next({
       pullRequests: pullRequests.data,
-    });
+    })
   },
-});
+})

@@ -1,5 +1,5 @@
-import * as i from '@xentom/integration-framework';
-import * as v from 'valibot';
+import * as i from '@xentom/integration-framework'
+import * as v from 'valibot'
 
 import {
   type ChannelArchiveEvent,
@@ -13,19 +13,19 @@ import {
   type ChannelUnarchiveEvent,
   type ChannelUnsharedEvent,
   type MessageEvent,
-} from '@slack/web-api';
-import { type Channel } from '@slack/web-api/dist/types/response/ConversationsListResponse';
+} from '@slack/web-api'
+import { type Channel } from '@slack/web-api/dist/types/response/ConversationsListResponse'
 
 export const item = i.pins.data<Channel>({
   displayName: 'Channel',
   description: 'Slack conversation metadata as returned by the Web API.',
-});
+})
 
 export const items = i.pins.data<Channel[]>({
   displayName: 'Channels',
   description:
     'Collection of Slack conversations accessible to the integration.',
-});
+})
 
 export const id = i.pins.data({
   displayName: 'Channel ID',
@@ -34,41 +34,41 @@ export const id = i.pins.data({
   control: i.controls.select({
     placeholder: 'C1234567890',
     async options(opts) {
-      const options: i.SelectControlOption<string>[] = [];
+      const options: i.SelectControlOption<string>[] = []
 
-      let cursor: string | undefined;
+      let cursor: string | undefined
       do {
         const response = await opts.state.client.conversations.list({
           limit: 200,
           cursor,
           exclude_archived: true,
           types: 'public_channel,private_channel',
-        });
+        })
 
         if (!response.ok) {
           throw new Error(
             response.error ?? 'Slack conversations.list request failed',
-          );
+          )
         }
 
         for (const channel of response.channels ?? []) {
           if (!channel.id) {
-            continue;
+            continue
           }
 
           options.push({
             value: channel.id,
             suffix: `#${channel.name}`,
-          });
+          })
         }
 
-        cursor = response.response_metadata?.next_cursor || undefined;
-      } while (cursor);
+        cursor = response.response_metadata?.next_cursor || undefined
+      } while (cursor)
 
-      return options;
+      return options
     },
   }),
-});
+})
 
 export const name = i.pins.data({
   displayName: 'Channel Name',
@@ -77,7 +77,7 @@ export const name = i.pins.data({
   control: i.controls.text({
     placeholder: 'general',
   }),
-});
+})
 
 export type ChannelEvent =
   | ChannelArchiveEvent
@@ -89,7 +89,7 @@ export type ChannelEvent =
   | ChannelRenameEvent
   | ChannelSharedEvent
   | ChannelUnarchiveEvent
-  | ChannelUnsharedEvent;
+  | ChannelUnsharedEvent
 
 export const eventType = i.pins.data<ChannelEvent['type']>({
   description: 'The type of channel event to trigger on.',
@@ -147,9 +147,9 @@ export const eventType = i.pins.data<ChannelEvent['type']>({
       },
     ],
   }),
-});
+})
 
-export type ChannelTypes = MessageEvent['channel_type'];
+export type ChannelTypes = MessageEvent['channel_type']
 
 export const type = i.pins.data<ChannelTypes>({
   description: 'The type of channel the message was sent in.',
@@ -185,4 +185,4 @@ export const type = i.pins.data<ChannelTypes>({
       },
     ],
   }),
-});
+})

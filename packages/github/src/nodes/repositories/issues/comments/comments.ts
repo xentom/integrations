@@ -1,54 +1,54 @@
-import * as i from '@xentom/integration-framework';
+import * as i from '@xentom/integration-framework'
 
-import { type EmitterWebhookEvent } from '@octokit/webhooks';
+import { type EmitterWebhookEvent } from '@octokit/webhooks'
 
-import { extractOwnerAndRepo } from '@/helpers/options';
-import { createRepositoryWebhook } from '@/helpers/webhooks';
-import * as pins from '@/pins';
+import { extractOwnerAndRepo } from '@/helpers/options'
+import { createRepositoryWebhook } from '@/helpers/webhooks'
+import * as pins from '@/pins'
 
-const nodes = i.nodes.group('Repositories/Issues/Comments');
+const nodes = i.nodes.group('Repositories/Issues/Comments')
 
-export const onIssueComment = i.generic(<
-  I extends i.GenericInputs<typeof inputs>,
->() => {
-  const inputs = {
-    repository: pins.repository.name,
-    action: pins.issue.comment.action,
-  };
+export const onIssueComment = i.generic(
+  <I extends i.GenericInputs<typeof inputs>>() => {
+    const inputs = {
+      repository: pins.repository.name,
+      action: pins.issue.comment.action,
+    }
 
-  type WebhookEvent = EmitterWebhookEvent<`issue_comment.${I['action']}`>;
+    type WebhookEvent = EmitterWebhookEvent<`issue_comment.${I['action']}`>
 
-  return nodes.trigger({
-    inputs,
-    outputs: {
-      id: i.pins.data<WebhookEvent['id']>(),
-      payload: i.pins.data<WebhookEvent['payload']>(),
-    },
-    async subscribe(opts) {
-      opts.state.webhooks.on(
-        `issue_comment.${opts.inputs.action}`,
-        ({ id, payload }) => {
-          if (payload.repository.full_name !== opts.inputs.repository) {
-            return;
-          }
+    return nodes.trigger({
+      inputs,
+      outputs: {
+        id: i.pins.data<WebhookEvent['id']>(),
+        payload: i.pins.data<WebhookEvent['payload']>(),
+      },
+      async subscribe(opts) {
+        opts.state.webhooks.on(
+          `issue_comment.${opts.inputs.action}`,
+          ({ id, payload }) => {
+            if (payload.repository.full_name !== opts.inputs.repository) {
+              return
+            }
 
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-          void opts.next({
-            id,
-            payload,
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          } as any);
-        },
-      );
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+            void opts.next({
+              id,
+              payload,
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            } as any)
+          },
+        )
 
-      await createRepositoryWebhook({
-        repository: opts.inputs.repository,
-        webhook: opts.webhook,
-        state: opts.state,
-      });
-    },
-  });
-});
+        await createRepositoryWebhook({
+          repository: opts.inputs.repository,
+          webhook: opts.webhook,
+          state: opts.state,
+        })
+      },
+    })
+  },
+)
 
 export const addIssueComment = nodes.callable({
   description: 'Add a comment to an issue',
@@ -65,13 +65,13 @@ export const addIssueComment = nodes.callable({
       ...extractOwnerAndRepo(opts.inputs.repository),
       issue_number: opts.inputs.issueNumber,
       body: opts.inputs.body,
-    });
+    })
 
     return opts.next({
       comment: comment.data,
-    });
+    })
   },
-});
+})
 
 export const listIssueComments = nodes.callable({
   description: 'List comments for an issue',
@@ -83,14 +83,13 @@ export const listIssueComments = nodes.callable({
     comments: pins.issue.comment.items,
   },
   async run(opts) {
-    const comments =
-      await opts.state.octokit.rest.issues.listComments({
-        ...extractOwnerAndRepo(opts.inputs.repository),
-        issue_number: opts.inputs.issueNumber,
-      });
+    const comments = await opts.state.octokit.rest.issues.listComments({
+      ...extractOwnerAndRepo(opts.inputs.repository),
+      issue_number: opts.inputs.issueNumber,
+    })
 
     return opts.next({
       comments: comments.data,
-    });
+    })
   },
-});
+})

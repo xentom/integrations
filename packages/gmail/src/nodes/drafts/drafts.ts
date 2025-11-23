@@ -1,9 +1,9 @@
-import * as i from '@xentom/integration-framework';
-import * as v from 'valibot';
+import * as i from '@xentom/integration-framework'
+import * as v from 'valibot'
 
-import * as pins from '../../pins';
+import * as pins from '../../pins'
 
-const nodes = i.nodes.group('Drafts');
+const nodes = i.nodes.group('Drafts')
 
 export const createDraft = nodes.callable({
   description: 'Create a new draft email in Gmail',
@@ -29,17 +29,17 @@ export const createDraft = nodes.callable({
     const headers = [
       `To: ${opts.inputs.to.join(', ')}`,
       `Subject: ${opts.inputs.subject}`,
-    ];
+    ]
 
     if (opts.inputs.cc?.length) {
-      headers.push(`Cc: ${opts.inputs.cc.join(', ')}`);
+      headers.push(`Cc: ${opts.inputs.cc.join(', ')}`)
     }
 
     if (opts.inputs.bcc?.length) {
-      headers.push(`Bcc: ${opts.inputs.bcc.join(', ')}`);
+      headers.push(`Bcc: ${opts.inputs.bcc.join(', ')}`)
     }
 
-    const content = [...headers, '', opts.inputs.body ?? ''].join('\r\n');
+    const content = [...headers, '', opts.inputs.body ?? ''].join('\r\n')
     const response = await opts.state.gmail.users.drafts.create({
       userId: 'me',
       requestBody: {
@@ -47,13 +47,13 @@ export const createDraft = nodes.callable({
           raw: Buffer.from(content).toString('base64url'),
         },
       },
-    });
+    })
 
     return opts.next({
       draft: response.data,
-    });
+    })
   },
-});
+})
 
 export const sendDraft = nodes.callable({
   description: 'Send an existing draft email',
@@ -69,13 +69,13 @@ export const sendDraft = nodes.callable({
       requestBody: {
         id: opts.inputs.id,
       },
-    });
+    })
 
     return opts.next({
       message: response.data,
-    });
+    })
   },
-});
+})
 
 export const getDraft = nodes.callable({
   description: 'Retrieve a specific draft by ID',
@@ -89,13 +89,13 @@ export const getDraft = nodes.callable({
     const response = await opts.state.gmail.users.drafts.get({
       userId: 'me',
       id: opts.inputs.id,
-    });
+    })
 
     return opts.next({
       draft: response.data,
-    });
+    })
   },
-});
+})
 
 export const listDrafts = nodes.callable({
   description: 'Retrieve all draft emails',
@@ -119,14 +119,14 @@ export const listDrafts = nodes.callable({
     const response = await opts.state.gmail.users.drafts.list({
       userId: 'me',
       maxResults: opts.inputs.maxResults,
-    });
+    })
 
     return opts.next({
       drafts: response.data.drafts ?? [],
       resultSizeEstimate: response.data.resultSizeEstimate ?? 0,
-    });
+    })
   },
-});
+})
 
 export const deleteDraft = nodes.callable({
   description: 'Delete a draft email',
@@ -137,6 +137,6 @@ export const deleteDraft = nodes.callable({
     await opts.state.gmail.users.drafts.delete({
       userId: 'me',
       id: opts.inputs.id,
-    });
+    })
   },
-});
+})

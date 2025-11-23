@@ -1,11 +1,11 @@
-import * as i from '@xentom/integration-framework';
-import * as z from 'zod';
+import * as i from '@xentom/integration-framework'
+import * as z from 'zod'
 
-import { type Response } from 'openai/resources/responses/responses';
+import { type Response } from 'openai/resources/responses/responses'
 
 export const item = i.pins.data<Response>({
   description: 'A response object representing a response from OpenAI.',
-});
+})
 
 export const id = i.pins.data({
   displayName: 'Response ID',
@@ -14,4 +14,4 @@ export const id = i.pins.data({
   control: i.controls.text({
     placeholder: 'resp_...',
   }),
-});
+})

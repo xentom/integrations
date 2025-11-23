@@ -1,13 +1,13 @@
-import * as i from '@xentom/integration-framework';
-import * as v from 'valibot';
+import * as i from '@xentom/integration-framework'
+import * as v from 'valibot'
 
-import { type AnyBlock, type MessageEvent } from '@slack/web-api';
-import { type ChatPostMessageResponseMessage } from '@slack/web-api/dist/types/response/ChatPostMessageResponse';
+import { type AnyBlock, type MessageEvent } from '@slack/web-api'
+import { type ChatPostMessageResponseMessage } from '@slack/web-api/dist/types/response/ChatPostMessageResponse'
 
 export const item = i.pins.data<ChatPostMessageResponseMessage>({
   displayName: 'Message',
   description: 'Slack message payload returned by the Web API.',
-});
+})
 
 export const text = i.pins.data({
   description: 'Content that will be delivered to Slack users.',
@@ -20,7 +20,7 @@ export const text = i.pins.data({
     placeholder: 'Hello from Xentom!',
     rows: 3,
   }),
-});
+})
 
 export const markdown = i.pins.data({
   description: 'Content that will be delivered to Slack users.',
@@ -35,7 +35,7 @@ export const markdown = i.pins.data({
     placeholder: '# Markdown',
     rows: 3,
   }),
-});
+})
 
 export const blocks = i.pins.data<AnyBlock[]>({
   description: 'The message blocks to deliver.',
@@ -52,7 +52,7 @@ export const blocks = i.pins.data<AnyBlock[]>({
     ),
     rows: 3,
   }),
-});
+})
 
 export const ts = i.pins.data({
   displayName: 'Message Timestamp',
@@ -68,7 +68,7 @@ export const ts = i.pins.data({
   control: i.controls.text({
     placeholder: '1700000000.000000',
   }),
-});
+})
 
 export const threadTs = i.pins.data({
   displayName: 'Thread Timestamp',
@@ -84,7 +84,7 @@ export const threadTs = i.pins.data({
   control: i.controls.text({
     placeholder: '1700000000.000000',
   }),
-});
+})
 
 export const eventSubtype = i.pins.data<MessageEvent['subtype']>({
   description: 'The subtype of message to trigger on.',
@@ -156,4 +156,4 @@ export const eventSubtype = i.pins.data<MessageEvent['subtype']>({
       },
     ],
   }),
-});
+})

@@ -1,2 +1,2 @@
-export * from './primitives';
-export * from './structured';
+export * from './primitives'
+export * from './structured'

@@ -1,14 +1,14 @@
-import * as i from '@xentom/integration-framework';
+import * as i from '@xentom/integration-framework'
 
 import {
   type CreateDomainResponseSuccess,
   type GetDomainResponseSuccess,
   type ListDomainsResponseSuccess,
-} from 'resend';
+} from 'resend'
 
-import * as pins from '@/pins';
+import * as pins from '@/pins'
 
-const nodes = i.nodes.group('Domains');
+const nodes = i.nodes.group('Domains')
 
 export const createDomain = nodes.callable({
   description: 'Create a new domain for sending emails.',
@@ -35,17 +35,17 @@ export const createDomain = nodes.callable({
       name: opts.inputs.name,
       region: opts.inputs.region,
       customReturnPath: opts.inputs.returnPath,
-    });
+    })
 
     if (response.error) {
-      throw new Error(response.error.message);
+      throw new Error(response.error.message)
     }
 
     return opts.next({
       domain: response.data,
-    });
+    })
   },
-});
+})
 
 export const getDomain = nodes.callable({
   description: 'Retrieve details of a domain by its ID.',
@@ -60,17 +60,17 @@ export const getDomain = nodes.callable({
     }),
   },
   async run(opts) {
-    const response = await opts.state.resend.domains.get(opts.inputs.id);
+    const response = await opts.state.resend.domains.get(opts.inputs.id)
 
     if (response.error) {
-      throw new Error(response.error.message);
+      throw new Error(response.error.message)
     }
 
     return opts.next({
       domain: response.data,
-    });
+    })
   },
-});
+})
 
 export const listDomains = nodes.callable({
   description: 'Retrieve a list of domains.',
@@ -80,17 +80,17 @@ export const listDomains = nodes.callable({
     }),
   },
   async run(opts) {
-    const response = await opts.state.resend.domains.list();
+    const response = await opts.state.resend.domains.list()
 
     if (response.error) {
-      throw new Error(response.error.message);
+      throw new Error(response.error.message)
     }
 
     return opts.next({
       domains: response.data,
-    });
+    })
   },
-});
+})
 
 export const verifyDomain = nodes.callable({
   description: 'Verify a domain by checking its DNS records.',
@@ -106,17 +106,17 @@ export const verifyDomain = nodes.callable({
     }),
   },
   async run(opts) {
-    const response = await opts.state.resend.domains.verify(opts.inputs.id);
+    const response = await opts.state.resend.domains.verify(opts.inputs.id)
 
     if (response.error) {
-      throw new Error(response.error.message);
+      throw new Error(response.error.message)
     }
 
     return opts.next({
       id: response.data.id,
-    });
+    })
   },
-});
+})
 
 export const deleteDomain = nodes.callable({
   description: 'Delete a domain by its ID.',
@@ -132,18 +132,18 @@ export const deleteDomain = nodes.callable({
     }),
   },
   async run(opts) {
-    const response = await opts.state.resend.domains.remove(opts.inputs.id);
+    const response = await opts.state.resend.domains.remove(opts.inputs.id)
 
     if (response.error) {
-      throw new Error(response.error.message);
+      throw new Error(response.error.message)
     }
 
     if (!response.data.deleted) {
-      throw new Error('Failed to delete domain');
+      throw new Error('Failed to delete domain')
     }
 
     return opts.next({
       id: response.data.id,
-    });
+    })
   },
-});
+})

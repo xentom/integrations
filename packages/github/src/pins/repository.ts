@@ -1,11 +1,11 @@
-import * as i from '@xentom/integration-framework';
-import * as v from 'valibot';
+import * as i from '@xentom/integration-framework'
+import * as v from 'valibot'
 
-import { type components } from '@octokit/openapi-types';
+import { type components } from '@octokit/openapi-types'
 
 export const item = i.pins.data<components['schemas']['full-repository']>({
   displayName: 'Repository',
-});
+})
 
 export type Action =
   | 'archived'
@@ -15,7 +15,7 @@ export type Action =
   | 'publicized'
   | 'renamed'
   | 'transferred'
-  | 'unarchived';
+  | 'unarchived'
 
 export const action = i.pins.data<Action>({
   description: 'The action type of the repository',
@@ -56,7 +56,7 @@ export const action = i.pins.data<Action>({
     ],
     defaultValue: 'edited',
   }),
-});
+})
 
 export const name = i.pins.data({
   description: 'The full name of the repository (e.g., octocat/Hello-World)',
@@ -64,11 +64,11 @@ export const name = i.pins.data({
   control: i.controls.select({
     async options(opts) {
       const repositories =
-        await opts.state.octokit.rest.repos.listForAuthenticatedUser();
+        await opts.state.octokit.rest.repos.listForAuthenticatedUser()
 
       return repositories.data.map((repo) => ({
         value: repo.full_name,
-      }));
+      }))
     },
   }),
-});
+})

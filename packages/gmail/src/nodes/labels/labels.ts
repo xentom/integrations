@@ -1,9 +1,9 @@
-import * as i from '@xentom/integration-framework';
-import * as v from 'valibot';
+import * as i from '@xentom/integration-framework'
+import * as v from 'valibot'
 
-import * as pins from '../../pins';
+import * as pins from '../../pins'
 
-const nodes = i.nodes.group('Labels');
+const nodes = i.nodes.group('Labels')
 
 export const listLabels = nodes.callable({
   description: 'Retrieve all Gmail labels',
@@ -13,13 +13,13 @@ export const listLabels = nodes.callable({
   async run(opts) {
     const response = await opts.state.gmail.users.labels.list({
       userId: 'me',
-    });
+    })
 
     return opts.next({
       labels: response.data.labels ?? [],
-    });
+    })
   },
-});
+})
 
 export const getLabel = nodes.callable({
   description: 'Retrieve a specific Gmail label by ID',
@@ -33,13 +33,13 @@ export const getLabel = nodes.callable({
     const response = await opts.state.gmail.users.labels.get({
       userId: 'me',
       id: opts.inputs.id,
-    });
+    })
 
     return opts.next({
       label: response.data,
-    });
+    })
   },
-});
+})
 
 export const createLabel = nodes.callable({
   description: 'Create a new Gmail label',
@@ -89,13 +89,13 @@ export const createLabel = nodes.callable({
         messageListVisibility: opts.inputs.messageListVisibility,
         labelListVisibility: opts.inputs.labelListVisibility,
       },
-    });
+    })
 
     return opts.next({
       label: response.data,
-    });
+    })
   },
-});
+})
 
 export const deleteLabel = nodes.callable({
   description: 'Delete a Gmail label (cannot delete system labels)',
@@ -106,9 +106,9 @@ export const deleteLabel = nodes.callable({
     await opts.state.gmail.users.labels.delete({
       userId: 'me',
       id: opts.inputs.id,
-    });
+    })
   },
-});
+})
 
 export const modifyMessageLabels = nodes.callable({
   description: 'Add or remove labels from a message',
@@ -134,10 +134,10 @@ export const modifyMessageLabels = nodes.callable({
         addLabelIds: opts.inputs.addLabelIds,
         removeLabelIds: opts.inputs.removeLabelIds,
       },
-    });
+    })
 
     return opts.next({
       message: response.data,
-    });
+    })
   },
-});
+})

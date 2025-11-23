@@ -8,4 +8,4 @@ export const HTTP_REQUEST_METHODS = [
   'OPTIONS',
   'TRACE',
   'PATCH',
-] as const;
+] as const

@@ -1,54 +1,54 @@
-import * as i from '@xentom/integration-framework';
+import * as i from '@xentom/integration-framework'
 
-import { type EmitterWebhookEvent } from '@octokit/webhooks/types';
+import { type EmitterWebhookEvent } from '@octokit/webhooks/types'
 
-import { extractOwnerAndRepo } from '@/helpers/options';
-import { createRepositoryWebhook } from '@/helpers/webhooks';
-import * as pins from '@/pins';
+import { extractOwnerAndRepo } from '@/helpers/options'
+import { createRepositoryWebhook } from '@/helpers/webhooks'
+import * as pins from '@/pins'
 
-const nodes = i.nodes.group('Repositories/Issues');
+const nodes = i.nodes.group('Repositories/Issues')
 
-export const onIssue = i.generic(<
-  I extends i.GenericInputs<typeof inputs>,
->() => {
-  const inputs = {
-    repository: pins.repository.name,
-    action: pins.issue.action,
-  };
+export const onIssue = i.generic(
+  <I extends i.GenericInputs<typeof inputs>>() => {
+    const inputs = {
+      repository: pins.repository.name,
+      action: pins.issue.action,
+    }
 
-  type WebhookEvent = EmitterWebhookEvent<`issues.${I['action']}`>;
+    type WebhookEvent = EmitterWebhookEvent<`issues.${I['action']}`>
 
-  return nodes.trigger({
-    inputs,
-    outputs: {
-      id: i.pins.data<WebhookEvent['id']>(),
-      payload: i.pins.data<WebhookEvent['payload']>(),
-    },
-    async subscribe(opts) {
-      opts.state.webhooks.on(
-        `issues.${opts.inputs.action}`,
-        ({ id, payload }) => {
-          if (payload.repository.full_name !== opts.inputs.repository) {
-            return;
-          }
+    return nodes.trigger({
+      inputs,
+      outputs: {
+        id: i.pins.data<WebhookEvent['id']>(),
+        payload: i.pins.data<WebhookEvent['payload']>(),
+      },
+      async subscribe(opts) {
+        opts.state.webhooks.on(
+          `issues.${opts.inputs.action}`,
+          ({ id, payload }) => {
+            if (payload.repository.full_name !== opts.inputs.repository) {
+              return
+            }
 
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-          void opts.next({
-            id,
-            payload,
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          } as any);
-        },
-      );
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+            void opts.next({
+              id,
+              payload,
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            } as any)
+          },
+        )
 
-      await createRepositoryWebhook({
-        repository: opts.inputs.repository,
-        webhook: opts.webhook,
-        state: opts.state,
-      });
-    },
-  });
-});
+        await createRepositoryWebhook({
+          repository: opts.inputs.repository,
+          webhook: opts.webhook,
+          state: opts.state,
+        })
+      },
+    })
+  },
+)
 
 export const getIssue = nodes.callable({
   description: 'Get details of a specific issue',
@@ -63,13 +63,13 @@ export const getIssue = nodes.callable({
     const issue = await opts.state.octokit.rest.issues.get({
       ...extractOwnerAndRepo(opts.inputs.repository),
       issue_number: opts.inputs.number,
-    });
+    })
 
     return opts.next({
       issue: issue.data,
-    });
+    })
   },
-});
+})
 
 export const createIssue = nodes.callable({
   description: 'Create a new issue in a repository',
@@ -96,13 +96,13 @@ export const createIssue = nodes.callable({
       body: opts.inputs.body,
       labels: opts.inputs.labels,
       assignees: opts.inputs.assignees,
-    });
+    })
 
     return opts.next({
       issue: issues.data,
-    });
+    })
   },
-});
+})
 
 export const updateIssue = nodes.callable({
   description: 'Update an existing issue',
@@ -137,13 +137,13 @@ export const updateIssue = nodes.callable({
       title: opts.inputs.title,
       body: opts.inputs.body,
       state: opts.inputs.state,
-    });
+    })
 
     return opts.next({
       issue: issues.data,
-    });
+    })
   },
-});
+})
 
 export const listIssues = nodes.callable({
   description: 'List issues in a repository',
@@ -165,10 +165,10 @@ export const listIssues = nodes.callable({
       ...extractOwnerAndRepo(opts.inputs.repository),
       state: opts.inputs.state,
       labels: opts.inputs.labels?.join(','),
-    });
+    })
 
     return opts.next({
       issues: issues.data,
-    });
+    })
   },
-});
+})

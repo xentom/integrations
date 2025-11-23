@@ -1,2 +1,2 @@
-export * from './channels';
-export * from './messaging';
+export * from './channels'
+export * from './messaging'

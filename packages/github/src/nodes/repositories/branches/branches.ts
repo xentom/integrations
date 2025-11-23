@@ -1,11 +1,11 @@
-import * as i from '@xentom/integration-framework';
+import * as i from '@xentom/integration-framework'
 
-import { type components } from '@octokit/openapi-types';
+import { type components } from '@octokit/openapi-types'
 
-import { extractOwnerAndRepo } from '@/helpers/options';
-import * as pins from '@/pins';
+import { extractOwnerAndRepo } from '@/helpers/options'
+import * as pins from '@/pins'
 
-const nodes = i.nodes.group('Repositories/Branches');
+const nodes = i.nodes.group('Repositories/Branches')
 
 export const listBranches = nodes.callable({
   description: 'List repository branches',
@@ -20,13 +20,13 @@ export const listBranches = nodes.callable({
   async run(opts) {
     const branches = await opts.state.octokit.rest.repos.listBranches({
       ...extractOwnerAndRepo(opts.inputs.repository),
-    });
+    })
 
     return opts.next({
       branches: branches.data,
-    });
+    })
   },
-});
+})
 
 export const getBranch = nodes.callable({
   description: 'Get details for a branch',
@@ -43,13 +43,13 @@ export const getBranch = nodes.callable({
     const branch = await opts.state.octokit.rest.repos.getBranch({
       ...extractOwnerAndRepo(opts.inputs.repository),
       branch: opts.inputs.branch,
-    });
+    })
 
     return opts.next({
       branch: branch.data,
-    });
+    })
   },
-});
+})
 
 export const createBranch = nodes.callable({
   description: 'Create a new branch from a commit',
@@ -73,10 +73,10 @@ export const createBranch = nodes.callable({
       ...extractOwnerAndRepo(opts.inputs.repository),
       ref: `refs/heads/${opts.inputs.branchName}`,
       sha: opts.inputs.commitSha,
-    });
+    })
 
     return opts.next({
       branch: branch.data,
-    });
+    })
   },
-});
+})

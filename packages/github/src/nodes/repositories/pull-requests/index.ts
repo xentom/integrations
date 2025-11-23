@@ -1,1 +1,1 @@
-export * from './pull-requests';
+export * from './pull-requests'

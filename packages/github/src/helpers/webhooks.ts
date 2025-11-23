@@ -1,11 +1,11 @@
-import type * as i from '@xentom/integration-framework';
+import type * as i from '@xentom/integration-framework'
 
-import { extractOwnerAndRepo } from './options';
+import { extractOwnerAndRepo } from './options'
 
 interface CreateRepositoryWebhookOptions {
-  repository: string;
-  state: i.IntegrationState;
-  webhook: i.Webhook;
+  repository: string
+  state: i.IntegrationState
+  webhook: i.Webhook
 }
 
 export async function createRepositoryWebhook(
@@ -31,7 +31,7 @@ export async function createRepositoryWebhook(
         secret: options.state.webhookSecret,
         content_type: 'json',
       },
-    });
+    })
   } catch (error) {
     if (
       error instanceof Error &&
@@ -39,8 +39,8 @@ export async function createRepositoryWebhook(
     ) {
       // Webhook already exists, do nothing
     } else {
-      console.error('Error creating webhook:', error);
-      throw error;
+      console.error('Error creating webhook:', error)
+      throw error
     }
   }
 }

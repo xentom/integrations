@@ -1,8 +1,8 @@
-import * as i from '@xentom/integration-framework';
+import * as i from '@xentom/integration-framework'
 
-import * as pins from '@/pins';
+import * as pins from '@/pins'
 
-const nodes = i.nodes.group('Audiences');
+const nodes = i.nodes.group('Audiences')
 
 export const createAudience = nodes.callable({
   description: 'Create a new audience in Resend.',
@@ -20,17 +20,17 @@ export const createAudience = nodes.callable({
   async run(opts) {
     const response = await opts.state.resend.audiences.create({
       name: opts.inputs.name,
-    });
+    })
 
     if (response.error) {
-      throw new Error(response.error.message);
+      throw new Error(response.error.message)
     }
 
     return opts.next({
       id: response.data.id,
-    });
+    })
   },
-});
+})
 
 export const listAudiences = nodes.callable({
   description: 'List all audiences in Resend.',
@@ -40,17 +40,17 @@ export const listAudiences = nodes.callable({
     }),
   },
   async run(opts) {
-    const response = await opts.state.resend.audiences.list();
+    const response = await opts.state.resend.audiences.list()
 
     if (response.error) {
-      throw new Error(response.error.message);
+      throw new Error(response.error.message)
     }
 
     return opts.next({
       audiences: response.data.data,
-    });
+    })
   },
-});
+})
 
 export const getAudience = nodes.callable({
   description: 'Get a specific audience by ID.',
@@ -65,17 +65,17 @@ export const getAudience = nodes.callable({
     }),
   },
   async run(opts) {
-    const response = await opts.state.resend.audiences.get(opts.inputs.id);
+    const response = await opts.state.resend.audiences.get(opts.inputs.id)
 
     if (response.error) {
-      throw new Error(response.error.message);
+      throw new Error(response.error.message)
     }
 
     return opts.next({
       audience: response.data,
-    });
+    })
   },
-});
+})
 
 export const deleteAudience = nodes.callable({
   description: 'Delete an audience by ID.',
@@ -91,18 +91,18 @@ export const deleteAudience = nodes.callable({
     }),
   },
   async run(opts) {
-    const response = await opts.state.resend.audiences.remove(opts.inputs.id);
+    const response = await opts.state.resend.audiences.remove(opts.inputs.id)
 
     if (response.error) {
-      throw new Error(response.error.message);
+      throw new Error(response.error.message)
     }
 
     if (!response.data.deleted) {
-      throw new Error('Failed to delete audience');
+      throw new Error('Failed to delete audience')
     }
 
     return opts.next({
       id: response.data.id,
-    });
+    })
   },
-});
+})

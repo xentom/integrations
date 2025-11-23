@@ -1,9 +1,9 @@
-import * as i from '@xentom/integration-framework';
-import * as v from 'valibot';
+import * as i from '@xentom/integration-framework'
+import * as v from 'valibot'
 
-import * as pins from '@/pins';
+import * as pins from '@/pins'
 
-const nodes = i.nodes.group('Threads');
+const nodes = i.nodes.group('Threads')
 
 export const getThread = nodes.callable({
   description: 'Retrieve a specific Gmail conversation thread by ID',
@@ -21,13 +21,13 @@ export const getThread = nodes.callable({
       userId: 'me',
       id: opts.inputs.id,
       format: opts.inputs.format,
-    });
+    })
 
     return opts.next({
       thread: response.data,
-    });
+    })
   },
-});
+})
 
 export const listThreads = nodes.callable({
   description: 'Search and retrieve Gmail conversation threads',
@@ -55,14 +55,14 @@ export const listThreads = nodes.callable({
       q: opts.inputs.query,
       labelIds: opts.inputs.labelIds,
       maxResults: opts.inputs.maxResults,
-    });
+    })
 
     return opts.next({
       threads: response.data.threads ?? [],
       resultSizeEstimate: response.data.resultSizeEstimate ?? 0,
-    });
+    })
   },
-});
+})
 
 export const modifyThread = nodes.callable({
   description: 'Add or remove labels from all messages in a thread',
@@ -90,13 +90,13 @@ export const modifyThread = nodes.callable({
         addLabelIds: opts.inputs.addLabelIds,
         removeLabelIds: opts.inputs.removeLabelIds,
       },
-    });
+    })
 
     return opts.next({
       thread: response.data,
-    });
+    })
   },
-});
+})
 
 export const deleteThread = nodes.callable({
   description: 'Permanently delete an entire conversation thread',
@@ -107,6 +107,6 @@ export const deleteThread = nodes.callable({
     await opts.state.gmail.users.threads.delete({
       userId: 'me',
       id: opts.inputs.id,
-    });
+    })
   },
-});
+})

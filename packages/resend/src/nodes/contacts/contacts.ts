@@ -1,8 +1,8 @@
-import * as i from '@xentom/integration-framework';
+import * as i from '@xentom/integration-framework'
 
-import * as pins from '@/pins';
+import * as pins from '@/pins'
 
-const nodes = i.nodes.group('Contacts');
+const nodes = i.nodes.group('Contacts')
 
 export const createContact = nodes.callable({
   description: 'Create a new contact in Resend.',
@@ -36,17 +36,17 @@ export const createContact = nodes.callable({
       lastName: opts.inputs.lastName,
       unsubscribed: opts.inputs.unsubscribed,
       audienceId: opts.inputs.audienceId,
-    });
+    })
 
     if (response.error) {
-      throw new Error(response.error.message);
+      throw new Error(response.error.message)
     }
 
     return opts.next({
       id: response.data.id,
-    });
+    })
   },
-});
+})
 
 export const getContact = nodes.callable({
   description: 'Retrieve a contact by its ID.',
@@ -67,7 +67,7 @@ export const getContact = nodes.callable({
   },
   async run(opts) {
     if (!opts.inputs.id && !opts.inputs.email) {
-      throw new Error('Either ID or email must be provided.');
+      throw new Error('Either ID or email must be provided.')
     }
 
     const response = await opts.state.resend.contacts.get({
@@ -76,17 +76,17 @@ export const getContact = nodes.callable({
         ? { id: opts.inputs.id }
         : // biome-ignore lint/style/noNonNullAssertion: <email is guaranteed to be provided>
           { email: opts.inputs.email! }),
-    });
+    })
 
     if (response.error) {
-      throw new Error(response.error.message);
+      throw new Error(response.error.message)
     }
 
     return opts.next({
       contact: response.data,
-    });
+    })
   },
-});
+})
 
 export const listContacts = nodes.callable({
   description: 'List all contacts in Resend.',
@@ -101,17 +101,17 @@ export const listContacts = nodes.callable({
   async run(opts) {
     const response = await opts.state.resend.contacts.list({
       audienceId: opts.inputs.audienceId,
-    });
+    })
 
     if (response.error) {
-      throw new Error(response.error.message);
+      throw new Error(response.error.message)
     }
 
     return opts.next({
       contacts: response.data.data,
-    });
+    })
   },
-});
+})
 
 export const updateContact = nodes.callable({
   description: 'Update an existing contact by its ID.',
@@ -145,7 +145,7 @@ export const updateContact = nodes.callable({
   },
   async run(opts) {
     if (!opts.inputs.id && !opts.inputs.email) {
-      throw new Error('Either ID or email must be provided.');
+      throw new Error('Either ID or email must be provided.')
     }
 
     const response = await opts.state.resend.contacts.update({
@@ -158,17 +158,17 @@ export const updateContact = nodes.callable({
         ? { id: opts.inputs.id }
         : // biome-ignore lint/style/noNonNullAssertion: <email is guaranteed to be provided>
           { email: opts.inputs.email! }),
-    });
+    })
 
     if (response.error) {
-      throw new Error(response.error.message);
+      throw new Error(response.error.message)
     }
 
     return opts.next({
       id: response.data.id,
-    });
+    })
   },
-});
+})
 
 export const deleteContact = nodes.callable({
   description: 'Delete a contact by its ID.',
@@ -188,14 +188,14 @@ export const deleteContact = nodes.callable({
     const response = await opts.state.resend.contacts.remove({
       audienceId: opts.inputs.audienceId,
       id: opts.inputs.id,
-    });
+    })
 
     if (response.error) {
-      throw new Error(response.error.message);
+      throw new Error(response.error.message)
     }
 
     return opts.next({
       id: response.data.contact,
-    });
+    })
   },
-});
+})

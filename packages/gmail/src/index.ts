@@ -1,22 +1,22 @@
-import * as i from '@xentom/integration-framework';
-import * as v from 'valibot';
+import * as i from '@xentom/integration-framework'
+import * as v from 'valibot'
 
-import { OAuth2Client } from 'google-auth-library';
-import { gmail_v1 } from 'googleapis/build/src/apis/gmail/v1';
-import { pubsub_v1 } from 'googleapis/build/src/apis/pubsub/v1';
+import { OAuth2Client } from 'google-auth-library'
+import { gmail_v1 } from 'googleapis/build/src/apis/gmail/v1'
+import { pubsub_v1 } from 'googleapis/build/src/apis/pubsub/v1'
 
-import * as nodes from './nodes';
+import * as nodes from './nodes'
 
 v.setGlobalConfig({
   abortEarly: true,
   abortPipeEarly: true,
-});
+})
 
 declare module '@xentom/integration-framework' {
   interface IntegrationState {
-    auth: OAuth2Client;
-    gmail: gmail_v1.Gmail;
-    pubsub: pubsub_v1.Pubsub;
+    auth: OAuth2Client
+    gmail: gmail_v1.Gmail
+    pubsub: pubsub_v1.Pubsub
   }
 }
 
@@ -38,7 +38,7 @@ export default i.integration({
     onAccessTokenUpdated(opts) {
       opts.state.auth.setCredentials({
         access_token: opts.auth.accessToken,
-      });
+      })
     },
   }),
 
@@ -47,14 +47,14 @@ export default i.integration({
       credentials: {
         access_token: opts.auth.accessToken,
       },
-    });
+    })
 
     opts.state.gmail = new gmail_v1.Gmail({
       auth: opts.state.auth,
-    });
+    })
 
     opts.state.pubsub = new pubsub_v1.Pubsub({
       auth: opts.state.auth,
-    });
+    })
   },
-});
+})

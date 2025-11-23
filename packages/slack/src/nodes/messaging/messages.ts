@@ -1,57 +1,57 @@
-import * as i from '@xentom/integration-framework';
+import * as i from '@xentom/integration-framework'
 
-import { type AnyBlock, type MessageEvent } from '@slack/web-api';
+import { type AnyBlock, type MessageEvent } from '@slack/web-api'
 
-import * as pins from '@/pins';
-import { type EventPayload } from '@/utils/event';
+import * as pins from '@/pins'
+import { type EventPayload } from '@/utils/event'
 
-const nodes = i.nodes.group('Slack/Messages');
+const nodes = i.nodes.group('Slack/Messages')
 
-export const onMessageEvent = i.generic(<
-  I extends i.GenericInputs<typeof inputs>,
->() => {
-  const inputs = {
-    subtype: pins.message.eventSubtype.with({
-      optional: true,
-    }),
-    channelType: pins.channel.type.with({
-      optional: true,
-    }),
-  };
+export const onMessageEvent = i.generic(
+  <I extends i.GenericInputs<typeof inputs>>() => {
+    const inputs = {
+      subtype: pins.message.eventSubtype.with({
+        optional: true,
+      }),
+      channelType: pins.channel.type.with({
+        optional: true,
+      }),
+    }
 
-  return nodes.trigger({
-    description: 'Triggered when a message is sent.',
-    inputs,
-    outputs: {
-      event: i.pins.data<Extract<MessageEvent, { subtype: I['subtype'] }>>(),
-    },
-    subscribe(opts) {
-      async function onEvent(payload: EventPayload<MessageEvent>) {
-        if (payload.event.subtype !== opts.inputs.subtype) {
-          return;
+    return nodes.trigger({
+      description: 'Triggered when a message is sent.',
+      inputs,
+      outputs: {
+        event: i.pins.data<Extract<MessageEvent, { subtype: I['subtype'] }>>(),
+      },
+      subscribe(opts) {
+        async function onEvent(payload: EventPayload<MessageEvent>) {
+          if (payload.event.subtype !== opts.inputs.subtype) {
+            return
+          }
+
+          if (
+            opts.inputs.channelType &&
+            payload.event.channel_type !== opts.inputs.channelType
+          ) {
+            return
+          }
+
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+          await opts.next({
+            event: payload.event,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          } as any)
         }
 
-        if (
-          opts.inputs.channelType &&
-          payload.event.channel_type !== opts.inputs.channelType
-        ) {
-          return;
+        opts.state.socket.on('message', onEvent)
+        return () => {
+          opts.state.socket.off('message', onEvent)
         }
-
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-        await opts.next({
-          event: payload.event,
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        } as any);
-      }
-
-      opts.state.socket.on('message', onEvent);
-      return () => {
-        opts.state.socket.off('message', onEvent);
-      };
-    },
-  });
-});
+      },
+    })
+  },
+)
 
 export const sendMessage = nodes.callable({
   description:
@@ -85,13 +85,13 @@ export const sendMessage = nodes.callable({
     }),
   },
   async run(opts) {
-    const blocks: AnyBlock[] = opts.inputs.blocks ?? [];
+    const blocks: AnyBlock[] = opts.inputs.blocks ?? []
 
     if (opts.inputs.markdown) {
       blocks.push({
         type: 'markdown',
         text: opts.inputs.markdown,
-      });
+      })
     }
 
     const response = await opts.state.client.chat.postMessage({
@@ -99,14 +99,14 @@ export const sendMessage = nodes.callable({
       thread_ts: opts.inputs.threadTs,
       text: opts.inputs.text ?? opts.inputs.markdown,
       blocks,
-    });
+    })
 
     if (!response.ok || !response.message) {
-      throw new Error(response.error ?? 'Slack API did not return a message.');
+      throw new Error(response.error ?? 'Slack API did not return a message.')
     }
 
     return opts.next({
       message: response.message,
-    });
+    })
   },
-});
+})

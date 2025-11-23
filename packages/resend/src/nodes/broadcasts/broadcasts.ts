@@ -1,15 +1,15 @@
-import * as i from '@xentom/integration-framework';
-import * as v from 'valibot';
+import * as i from '@xentom/integration-framework'
+import * as v from 'valibot'
 
 import {
   type ListBroadcastsResponseSuccess,
   type SendBroadcastResponseSuccess,
   type UpdateBroadcastResponseSuccess,
-} from 'resend';
+} from 'resend'
 
-import * as pins from '@/pins';
+import * as pins from '@/pins'
 
-const nodes = i.nodes.group('Broadcasts');
+const nodes = i.nodes.group('Broadcasts')
 
 export const createBroadcast = nodes.callable({
   description: 'Create a new broadcast.',
@@ -54,7 +54,7 @@ export const createBroadcast = nodes.callable({
   async run(opts) {
     // Validate that at least one EmailRenderOption is provided
     if (!opts.inputs.html && !opts.inputs.text) {
-      throw new Error('At least one of html or text must be provided');
+      throw new Error('At least one of html or text must be provided')
     }
 
     const response = await opts.state.resend.broadcasts.create({
@@ -67,17 +67,17 @@ export const createBroadcast = nodes.callable({
       name: opts.inputs.name,
       previewText: opts.inputs.previewText,
       replyTo: opts.inputs.replyTo,
-    });
+    })
 
     if (response.error) {
-      throw new Error(response.error.message);
+      throw new Error(response.error.message)
     }
 
     return opts.next({
       id: response.data.id,
-    });
+    })
   },
-});
+})
 
 export const getBroadcast = nodes.callable({
   description: 'Retrieve details of a broadcast by its ID.',
@@ -92,17 +92,17 @@ export const getBroadcast = nodes.callable({
     }),
   },
   async run(opts) {
-    const response = await opts.state.resend.broadcasts.get(opts.inputs.id);
+    const response = await opts.state.resend.broadcasts.get(opts.inputs.id)
 
     if (response.error) {
-      throw new Error(response.error.message);
+      throw new Error(response.error.message)
     }
 
     return opts.next({
       broadcast: response.data,
-    });
+    })
   },
-});
+})
 
 export const listBroadcasts = nodes.callable({
   description: 'Retrieve a list of broadcasts.',
@@ -112,17 +112,17 @@ export const listBroadcasts = nodes.callable({
     }),
   },
   async run(opts) {
-    const response = await opts.state.resend.broadcasts.list();
+    const response = await opts.state.resend.broadcasts.list()
 
     if (response.error) {
-      throw new Error(response.error.message);
+      throw new Error(response.error.message)
     }
 
     return opts.next({
       broadcasts: response.data,
-    });
+    })
   },
-});
+})
 
 export const updateBroadcast = nodes.callable({
   description: 'Update an existing broadcast.',
@@ -179,17 +179,17 @@ export const updateBroadcast = nodes.callable({
       text: opts.inputs.text,
       previewText: opts.inputs.previewText,
       replyTo: opts.inputs.replyTo,
-    });
+    })
 
     if (response.error) {
-      throw new Error(response.error.message);
+      throw new Error(response.error.message)
     }
 
     return opts.next({
       broadcast: response.data,
-    });
+    })
   },
-});
+})
 
 export const sendBroadcast = nodes.callable({
   description: 'Send a broadcast to its audience.',
@@ -216,17 +216,17 @@ export const sendBroadcast = nodes.callable({
   async run(opts) {
     const response = await opts.state.resend.broadcasts.send(opts.inputs.id, {
       scheduledAt: opts.inputs.scheduledAt,
-    });
+    })
 
     if (response.error) {
-      throw new Error(response.error.message);
+      throw new Error(response.error.message)
     }
 
     return opts.next({
       broadcast: response.data,
-    });
+    })
   },
-});
+})
 
 export const deleteBroadcast = nodes.callable({
   description: 'Delete a broadcast by its ID.',
@@ -242,18 +242,18 @@ export const deleteBroadcast = nodes.callable({
     }),
   },
   async run(opts) {
-    const response = await opts.state.resend.broadcasts.remove(opts.inputs.id);
+    const response = await opts.state.resend.broadcasts.remove(opts.inputs.id)
 
     if (response.error) {
-      throw new Error(response.error.message);
+      throw new Error(response.error.message)
     }
 
     if (!response.data.deleted) {
-      throw new Error('Failed to delete broadcast');
+      throw new Error('Failed to delete broadcast')
     }
 
     return opts.next({
       id: response.data.id,
-    });
+    })
   },
-});
+})

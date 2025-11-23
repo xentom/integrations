@@ -1,11 +1,11 @@
-import * as i from '@xentom/integration-framework';
-import * as v from 'valibot';
+import * as i from '@xentom/integration-framework'
+import * as v from 'valibot'
 
-import { type GetEmailResponseSuccess } from 'resend';
+import { type GetEmailResponseSuccess } from 'resend'
 
-import * as pins from '@/pins';
+import * as pins from '@/pins'
 
-const nodes = i.nodes.group('Emails');
+const nodes = i.nodes.group('Emails')
 
 export const sendEmail = nodes.callable({
   description: 'Send a simple email using Resend.',
@@ -73,7 +73,7 @@ export const sendEmail = nodes.callable({
   async run(opts) {
     // Validate that at least one content type is provided
     if (!opts.inputs.html && !opts.inputs.text) {
-      throw new Error('At least one of html or text must be provided');
+      throw new Error('At least one of html or text must be provided')
     }
 
     const response = await opts.state.resend.emails.send(
@@ -95,17 +95,17 @@ export const sendEmail = nodes.callable({
       {
         idempotencyKey: opts.inputs.idempotencyKey,
       },
-    );
+    )
 
     if (response.error) {
-      throw new Error(response.error.message);
+      throw new Error(response.error.message)
     }
 
     return opts.next({
       id: response.data.id,
-    });
+    })
   },
-});
+})
 
 export const getEmail = nodes.callable({
   description: 'Retrieve details of a sent email by its ID.',
@@ -118,16 +118,16 @@ export const getEmail = nodes.callable({
     email: i.pins.data<GetEmailResponseSuccess>(),
   },
   async run(opts) {
-    const response = await opts.state.resend.emails.get(opts.inputs.id);
+    const response = await opts.state.resend.emails.get(opts.inputs.id)
     if (response.error) {
-      throw new Error(response.error.message);
+      throw new Error(response.error.message)
     }
 
     return opts.next({
       email: response.data,
-    });
+    })
   },
-});
+})
 
 export const updateEmail = nodes.callable({
   description: 'Update a scheduled email by its ID.',
@@ -153,17 +153,17 @@ export const updateEmail = nodes.callable({
     const response = await opts.state.resend.emails.update({
       id: opts.inputs.id,
       scheduledAt: opts.inputs.scheduledAt,
-    });
+    })
 
     if (response.error) {
-      throw new Error(response.error.message);
+      throw new Error(response.error.message)
     }
 
     return opts.next({
       id: response.data.id,
-    });
+    })
   },
-});
+})
 
 export const cancelEmail = nodes.callable({
   description: 'Cancel a previously sent email by its ID.',
@@ -179,13 +179,13 @@ export const cancelEmail = nodes.callable({
     }),
   },
   async run(opts) {
-    const response = await opts.state.resend.emails.cancel(opts.inputs.id);
+    const response = await opts.state.resend.emails.cancel(opts.inputs.id)
     if (response.error) {
-      throw new Error(response.error.message);
+      throw new Error(response.error.message)
     }
 
     return opts.next({
       id: response.data.id,
-    });
+    })
   },
-});
+})

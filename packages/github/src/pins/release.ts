@@ -1,17 +1,17 @@
-import * as i from '@xentom/integration-framework';
-import * as v from 'valibot';
+import * as i from '@xentom/integration-framework'
+import * as v from 'valibot'
 
-import { type components } from '@octokit/openapi-types';
+import { type components } from '@octokit/openapi-types'
 
-import { extractOwnerAndRepo, hasRepositoryNameInput } from '@/helpers/options';
+import { extractOwnerAndRepo, hasRepositoryNameInput } from '@/helpers/options'
 
 export const item = i.pins.data<components['schemas']['release']>({
   displayName: 'Release',
-});
+})
 
 export const items = i.pins.data<components['schemas']['release'][]>({
   displayName: 'Releases',
-});
+})
 
 export type Action =
   | 'published'
@@ -19,7 +19,7 @@ export type Action =
   | 'created'
   | 'edited'
   | 'deleted'
-  | 'prereleased';
+  | 'prereleased'
 
 export const action = i.pins.data<Action>({
   description: 'The action type of the release',
@@ -34,7 +34,7 @@ export const action = i.pins.data<Action>({
     ],
     defaultValue: 'published',
   }),
-});
+})
 
 export const id = i.pins.data({
   description: 'The ID of the release',
@@ -42,21 +42,21 @@ export const id = i.pins.data({
   control: i.controls.select({
     async options(opts) {
       if (!hasRepositoryNameInput(opts)) {
-        return [];
+        return []
       }
 
       const releases = await opts.state.octokit.rest.repos.listReleases({
         ...extractOwnerAndRepo(opts.node.inputs.repository),
-      });
+      })
 
       return releases.data.map((release) => ({
         label: release.name ?? release.tag_name,
         value: release.id,
         suffix: release.tag_name,
-      }));
+      }))
     },
   }),
-});
+})
 
 export const tagName = i.pins.data({
   description: 'The tag name for the release (e.g., v1.0.0)',
@@ -64,7 +64,7 @@ export const tagName = i.pins.data({
   control: i.controls.text({
     placeholder: 'v1.0.0',
   }),
-});
+})
 
 export const name = i.pins.data({
   description: 'The release title shown to users',
@@ -72,7 +72,7 @@ export const name = i.pins.data({
   control: i.controls.text({
     placeholder: 'July Release',
   }),
-});
+})
 
 export const body = i.pins.data({
   description: 'Release notes describing the changes',
@@ -82,19 +82,19 @@ export const body = i.pins.data({
     placeholder: 'Highlights, fixes, and known issues',
     rows: 3,
   }),
-});
+})
 
 export const draft = i.pins.data({
   description: 'Whether the release is a draft',
   schema: v.boolean(),
   control: i.controls.switch(),
-});
+})
 
 export const prerelease = i.pins.data({
   description: 'Whether the release is a prerelease',
   schema: v.boolean(),
   control: i.controls.switch(),
-});
+})
 
 export const targetCommitish = i.pins.data({
   description: 'Branch or commit SHA to create or update the tag from',
@@ -102,15 +102,11 @@ export const targetCommitish = i.pins.data({
   control: i.controls.text({
     placeholder: 'main',
   }),
-});
+})
 
 export const makeLatest = i.pins.data({
   description: 'Whether this release should be marked as the latest',
-  schema: v.union([
-    v.literal('true'),
-    v.literal('false'),
-    v.literal('legacy'),
-  ]),
+  schema: v.union([v.literal('true'), v.literal('false'), v.literal('legacy')]),
   control: i.controls.select({
     options: [
       {
@@ -127,4 +123,4 @@ export const makeLatest = i.pins.data({
       },
     ],
   }),
-});
+})

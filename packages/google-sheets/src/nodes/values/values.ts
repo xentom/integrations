@@ -1,10 +1,10 @@
-import * as i from '@xentom/integration-framework';
+import * as i from '@xentom/integration-framework'
 
-import { type sheets_v4 } from 'googleapis/build/src/apis/sheets/v4';
+import { type sheets_v4 } from 'googleapis/build/src/apis/sheets/v4'
 
-import * as pins from '@/pins';
+import * as pins from '@/pins'
 
-const nodes = i.nodes.group('Values');
+const nodes = i.nodes.group('Values')
 
 export const getValues = nodes.callable({
   displayName: 'Get Values',
@@ -25,13 +25,13 @@ export const getValues = nodes.callable({
     const response = await opts.state.sheets.spreadsheets.values.get({
       spreadsheetId: opts.inputs.spreadsheetId,
       range: addSheetNameToRange(opts.inputs),
-    });
+    })
 
     await opts.next({
       values: response.data.values ?? [],
-    });
+    })
   },
-});
+})
 
 export const updateValues = nodes.callable({
   displayName: 'Update Values',
@@ -55,13 +55,13 @@ export const updateValues = nodes.callable({
       requestBody: {
         values: opts.inputs.values,
       },
-    });
+    })
 
     await opts.next({
       response: response.data,
-    });
+    })
   },
-});
+})
 
 export const appendValues = nodes.callable({
   displayName: 'Append Values',
@@ -86,13 +86,13 @@ export const appendValues = nodes.callable({
       requestBody: {
         values: opts.inputs.values,
       },
-    });
+    })
 
     await opts.next({
       response: response.data,
-    });
+    })
   },
-});
+})
 
 export const clearValues = nodes.callable({
   displayName: 'Clear Values',
@@ -111,18 +111,18 @@ export const clearValues = nodes.callable({
     const response = await opts.state.sheets.spreadsheets.values.clear({
       spreadsheetId: opts.inputs.spreadsheetId,
       range: addSheetNameToRange(opts.inputs),
-    });
+    })
 
     await opts.next({
       response: response.data,
-    });
+    })
   },
-});
+})
 
 function addSheetNameToRange(inputs: { range: string; sheet?: string }) {
   if (inputs.sheet && !inputs.range.includes('!')) {
-    return `${inputs.sheet}!${inputs.range}`;
+    return `${inputs.sheet}!${inputs.range}`
   }
 
-  return inputs.range;
+  return inputs.range
 }

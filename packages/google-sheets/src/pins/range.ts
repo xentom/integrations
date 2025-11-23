@@ -1,5 +1,5 @@
-import * as i from '@xentom/integration-framework';
-import * as v from 'valibot';
+import * as i from '@xentom/integration-framework'
+import * as v from 'valibot'
 
 export const range = i.pins.data({
   displayName: 'Range',
@@ -46,7 +46,7 @@ export const range = i.pins.data({
       value: "'My Custom Sheet'",
     },
   ],
-});
+})
 
 export const values = i.pins.data({
   displayName: 'Values',
@@ -55,4 +55,4 @@ export const values = i.pins.data({
   control: i.controls.expression({
     placeholder: '[["A", "B", "C"]]',
   }),
-});
+})

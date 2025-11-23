@@ -1,18 +1,18 @@
-import * as i from '@xentom/integration-framework';
-import * as v from 'valibot';
+import * as i from '@xentom/integration-framework'
+import * as v from 'valibot'
 
-import { TeamSpeakChannel } from 'ts3-nodejs-library';
-import { type ChannelEntry } from 'ts3-nodejs-library/lib/types/ResponseTypes';
+import { TeamSpeakChannel } from 'ts3-nodejs-library'
+import { type ChannelEntry } from 'ts3-nodejs-library/lib/types/ResponseTypes'
 
 export const item = {
   input: i.pins.data({
     schema({ state }) {
       return v.pipe(
         v.custom<ChannelEntry>((value) => {
-          return !!value && typeof value === 'object' && 'cid' in value;
+          return !!value && typeof value === 'object' && 'cid' in value
         }),
         v.transform((data) => new TeamSpeakChannel(state.teamspeak, data)),
-      );
+      )
     },
   }),
   output: i.pins.data({
@@ -21,22 +21,22 @@ export const item = {
       v.transform((channel) => channel.toJSON() as ChannelEntry),
     ),
   }),
-};
+}
 
 export const items = {
   output: i.pins.data({
     schema: v.pipe(
       v.array(
         v.custom<TeamSpeakChannel>((value) => {
-          return value instanceof TeamSpeakChannel;
+          return value instanceof TeamSpeakChannel
         }),
       ),
       v.transform((channels) => {
-        return channels.map((channel) => channel.toJSON() as ChannelEntry);
+        return channels.map((channel) => channel.toJSON() as ChannelEntry)
       }),
     ),
   }),
-};
+}
 
 export const id = i.pins.data({
   displayName: 'ID',
@@ -45,19 +45,19 @@ export const id = i.pins.data({
   control: i.controls.text({
     placeholder: '1',
   }),
-});
+})
 
 export const idSelection = id.with({
   control: i.controls.select({
     async options(opts) {
-      const channels = await opts.state.teamspeak.channelList();
+      const channels = await opts.state.teamspeak.channelList()
       return channels.map((channel) => ({
         value: channel.cid,
         suffix: channel.name,
-      }));
+      }))
     },
   }),
-});
+})
 
 export const parentId = i.pins.data({
   displayName: 'Parent Channel ID',
@@ -66,12 +66,12 @@ export const parentId = i.pins.data({
   control: i.controls.text({
     placeholder: '0',
   }),
-});
+})
 
 export const parentIdSelection = parentId.with({
   control: i.controls.select({
     async options(opts) {
-      const channels = await opts.state.teamspeak.channelList();
+      const channels = await opts.state.teamspeak.channelList()
       return [
         {
           value: '0',
@@ -81,10 +81,10 @@ export const parentIdSelection = parentId.with({
           value: channel.cid,
           suffix: channel.name,
         })),
-      ];
+      ]
     },
   }),
-});
+})
 
 export const name = i.pins.data({
   displayName: 'Name',
@@ -93,21 +93,21 @@ export const name = i.pins.data({
   control: i.controls.text({
     placeholder: 'Default Channel',
   }),
-});
+})
 
 export const nameSelection = name.with({
   control: i.controls.select({
     async options(opts) {
-      const channels = await opts.state.teamspeak.channelList();
+      const channels = await opts.state.teamspeak.channelList()
       return channels.map((channel) => {
         return {
           value: channel.name,
           label: channel.name,
-        };
-      });
+        }
+      })
     },
   }),
-});
+})
 
 export const topic = i.pins.data({
   displayName: 'Topic',
@@ -116,7 +116,7 @@ export const topic = i.pins.data({
   control: i.controls.text({
     placeholder: 'Channel topic...',
   }),
-});
+})
 
 export const password = i.pins.data({
   displayName: 'Password',
@@ -125,7 +125,7 @@ export const password = i.pins.data({
   control: i.controls.text({
     placeholder: 'Enter password...',
   }),
-});
+})
 
 export const description = i.pins.data({
   displayName: 'Description',
@@ -134,7 +134,7 @@ export const description = i.pins.data({
     placeholder: 'Channel description...',
   }),
   schema: v.string(),
-});
+})
 
 export enum ChannelType {
   TEMPORARY = 0,
@@ -154,7 +154,7 @@ export const type = i.pins.data<ChannelType>({
     ],
     defaultValue: ChannelType.TEMPORARY,
   }),
-});
+})
 
 export const codec = i.pins.data({
   displayName: 'Codec',
@@ -171,7 +171,7 @@ export const codec = i.pins.data({
     ],
     defaultValue: 4,
   }),
-});
+})
 
 export const codecQuality = i.pins.data({
   displayName: 'Codec Quality',
@@ -181,7 +181,7 @@ export const codecQuality = i.pins.data({
     placeholder: '6',
     defaultValue: 6,
   }),
-});
+})
 
 export const maxClients = i.pins.data({
   displayName: 'Max Clients',
@@ -190,14 +190,14 @@ export const maxClients = i.pins.data({
   control: i.controls.expression({
     defaultValue: -1,
   }),
-});
+})
 
 export const maxFamilyClients = i.pins.data({
   displayName: 'Max Family Clients',
   description: 'Maximum number of clients in the channel family',
   schema: v.pipe(v.number(), v.minValue(-1)),
   control: i.controls.expression(),
-});
+})
 
 export const order = i.pins.data({
   displayName: 'Order',
@@ -207,7 +207,7 @@ export const order = i.pins.data({
     placeholder: '0',
     defaultValue: 0,
   }),
-});
+})
 
 export const neededTalkPower = i.pins.data({
   displayName: 'Needed Talk Power',
@@ -217,7 +217,7 @@ export const neededTalkPower = i.pins.data({
     placeholder: '0',
     defaultValue: 0,
   }),
-});
+})
 
 export const namePhonetic = i.pins.data({
   displayName: 'Phonetic Name',
@@ -226,7 +226,7 @@ export const namePhonetic = i.pins.data({
   control: i.controls.text({
     placeholder: 'Phonetic pronunciation...',
   }),
-});
+})
 
 // Channel flags
 export const flagDefault = i.pins.data({
@@ -236,25 +236,25 @@ export const flagDefault = i.pins.data({
   control: i.controls.switch({
     defaultValue: false,
   }),
-});
+})
 
 export const flagMaxClientsUnlimited = i.pins.data({
   displayName: 'Unlimited Max Clients',
   description: 'Whether max clients is unlimited',
   schema: v.boolean(),
   control: i.controls.switch(),
-});
+})
 
 export const flagMaxFamilyClientsInherited = i.pins.data({
   displayName: 'Inherit Max Family Clients',
   description: 'Whether max family clients is inherited',
   schema: v.boolean(),
   control: i.controls.switch(),
-});
+})
 
 export const codecIsUnencrypted = i.pins.data({
   displayName: 'Unencrypted Codec',
   description: 'Whether the codec is unencrypted',
   schema: v.boolean(),
   control: i.controls.switch(),
-});
+})

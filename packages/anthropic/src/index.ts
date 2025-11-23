@@ -1,18 +1,18 @@
-import * as i from '@xentom/integration-framework';
-import * as v from 'valibot';
+import * as i from '@xentom/integration-framework'
+import * as v from 'valibot'
 
-import Anthropic from '@anthropic-ai/sdk';
+import Anthropic from '@anthropic-ai/sdk'
 
-import * as nodes from './nodes';
+import * as nodes from './nodes'
 
 v.setGlobalConfig({
   abortEarly: true,
   abortPipeEarly: true,
-});
+})
 
 declare module '@xentom/integration-framework' {
   interface IntegrationState {
-    client: Anthropic;
+    client: Anthropic
   }
 }
 
@@ -30,9 +30,9 @@ export default i.integration({
       v.string(),
       v.startsWith('sk-ant-'),
       v.checkAsync(async (apiKey) => {
-        const client = new Anthropic({ apiKey });
-        await client.models.list({ limit: 1 });
-        return true;
+        const client = new Anthropic({ apiKey })
+        await client.models.list({ limit: 1 })
+        return true
       }, 'Invalid Anthropic API key. Please check your key and permissions.'),
     ),
   }),
@@ -40,6 +40,6 @@ export default i.integration({
   start({ state, auth }) {
     state.client = new Anthropic({
       apiKey: auth.token,
-    });
+    })
   },
-});
+})

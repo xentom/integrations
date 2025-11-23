@@ -1,1 +1,1 @@
-export * from './drafts';
+export * from './drafts'

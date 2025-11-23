@@ -1,11 +1,11 @@
-import * as i from '@xentom/integration-framework';
-import * as z from 'zod';
+import * as i from '@xentom/integration-framework'
+import * as z from 'zod'
 
-import { type FilePurpose } from 'openai/resources';
+import { type FilePurpose } from 'openai/resources'
 
-import * as pins from '@/pins';
+import * as pins from '@/pins'
 
-const nodes = i.nodes.group('Files');
+const nodes = i.nodes.group('Files')
 
 export const createFile = nodes.callable({
   inputs: {
@@ -63,25 +63,25 @@ export const createFile = nodes.callable({
     const file = await opts.state.client.files.create({
       file: opts.inputs.file,
       purpose: opts.inputs.purpose,
-    });
+    })
 
     return opts.next({
       file,
-    });
+    })
   },
-});
+})
 
 export const deleteFile = nodes.callable({
   inputs: {
     fileId: pins.file.id,
   },
   async run(opts) {
-    const file = await opts.state.client.files.delete(opts.inputs.fileId);
+    const file = await opts.state.client.files.delete(opts.inputs.fileId)
     if (!file.deleted) {
-      throw new Error(`Failed to delete file with ID: ${opts.inputs.fileId}`);
+      throw new Error(`Failed to delete file with ID: ${opts.inputs.fileId}`)
     }
   },
-});
+})
 
 export const listFiles = nodes.callable({
   inputs: {
@@ -109,14 +109,14 @@ export const listFiles = nodes.callable({
     const files = await opts.state.client.files.list({
       limit: opts.inputs.limit,
       after: opts.inputs.after,
-    });
+    })
 
     return opts.next({
       files: files.data,
       hasMore: files.has_more,
-    });
+    })
   },
-});
+})
 
 export const getFile = nodes.callable({
   inputs: {
@@ -126,12 +126,12 @@ export const getFile = nodes.callable({
     file: pins.file.item,
   },
   async run(opts) {
-    const file = await opts.state.client.files.retrieve(opts.inputs.fileId);
+    const file = await opts.state.client.files.retrieve(opts.inputs.fileId)
     return opts.next({
       file,
-    });
+    })
   },
-});
+})
 
 export const fileContent = nodes.callable({
   inputs: {
@@ -144,12 +144,12 @@ export const fileContent = nodes.callable({
     }),
   },
   async run(opts) {
-    const content = await opts.state.client.files.content(opts.inputs.fileId);
+    const content = await opts.state.client.files.content(opts.inputs.fileId)
     return opts.next({
       content,
-    });
+    })
   },
-});
+})
 
 export const waitForFileProcessing = nodes.callable({
   inputs: {
@@ -176,10 +176,10 @@ export const waitForFileProcessing = nodes.callable({
         pollInterval: opts.inputs.pollInterval,
         maxWait: opts.inputs.maxWait,
       },
-    );
+    )
 
     return opts.next({
       file,
-    });
+    })
   },
-});
+})

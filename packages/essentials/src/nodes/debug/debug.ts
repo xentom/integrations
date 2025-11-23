@@ -1,7 +1,7 @@
-import * as i from '@xentom/integration-framework';
-import * as v from 'valibot';
+import * as i from '@xentom/integration-framework'
+import * as v from 'valibot'
 
-const nodes = i.nodes.group('Debug');
+const nodes = i.nodes.group('Debug')
 
 export const log = nodes.callable({
   inputs: {
@@ -13,10 +13,10 @@ export const log = nodes.callable({
     }),
   },
   run(opts) {
-    console.log(opts.inputs.message);
-    return opts.next();
+    console.log(opts.inputs.message)
+    return opts.next()
   },
-});
+})
 
 export const error = nodes.callable({
   inputs: {
@@ -28,9 +28,9 @@ export const error = nodes.callable({
     }),
   },
   run(opts) {
-    throw new Error(opts.inputs.message);
+    throw new Error(opts.inputs.message)
   },
-});
+})
 
 export const evaluate = nodes.callable({
   inputs: {
@@ -52,10 +52,10 @@ export const evaluate = nodes.callable({
     const result = await new Function(
       ...Object.keys(opts.variables),
       `"use strict"; return (async () => { ${opts.inputs.code} })();`,
-    )(...Object.values(opts.variables));
+    )(...Object.values(opts.variables))
 
     return opts.next({
       result,
-    });
+    })
   },
-});
+})

@@ -1,17 +1,17 @@
-import * as i from '@xentom/integration-framework';
+import * as i from '@xentom/integration-framework'
 
-const nodes = i.nodes.group('Workflows');
+const nodes = i.nodes.group('Workflows')
 
 export const onWorkflowStart = nodes.trigger({
   subscribe(opts) {
-    void opts.next();
+    void opts.next()
   },
-});
+})
 
 export const onWorkflowEnd = nodes.trigger({
   subscribe(opts) {
     return async () => {
-      await opts.next();
-    };
+      await opts.next()
+    }
   },
-});
+})

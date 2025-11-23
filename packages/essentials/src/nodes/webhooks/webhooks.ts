@@ -1,10 +1,10 @@
-import * as i from '@xentom/integration-framework';
-import * as v from 'valibot';
+import * as i from '@xentom/integration-framework'
+import * as v from 'valibot'
 
-import * as pins from '@/pins';
-import { parseRequestBody, responses } from './webhooks.utils';
+import * as pins from '@/pins'
+import { parseRequestBody, responses } from './webhooks.utils'
 
-const nodes = i.nodes.group('Webhooks');
+const nodes = i.nodes.group('Webhooks')
 
 export const onWebhook = nodes.trigger({
   inputs: {
@@ -37,24 +37,24 @@ export const onWebhook = nodes.trigger({
   subscribe(opts) {
     console.log(
       `Webhook url registered: ${opts.webhook.url}?webhook-key=${opts.inputs.webhookKey}`,
-    );
+    )
 
     return opts.webhook.subscribe(async (req) => {
       if (req.method !== opts.inputs.method) {
-        return;
+        return
       }
 
-      const headers = req.headers.toJSON();
+      const headers = req.headers.toJSON()
       const webhookKey =
         headers['X-Webhook-Key'] ||
-        new URL(req.url).searchParams.get('webhook-key');
+        new URL(req.url).searchParams.get('webhook-key')
 
       if (webhookKey !== opts.inputs.webhookKey) {
-        return;
+        return
       }
 
-      const body = await parseRequestBody(req, headers);
-      const requestId = Bun.randomUUIDv7();
+      const body = await parseRequestBody(req, headers)
+      const requestId = Bun.randomUUIDv7()
 
       if (!opts.inputs.customResponse) {
         void opts.next(
@@ -67,14 +67,14 @@ export const onWebhook = nodes.trigger({
             },
           },
           { requestId },
-        );
+        )
 
-        return;
+        return
       }
 
       const promise = new Promise<Response>((resolve) => {
-        responses.once(requestId, resolve);
-      });
+        responses.once(requestId, resolve)
+      })
 
       void opts.next(
         {
@@ -86,16 +86,16 @@ export const onWebhook = nodes.trigger({
           },
         },
         { requestId },
-      );
+      )
 
       return await Promise.race([
         promise,
         new Promise<Response>((resolve) => {
           setTimeout(() => {
-            resolve(new Response('Timeout', { status: 408 }));
-          }, 10000);
+            resolve(new Response('Timeout', { status: 408 }))
+          }, 10000)
         }),
-      ]);
-    });
+      ])
+    })
   },
-});
+})

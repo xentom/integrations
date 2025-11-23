@@ -1,14 +1,14 @@
-import * as i from '@xentom/integration-framework';
+import * as i from '@xentom/integration-framework'
 
-import { type EmitterWebhookEvent } from '@octokit/webhooks/types';
+import { type EmitterWebhookEvent } from '@octokit/webhooks/types'
 
-import { extractOwnerAndRepo } from '@/helpers/options';
-import { createRepositoryWebhook } from '@/helpers/webhooks';
-import * as pins from '@/pins';
+import { extractOwnerAndRepo } from '@/helpers/options'
+import { createRepositoryWebhook } from '@/helpers/webhooks'
+import * as pins from '@/pins'
 
-const nodes = i.nodes.group('Repositories/Commits');
+const nodes = i.nodes.group('Repositories/Commits')
 
-type WebhookEvent = EmitterWebhookEvent<'push'>;
+type WebhookEvent = EmitterWebhookEvent<'push'>
 
 export const onPush = nodes.trigger({
   inputs: {
@@ -21,22 +21,22 @@ export const onPush = nodes.trigger({
   async subscribe(opts) {
     opts.state.webhooks.on('push', ({ id, payload }) => {
       if (payload.repository.full_name !== opts.inputs.repository) {
-        return;
+        return
       }
 
       void opts.next({
         id,
         payload,
-      });
-    });
+      })
+    })
 
     await createRepositoryWebhook({
       repository: opts.inputs.repository,
       webhook: opts.webhook,
       state: opts.state,
-    });
+    })
   },
-});
+})
 
 export const listCommits = nodes.callable({
   description: 'List recent commits for a repository',
@@ -54,13 +54,13 @@ export const listCommits = nodes.callable({
     const commits = await opts.state.octokit.rest.repos.listCommits({
       ...extractOwnerAndRepo(opts.inputs.repository),
       sha: opts.inputs.branch,
-    });
+    })
 
     return opts.next({
       commits: commits.data,
-    });
+    })
   },
-});
+})
 
 export const getCommit = nodes.callable({
   description: 'Get details for a commit',
@@ -75,10 +75,10 @@ export const getCommit = nodes.callable({
     const commit = await opts.state.octokit.rest.repos.getCommit({
       ...extractOwnerAndRepo(opts.inputs.repository),
       ref: opts.inputs.sha,
-    });
+    })
 
     return opts.next({
       commit: commit.data,
-    });
+    })
   },
-});
+})

@@ -1,7 +1,7 @@
-import * as i from '@xentom/integration-framework';
-import * as v from 'valibot';
+import * as i from '@xentom/integration-framework'
+import * as v from 'valibot'
 
-const nodes = i.nodes.group('Data types/Primitives');
+const nodes = i.nodes.group('Data types/Primitives')
 
 export const number = nodes.pure({
   outputs: {
@@ -14,7 +14,7 @@ export const number = nodes.pure({
       schema: v.number(),
     }),
   },
-});
+})
 
 export const string = nodes.pure({
   outputs: {
@@ -27,7 +27,7 @@ export const string = nodes.pure({
       schema: v.string(),
     }),
   },
-});
+})
 
 export const boolean = nodes.pure({
   outputs: {
@@ -39,4 +39,4 @@ export const boolean = nodes.pure({
       schema: v.boolean(),
     }),
   },
-});
+})

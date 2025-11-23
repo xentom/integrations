@@ -1,18 +1,18 @@
-import * as i from '@xentom/integration-framework';
-import * as v from 'valibot';
+import * as i from '@xentom/integration-framework'
+import * as v from 'valibot'
 
-import * as common from '@/pins/common';
+import * as common from '@/pins/common'
 
-const EmailSchmea = v.pipe(v.string(), v.trim(), v.email());
+const EmailSchmea = v.pipe(v.string(), v.trim(), v.email())
 
 export const id = common.uuid.with({
   displayName: 'Email ID',
   description: 'The unique identifier for the email.',
   control: i.controls.select({
     async options({ state }) {
-      const response = await state.resend.emails.list();
+      const response = await state.resend.emails.list()
       if (!response.data) {
-        return [];
+        return []
       }
 
       return response.data.data.map((email) => {
@@ -20,11 +20,11 @@ export const id = common.uuid.with({
           value: email.id,
           label: email.subject,
           suffix: email.id,
-        };
-      });
+        }
+      })
     },
   }),
-});
+})
 
 export const address = i.pins.data({
   description: 'An email address.',
@@ -32,7 +32,7 @@ export const address = i.pins.data({
   control: i.controls.text({
     placeholder: 'john.doe@example.com',
   }),
-});
+})
 
 export const addressWithDisplayName = i.pins.data({
   description: 'An email address with a display name.',
@@ -47,7 +47,7 @@ export const addressWithDisplayName = i.pins.data({
       'Must be in format "Display Name <email@domain.com>"',
     ),
   ),
-});
+})
 
 export const addresses = i.pins.data({
   description: 'A list of email addresses.',
@@ -59,7 +59,7 @@ export const addresses = i.pins.data({
     v.transform((emails) => emails.replace('\n', '').split(',')),
     v.pipe(v.array(EmailSchmea), v.maxLength(50)),
   ),
-});
+})
 
 export const subject = i.pins.data({
   description: 'Email subject line.',
@@ -67,7 +67,7 @@ export const subject = i.pins.data({
     placeholder: 'Subject of the email',
   }),
   schema: v.string(),
-});
+})
 
 export const body = i.pins.data({
   description: 'Email body content. This is a simple text message.',
@@ -76,7 +76,7 @@ export const body = i.pins.data({
     rows: 5,
   }),
   schema: v.string(),
-});
+})
 
 export const html = i.pins.data({
   displayName: 'HTML',
@@ -87,7 +87,7 @@ export const html = i.pins.data({
     rows: 3,
   }),
   schema: v.pipe(v.string(), v.minLength(1)),
-});
+})
 
 export const text = i.pins.data({
   description: 'The plain text content of the email.',
@@ -97,7 +97,7 @@ export const text = i.pins.data({
     rows: 3,
   }),
   schema: v.pipe(v.string(), v.minLength(1)),
-});
+})
 
 export const previewText = i.pins.data({
   description: 'A short snippet shown in email previews.',
@@ -105,7 +105,7 @@ export const previewText = i.pins.data({
     placeholder: 'Preview text',
   }),
   schema: v.string(),
-});
+})
 
 export const scheduledAt = i.pins.data({
   description:
@@ -114,7 +114,7 @@ export const scheduledAt = i.pins.data({
     placeholder: '2024-08-05T11:52:01.858Z',
   }),
   schema: v.pipe(v.string(), v.minLength(1)),
-});
+})
 
 export const headers = i.pins.data({
   description: 'Custom email headers as key-value pairs.',
@@ -124,7 +124,7 @@ export const headers = i.pins.data({
     },
   }),
   schema: v.record(v.string(), v.string()),
-});
+})
 
 export const attachments = i.pins.data({
   description: 'File attachments',
@@ -145,7 +145,7 @@ export const attachments = i.pins.data({
       contentType: v.optional(v.string()),
     }),
   ),
-});
+})
 
 export const tags = i.pins.data({
   description: 'Custom key/value metadata for email tracking.',
@@ -172,7 +172,7 @@ export const tags = i.pins.data({
       ),
     }),
   ),
-});
+})
 
 export const idempotencyKey = i.pins.data({
   description: 'Unique key for safe retries without duplicating operations.',
@@ -180,4 +180,4 @@ export const idempotencyKey = i.pins.data({
     placeholder: 'unique-key-123',
   }),
   schema: v.pipe(v.string(), v.minLength(1), v.maxLength(256)),
-});
+})

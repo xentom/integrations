@@ -1,14 +1,14 @@
-import * as i from '@xentom/integration-framework';
-import * as z from 'zod';
+import * as i from '@xentom/integration-framework'
+import * as z from 'zod'
 
 import {
   type ResponseInput,
   type Tool,
-} from 'openai/resources/responses/responses';
+} from 'openai/resources/responses/responses'
 
-import * as pins from '@/pins';
+import * as pins from '@/pins'
 
-const nodes = i.nodes.group('Responses');
+const nodes = i.nodes.group('Responses')
 
 export const createResponse = nodes.callable({
   inputs: {
@@ -22,7 +22,7 @@ export const createResponse = nodes.callable({
             .map((model) => ({
               value: model.id,
               label: model.id,
-            }));
+            }))
         },
       }),
     }),
@@ -81,12 +81,12 @@ export const createResponse = nodes.callable({
     response: pins.response.item,
   },
   async run(opts) {
-    const tools: Tool[] = [];
+    const tools: Tool[] = []
 
     if (opts.inputs.web) {
       tools.push({
         type: 'web_search_preview',
-      });
+      })
     }
 
     return opts.next({
@@ -98,9 +98,9 @@ export const createResponse = nodes.callable({
         input: opts.inputs.input,
         tools,
       }),
-    });
+    })
   },
-});
+})
 
 export const getResponse = nodes.callable({
   inputs: {
@@ -112,9 +112,9 @@ export const getResponse = nodes.callable({
   async run(opts) {
     return opts.next({
       response: await opts.state.client.responses.retrieve(opts.inputs.id),
-    });
+    })
   },
-});
+})
 
 export const cancelResponse = nodes.callable({
   inputs: {
@@ -126,16 +126,16 @@ export const cancelResponse = nodes.callable({
   async run(opts) {
     return opts.next({
       response: await opts.state.client.responses.cancel(opts.inputs.id),
-    });
+    })
   },
-});
+})
 
 export const deleteResponse = nodes.callable({
   inputs: {
     id: pins.response.id,
   },
   async run(opts) {
-    await opts.state.client.responses.delete(opts.inputs.id);
-    return opts.next();
+    await opts.state.client.responses.delete(opts.inputs.id)
+    return opts.next()
   },
-});
+})

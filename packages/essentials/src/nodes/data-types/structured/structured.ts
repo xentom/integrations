@@ -1,7 +1,7 @@
-import * as i from '@xentom/integration-framework';
-import * as v from 'valibot';
+import * as i from '@xentom/integration-framework'
+import * as v from 'valibot'
 
-const nodes = i.nodes.group('Data types/Structured');
+const nodes = i.nodes.group('Data types/Structured')
 
 export const html = nodes.pure({
   displayName: 'HTML',
@@ -15,7 +15,7 @@ export const html = nodes.pure({
       schema: v.string(),
     }),
   },
-});
+})
 
 export const markdown = nodes.pure({
   outputs: {
@@ -28,4 +28,4 @@ export const markdown = nodes.pure({
       schema: v.string(),
     }),
   },
-});
+})

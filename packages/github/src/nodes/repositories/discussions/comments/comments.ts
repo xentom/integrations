@@ -1,50 +1,50 @@
-import * as i from '@xentom/integration-framework';
+import * as i from '@xentom/integration-framework'
 
-import { type EmitterWebhookEvent } from '@octokit/webhooks/types';
+import { type EmitterWebhookEvent } from '@octokit/webhooks/types'
 
-import { createRepositoryWebhook } from '@/helpers/webhooks';
-import * as pins from '@/pins';
+import { createRepositoryWebhook } from '@/helpers/webhooks'
+import * as pins from '@/pins'
 
-const nodes = i.nodes.group('Repositories/Discussions/Comments');
+const nodes = i.nodes.group('Repositories/Discussions/Comments')
 
-export const onDiscussionComment = i.generic(<
-  I extends i.GenericInputs<typeof inputs>,
->() => {
-  const inputs = {
-    repository: pins.repository.name,
-    action: pins.discussion.comment.action,
-  };
+export const onDiscussionComment = i.generic(
+  <I extends i.GenericInputs<typeof inputs>>() => {
+    const inputs = {
+      repository: pins.repository.name,
+      action: pins.discussion.comment.action,
+    }
 
-  type WebhookEvent = EmitterWebhookEvent<`discussion_comment.${I['action']}`>;
+    type WebhookEvent = EmitterWebhookEvent<`discussion_comment.${I['action']}`>
 
-  return nodes.trigger({
-    inputs,
-    outputs: {
-      id: i.pins.data<WebhookEvent['id']>(),
-      payload: i.pins.data<WebhookEvent['payload']>(),
-    },
-    async subscribe(opts) {
-      opts.state.webhooks.on(
-        `discussion_comment.${opts.inputs.action}`,
-        ({ id, payload }) => {
-          if (payload.repository.full_name !== opts.inputs.repository) {
-            return;
-          }
+    return nodes.trigger({
+      inputs,
+      outputs: {
+        id: i.pins.data<WebhookEvent['id']>(),
+        payload: i.pins.data<WebhookEvent['payload']>(),
+      },
+      async subscribe(opts) {
+        opts.state.webhooks.on(
+          `discussion_comment.${opts.inputs.action}`,
+          ({ id, payload }) => {
+            if (payload.repository.full_name !== opts.inputs.repository) {
+              return
+            }
 
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-          void opts.next({
-            id,
-            payload,
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          } as any);
-        },
-      );
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+            void opts.next({
+              id,
+              payload,
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            } as any)
+          },
+        )
 
-      await createRepositoryWebhook({
-        repository: opts.inputs.repository,
-        webhook: opts.webhook,
-        state: opts.state,
-      });
-    },
-  });
-});
+        await createRepositoryWebhook({
+          repository: opts.inputs.repository,
+          webhook: opts.webhook,
+          state: opts.state,
+        })
+      },
+    })
+  },
+)

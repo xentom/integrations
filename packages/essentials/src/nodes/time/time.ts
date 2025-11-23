@@ -1,7 +1,7 @@
-import * as i from '@xentom/integration-framework';
-import * as v from 'valibot';
+import * as i from '@xentom/integration-framework'
+import * as v from 'valibot'
 
-const nodes = i.nodes.group('Time');
+const nodes = i.nodes.group('Time')
 
 export const onInterval = nodes.trigger({
   inputs: {
@@ -15,14 +15,14 @@ export const onInterval = nodes.trigger({
   },
   subscribe(opts) {
     const interval = setInterval(() => {
-      void opts.next();
-    }, opts.inputs.ms);
+      void opts.next()
+    }, opts.inputs.ms)
 
     return () => {
-      clearInterval(interval);
-    };
+      clearInterval(interval)
+    }
   },
-});
+})
 
 export const sleep = nodes.callable({
   inputs: {
@@ -35,7 +35,7 @@ export const sleep = nodes.callable({
     }),
   },
   async run(opts) {
-    await Bun.sleep(opts.inputs.duration);
-    return opts.next();
+    await Bun.sleep(opts.inputs.duration)
+    return opts.next()
   },
-});
+})

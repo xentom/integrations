@@ -1,11 +1,11 @@
-import * as i from '@xentom/integration-framework';
-import * as v from 'valibot';
+import * as i from '@xentom/integration-framework'
+import * as v from 'valibot'
 
-import { type ChannelCreate } from 'ts3-nodejs-library/lib/types/Events';
+import { type ChannelCreate } from 'ts3-nodejs-library/lib/types/Events'
 
-import * as pins from '@/pins';
+import * as pins from '@/pins'
 
-const nodes = i.nodes.group('Channels');
+const nodes = i.nodes.group('Channels')
 
 export const onChannelCreated = nodes.trigger({
   outputs: {
@@ -17,15 +17,15 @@ export const onChannelCreated = nodes.trigger({
       void opts.next({
         channel: event.channel,
         invoker: event.invoker,
-      });
+      })
     }
 
-    opts.state.teamspeak.on('channelcreate', onChannelCreated);
+    opts.state.teamspeak.on('channelcreate', onChannelCreated)
     return () => {
-      opts.state.teamspeak.off('channelcreate', onChannelCreated);
-    };
+      opts.state.teamspeak.off('channelcreate', onChannelCreated)
+    }
   },
-});
+})
 
 export const getChannelById = nodes.pure({
   displayName: 'Get Channel By ID',
@@ -37,14 +37,14 @@ export const getChannelById = nodes.pure({
     channel: pins.channel.item.output,
   },
   async run(opts) {
-    const channel = await opts.state.teamspeak.getChannelById(opts.inputs.id);
+    const channel = await opts.state.teamspeak.getChannelById(opts.inputs.id)
     if (!channel) {
-      throw new Error(`Channel with the ID "${opts.inputs.id}" not found`);
+      throw new Error(`Channel with the ID "${opts.inputs.id}" not found`)
     }
 
-    opts.outputs.channel = channel;
+    opts.outputs.channel = channel
   },
-});
+})
 
 export const getChannelByName = nodes.pure({
   description: 'Get a TeamSpeak channel by its name',
@@ -57,15 +57,15 @@ export const getChannelByName = nodes.pure({
   async run(opts) {
     const channel = await opts.state.teamspeak.getChannelByName(
       opts.inputs.name,
-    );
+    )
 
     if (!channel) {
-      throw new Error(`Channel with the name "${opts.inputs.name}" not found`);
+      throw new Error(`Channel with the name "${opts.inputs.name}" not found`)
     }
 
-    opts.outputs.channel = channel;
+    opts.outputs.channel = channel
   },
-});
+})
 
 export const listChannels = nodes.pure({
   description: 'List all TeamSpeak channels',
@@ -73,9 +73,9 @@ export const listChannels = nodes.pure({
     channels: pins.channel.items.output,
   },
   async run(opts) {
-    opts.outputs.channels = await opts.state.teamspeak.channelList();
+    opts.outputs.channels = await opts.state.teamspeak.channelList()
   },
-});
+})
 
 export const createChannel = nodes.callable({
   description: 'Create a new TeamSpeak channel',
@@ -158,13 +158,13 @@ export const createChannel = nodes.callable({
       channelFlagMaxfamilyclientsInherited:
         opts.inputs.flagMaxFamilyClientsInherited,
       channelCodecIsUnencrypted: opts.inputs.codecIsUnencrypted,
-    });
+    })
 
     return opts.next({
       channel,
-    });
+    })
   },
-});
+})
 
 export const deleteChannel = nodes.callable({
   description: 'Delete a TeamSpeak channel',
@@ -178,6 +178,6 @@ export const deleteChannel = nodes.callable({
     }),
   },
   async run(opts) {
-    await opts.inputs.channel.del(opts.inputs.force);
+    await opts.inputs.channel.del(opts.inputs.force)
   },
-});
+})

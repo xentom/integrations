@@ -1,15 +1,15 @@
-import * as i from '@xentom/integration-framework';
-import * as v from 'valibot';
+import * as i from '@xentom/integration-framework'
+import * as v from 'valibot'
 
-import { QueryProtocol, TeamSpeak } from 'ts3-nodejs-library';
-import { type Whoami } from 'ts3-nodejs-library/lib/types/ResponseTypes';
+import { QueryProtocol, TeamSpeak } from 'ts3-nodejs-library'
+import { type Whoami } from 'ts3-nodejs-library/lib/types/ResponseTypes'
 
-import * as nodes from './nodes';
+import * as nodes from './nodes'
 
 declare module '@xentom/integration-framework' {
   interface IntegrationState {
-    teamspeak: TeamSpeak;
-    whoami: Whoami;
+    teamspeak: TeamSpeak
+    whoami: Whoami
   }
 }
 
@@ -83,20 +83,20 @@ export default i.integration({
       nickname: opts.env.NICKNAME,
       keepAlive: true,
       keepAliveTimeout: 60,
-    });
+    })
 
-    await opts.state.teamspeak.registerEvent('textprivate');
+    await opts.state.teamspeak.registerEvent('textprivate')
 
-    opts.state.whoami = await opts.state.teamspeak.whoami();
+    opts.state.whoami = await opts.state.teamspeak.whoami()
   },
 
   async stop(opts) {
-    if (!opts.state.teamspeak) return;
+    if (!opts.state.teamspeak) return
 
     try {
-      await opts.state.teamspeak.quit();
+      await opts.state.teamspeak.quit()
     } catch {
-      opts.state.teamspeak.forceQuit();
+      opts.state.teamspeak.forceQuit()
     }
   },
-});
+})

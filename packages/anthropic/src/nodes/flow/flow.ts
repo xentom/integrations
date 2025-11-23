@@ -1,11 +1,11 @@
-import * as i from '@xentom/integration-framework';
-import * as v from 'valibot';
+import * as i from '@xentom/integration-framework'
+import * as v from 'valibot'
 
-import { type ToolUseBlock } from '@anthropic-ai/sdk/resources';
+import { type ToolUseBlock } from '@anthropic-ai/sdk/resources'
 
-import * as pins from '@/pins';
+import * as pins from '@/pins'
 
-const nodes = i.nodes.group('Flow');
+const nodes = i.nodes.group('Flow')
 
 export const branch = nodes.callable({
   inputs: {
@@ -95,23 +95,23 @@ export const branch = nodes.callable({
         : {
             type: 'disabled',
           },
-    });
+    })
 
     const tool = message.content.find((block): block is ToolUseBlock => {
-      return block.type === 'tool_use' && block.name === 'evaluate_condition';
-    });
+      return block.type === 'tool_use' && block.name === 'evaluate_condition'
+    })
 
     if (!tool) {
-      throw new Error('No tool use block found in response');
+      throw new Error('No tool use block found in response')
     }
 
     const result = tool.input as {
-      condition: boolean;
-      reason?: string;
-    };
+      condition: boolean
+      reason?: string
+    }
 
     return await opts.next(`${result.condition}`, {
       reason: result.reason,
-    });
+    })
   },
-});
+})

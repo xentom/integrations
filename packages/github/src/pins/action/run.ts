@@ -1,6 +1,6 @@
-import * as i from '@xentom/integration-framework';
+import * as i from '@xentom/integration-framework'
 
-export type Action = 'completed' | 'in_progress' | 'requested';
+export type Action = 'completed' | 'in_progress' | 'requested'
 
 export const action = i.pins.data<Action>({
   description: 'The action type of the action run',
@@ -21,4 +21,4 @@ export const action = i.pins.data<Action>({
     ],
     defaultValue: 'completed',
   }),
-});
+})

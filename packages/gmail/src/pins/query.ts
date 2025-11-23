@@ -1,5 +1,5 @@
-import * as i from '@xentom/integration-framework';
-import * as v from 'valibot';
+import * as i from '@xentom/integration-framework'
+import * as v from 'valibot'
 
 export const searchQuery = i.pins.data({
   displayName: 'Search Query',
@@ -27,7 +27,7 @@ export const searchQuery = i.pins.data({
       value: 'larger:10M subject:reports',
     },
   ],
-});
+})
 
 export const messageFormat = i.pins.data({
   displayName: 'Message Format',
@@ -47,7 +47,7 @@ export const messageFormat = i.pins.data({
       value: 'full',
     },
   ],
-});
+})
 
 export const maxResults = i.pins.data({
   displayName: 'Max Results',
@@ -67,4 +67,4 @@ export const maxResults = i.pins.data({
       value: 100,
     },
   ],
-});
+})

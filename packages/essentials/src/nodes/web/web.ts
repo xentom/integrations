@@ -1,10 +1,10 @@
-import * as i from '@xentom/integration-framework';
+import * as i from '@xentom/integration-framework'
 
-import { type BodyInit } from 'bun';
+import { type BodyInit } from 'bun'
 
-import * as pins from '@/pins';
+import * as pins from '@/pins'
 
-const nodes = i.nodes.group('Web');
+const nodes = i.nodes.group('Web')
 
 export const request = nodes.callable({
   description:
@@ -32,17 +32,17 @@ export const request = nodes.callable({
     response: pins.http.response,
   },
   async run(opts) {
-    const requestMethod = opts.inputs.method ?? 'GET';
+    const requestMethod = opts.inputs.method ?? 'GET'
 
-    let requestBody: BodyInit | null | undefined;
+    let requestBody: BodyInit | null | undefined
     if (
       !['GET', 'HEAD', 'OPTIONS'].includes(requestMethod) &&
       opts.inputs.body !== undefined
     ) {
       if (opts.inputs.body instanceof Blob) {
-        requestBody = opts.inputs.body;
+        requestBody = opts.inputs.body
       } else {
-        requestBody = JSON.stringify(opts.inputs.body);
+        requestBody = JSON.stringify(opts.inputs.body)
       }
     }
 
@@ -50,32 +50,32 @@ export const request = nodes.callable({
       method: requestMethod,
       headers: opts.inputs.headers,
       body: requestBody,
-    });
+    })
 
     if (!response.ok) {
-      throw new Error(`Request failed with status ${response.status}`);
+      throw new Error(`Request failed with status ${response.status}`)
     }
 
-    const contentType = response.headers.get('content-type');
+    const contentType = response.headers.get('content-type')
 
-    let responseBody: unknown;
+    let responseBody: unknown
     switch (contentType?.split(';')[0]) {
       case 'application/json': {
-        responseBody = await response.json();
-        break;
+        responseBody = await response.json()
+        break
       }
 
       case 'text/plain': {
-        responseBody = await response.text();
-        break;
+        responseBody = await response.text()
+        break
       }
 
       default: {
-        const filename = opts.inputs.url.split('/').pop() || 'downloaded_file';
+        const filename = opts.inputs.url.split('/').pop() || 'downloaded_file'
         responseBody = new File([await response.arrayBuffer()], filename, {
           type: contentType ?? 'application/octet-stream',
-        });
-        break;
+        })
+        break
       }
     }
 
@@ -85,6 +85,6 @@ export const request = nodes.callable({
         headers: Object.fromEntries(response.headers.entries()),
         body: responseBody,
       },
-    });
+    })
   },
-});
+})

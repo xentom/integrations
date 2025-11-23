@@ -1,1 +1,1 @@
-export * from './structured';
+export * from './structured'

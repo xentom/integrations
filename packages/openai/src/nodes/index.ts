@@ -1,2 +1,2 @@
-export * from './files';
-export * from './responses';
+export * from './files'
+export * from './responses'

@@ -1,10 +1,10 @@
-import * as i from '@xentom/integration-framework';
+import * as i from '@xentom/integration-framework'
 
-import { type sheets_v4 } from 'googleapis/build/src/apis/sheets/v4';
+import { type sheets_v4 } from 'googleapis/build/src/apis/sheets/v4'
 
-import * as pins from '@/pins';
+import * as pins from '@/pins'
 
-const nodes = i.nodes.group('Spreadsheets');
+const nodes = i.nodes.group('Spreadsheets')
 
 export const onNewSheet = nodes.trigger({
   description: 'Trigger when a new sheet is added to a Google Spreadsheet',
@@ -20,25 +20,25 @@ export const onNewSheet = nodes.trigger({
     }),
   },
   async subscribe(opts) {
-    let lastSheetCount = 0;
-    let lastSheetIds = new Set<number>();
+    let lastSheetCount = 0
+    let lastSheetIds = new Set<number>()
 
     const checkForNewSheets = async () => {
       const response = await opts.state.sheets.spreadsheets.get({
         spreadsheetId: opts.inputs.spreadsheetId,
-      });
+      })
 
-      const sheets = response.data.sheets ?? [];
-      const currentSheetCount = sheets.length;
+      const sheets = response.data.sheets ?? []
+      const currentSheetCount = sheets.length
 
       if (lastSheetCount === 0) {
-        lastSheetCount = currentSheetCount;
+        lastSheetCount = currentSheetCount
         lastSheetIds = new Set(
           sheets
             .map((sheet) => sheet.properties?.sheetId)
             .filter((id): id is number => id !== undefined),
-        );
-        return;
+        )
+        return
       }
 
       if (currentSheetCount > lastSheetCount) {
@@ -46,24 +46,24 @@ export const onNewSheet = nodes.trigger({
           return (
             sheet.properties?.sheetId != null &&
             !lastSheetIds.has(sheet.properties.sheetId)
-          );
-        });
+          )
+        })
 
         for (const sheet of newSheets) {
           if (sheet.properties?.sheetId != null) {
-            lastSheetIds.add(sheet.properties.sheetId);
+            lastSheetIds.add(sheet.properties.sheetId)
             void opts.next({
               sheet,
               sheetName: sheet.properties.title ?? '',
-            });
+            })
           }
         }
 
-        lastSheetCount = currentSheetCount;
+        lastSheetCount = currentSheetCount
       }
-    };
+    }
 
-    const channelId = `${opts.node.id}-${Date.now()}`;
+    const channelId = `${opts.node.id}-${Date.now()}`
 
     await opts.state.drive.files.watch({
       fileId: opts.inputs.spreadsheetId,
@@ -72,24 +72,24 @@ export const onNewSheet = nodes.trigger({
         type: 'web_hook',
         address: opts.webhook.url,
       },
-    });
+    })
 
     const unsubscribe = opts.webhook.subscribe(async () => {
-      await checkForNewSheets();
-    });
+      await checkForNewSheets()
+    })
 
     return async () => {
-      unsubscribe();
+      unsubscribe()
 
       await opts.state.drive.channels.stop({
         requestBody: {
           id: channelId,
           resourceId: opts.inputs.spreadsheetId,
         },
-      });
-    };
+      })
+    }
   },
-});
+})
 
 export const getSpreadsheet = nodes.callable({
   displayName: 'Get Spreadsheet',
@@ -103,10 +103,10 @@ export const getSpreadsheet = nodes.callable({
   async run(opts) {
     const response = await opts.state.sheets.spreadsheets.get({
       spreadsheetId: opts.inputs.spreadsheetId,
-    });
+    })
 
     await opts.next({
       spreadsheet: response.data,
-    });
+    })
   },
-});
+})

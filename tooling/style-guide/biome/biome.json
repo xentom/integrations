@@ -3,7 +3,8 @@
   "$schema": "https://biomejs.dev/schemas/2.3.7/schema.json",
   "formatter": {
     "enabled": true,
-    "formatWithErrors": false
+    "formatWithErrors": false,
+    "indentStyle": "space"
   },
   "linter": {
     "enabled": true,
@@ -25,10 +26,7 @@
   "javascript": {
     "formatter": {
       "quoteStyle": "single",
-      "lineWidth": 80,
-      "trailingCommas": "es5",
-      "semicolons": "always",
-      "indentStyle": "space"
+      "semicolons": "asNeeded"
     }
   },
   "assist": {

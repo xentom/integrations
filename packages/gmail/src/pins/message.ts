@@ -1,11 +1,11 @@
-import * as i from '@xentom/integration-framework';
-import * as v from 'valibot';
+import * as i from '@xentom/integration-framework'
+import * as v from 'valibot'
 
-import { type gmail_v1 } from 'googleapis/build/src/apis/gmail/v1';
+import { type gmail_v1 } from 'googleapis/build/src/apis/gmail/v1'
 
 export const item = i.pins.data<gmail_v1.Schema$Message>({
   description: 'A Gmail message object with full content and metadata',
-});
+})
 
 export const id = i.pins.data({
   displayName: 'Message ID',
@@ -14,7 +14,7 @@ export const id = i.pins.data({
   control: i.controls.text({
     placeholder: '18b2c3d4e5f6g7h8',
   }),
-});
+})
 
 export const subject = i.pins.data({
   description: 'Email subject line',
@@ -22,7 +22,7 @@ export const subject = i.pins.data({
   control: i.controls.text({
     placeholder: 'Email subject',
   }),
-});
+})
 
 export const body = i.pins.data({
   description: 'Email body content (HTML or plain text)',
@@ -31,7 +31,7 @@ export const body = i.pins.data({
     placeholder: 'Email content',
     rows: 5,
   }),
-});
+})
 
 export const headers = i.pins.data({
   description: 'Email headers with common fields extracted',
@@ -57,7 +57,7 @@ export const headers = i.pins.data({
       },
     },
   ],
-});
+})
 
 export const draft = i.pins.data({
   description: 'A Gmail draft message',
@@ -83,7 +83,7 @@ export const draft = i.pins.data({
       },
     },
   ],
-});
+})
 
 export const address = i.pins.data({
   description: 'A validated email address',
@@ -97,7 +97,7 @@ export const address = i.pins.data({
       value: 'user@example.com',
     },
   ],
-});
+})
 
 export const addresses = i.pins.data({
   description: 'A comma-separated list of email addresses or an array',
@@ -117,14 +117,14 @@ export const addresses = i.pins.data({
       value: 'alice@example.com, bob@example.com',
     },
   ],
-});
+})
 
 export const cc = addresses.with({
   displayName: 'CC',
   description: 'Carbon copy recipients',
-});
+})
 
 export const bcc = addresses.with({
   displayName: 'BCC',
   description: 'Blind carbon copy recipients',
-});
+})

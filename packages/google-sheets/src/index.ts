@@ -1,16 +1,16 @@
-import * as i from '@xentom/integration-framework';
+import * as i from '@xentom/integration-framework'
 
-import { OAuth2Client } from 'google-auth-library';
-import { drive_v3 } from 'googleapis/build/src/apis/drive/v3';
-import { sheets_v4 } from 'googleapis/build/src/apis/sheets/v4';
+import { OAuth2Client } from 'google-auth-library'
+import { drive_v3 } from 'googleapis/build/src/apis/drive/v3'
+import { sheets_v4 } from 'googleapis/build/src/apis/sheets/v4'
 
-import * as nodes from './nodes';
+import * as nodes from './nodes'
 
 declare module '@xentom/integration-framework' {
   interface IntegrationState {
-    auth: OAuth2Client;
-    sheets: sheets_v4.Sheets;
-    drive: drive_v3.Drive;
+    auth: OAuth2Client
+    sheets: sheets_v4.Sheets
+    drive: drive_v3.Drive
   }
 }
 
@@ -27,7 +27,7 @@ export default i.integration({
     onAccessTokenUpdated(opts) {
       opts.state.auth.setCredentials({
         access_token: opts.auth.accessToken,
-      });
+      })
     },
   }),
 
@@ -36,14 +36,14 @@ export default i.integration({
       credentials: {
         access_token: opts.auth.accessToken,
       },
-    });
+    })
 
     opts.state.sheets = new sheets_v4.Sheets({
       auth: opts.state.auth,
-    });
+    })
 
     opts.state.drive = new drive_v3.Drive({
       auth: opts.state.auth,
-    });
+    })
   },
-});
+})

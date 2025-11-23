@@ -1,9 +1,9 @@
-import * as i from '@xentom/integration-framework';
-import * as v from 'valibot';
+import * as i from '@xentom/integration-framework'
+import * as v from 'valibot'
 
-import * as pins from '../../pins';
+import * as pins from '../../pins'
 
-const nodes = i.nodes.group('Messages');
+const nodes = i.nodes.group('Messages')
 
 // export const onMessage = nodes.trigger({
 //   description: 'Trigger when a new message is received',
@@ -132,29 +132,29 @@ export const sendMessage = nodes.callable({
     const headers = [
       `To: ${opts.inputs.to.join(', ')}`,
       `Subject: ${opts.inputs.subject}`,
-    ];
+    ]
 
     if (opts.inputs.cc?.length) {
-      headers.push(`Cc: ${opts.inputs.cc.join(', ')}`);
+      headers.push(`Cc: ${opts.inputs.cc.join(', ')}`)
     }
 
     if (opts.inputs.bcc?.length) {
-      headers.push(`Bcc: ${opts.inputs.bcc.join(', ')}`);
+      headers.push(`Bcc: ${opts.inputs.bcc.join(', ')}`)
     }
 
-    const content = [...headers, '', opts.inputs.body ?? ''].join('\r\n');
+    const content = [...headers, '', opts.inputs.body ?? ''].join('\r\n')
     const response = await opts.state.gmail.users.messages.send({
       userId: 'me',
       requestBody: {
         raw: Buffer.from(content).toString('base64url'),
       },
-    });
+    })
 
     return opts.next({
       message: response.data,
-    });
+    })
   },
-});
+})
 
 export const getMessage = nodes.callable({
   description: 'Retrieve a specific Gmail message by ID',
@@ -172,13 +172,13 @@ export const getMessage = nodes.callable({
       userId: 'me',
       id: opts.inputs.id,
       format: opts.inputs.format,
-    });
+    })
 
     return opts.next({
       message: response.data,
-    });
+    })
   },
-});
+})
 
 export const listMessages = nodes.callable({
   description: 'Search and retrieve Gmail messages',
@@ -209,21 +209,21 @@ export const listMessages = nodes.callable({
       q: opts.inputs.query,
       labelIds: opts.inputs.labelIds,
       maxResults: opts.inputs.maxResults,
-    });
+    })
 
     if (!response.data.messages) {
       return opts.next({
         messages: [],
         resultSizeEstimate: 0,
-      });
+      })
     }
 
     return opts.next({
       messages: response.data.messages,
       resultSizeEstimate: response.data.resultSizeEstimate ?? 0,
-    });
+    })
   },
-});
+})
 
 export const deleteMessage = nodes.callable({
   description: 'Permanently delete a Gmail message',
@@ -234,6 +234,6 @@ export const deleteMessage = nodes.callable({
     await opts.state.gmail.users.messages.delete({
       userId: 'me',
       id: opts.inputs.id,
-    });
+    })
   },
-});
+})
