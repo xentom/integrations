@@ -39,6 +39,7 @@
     "@xentom/style-guide": "catalog:",
     "@types/bun": "catalog:",
     "typescript": "catalog:",
+    "gaxios": "*",
     "@biomejs/biome": "catalog:"
   }
 }
