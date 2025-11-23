@@ -12,7 +12,7 @@
     "url": "https://github.com/xentom/integrations/issues"
   },
   "scripts": {
-    "clean": "turbo run clean && git clean -xdf node_modules",
+    "clean": "turbo run clean && git clean -xdf .turbo node_modules",
     "lint": "turbo run lint --continue -- --cache --cache-location .cache/.eslintcache",
     "typecheck": "turbo typecheck --continue",
     "format": "turbo run format --continue -- --write --cache --cache-location .cache/.prettiercache",
