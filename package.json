@@ -15,7 +15,7 @@
     "clean": "turbo run clean && git clean -xdf .turbo node_modules",
     "lint": "turbo run lint --continue --",
     "typecheck": "turbo typecheck --continue",
-    "format": "turbo run format --continue -- --write --cache --cache-location .cache/.prettiercache",
+    "format": "turbo run format --continue",
     "build": "turbo run build --",
     "pack": "turbo run pack --",
     "publish": "turbo run publish --",
@@ -43,10 +43,8 @@
       "mime": "^4.0.7",
       "googleapis": "^166.0.0",
       "valibot": "^1.1.0",
-      "@biomejs/biome": "^1.9.4",
-      "prettier": "^3.5.3",
+      "@biomejs/biome": "^2.3.7",
       "typescript": "^5.9.3"
     }
-  },
-  "prettier": "@xentom/style-guide/prettier"
+  }
 }

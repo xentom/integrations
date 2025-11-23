@@ -18,7 +18,7 @@ This is a monorepo for Xentom integrations using:
 bun run clean      # Clean all packages and git-ignored files
 bun run lint       # Run Biome across all packages
 bun run typecheck  # Run TypeScript type checking across all packages
-bun run format     # Format code with Prettier across all packages
+bun run format     # Format code with Biome across all packages
 bun run pack       # Build/pack all integration packages
 ```
 
@@ -30,7 +30,7 @@ bun run pack       # Build the integration package using `xentom pack`
 bun run publish    # Publish the integration using `xentom publish`
 bun run lint       # Run Biome for the package
 bun run typecheck  # Run TypeScript checking with `tsc --noEmit`
-bun run format     # Format code with Prettier
+bun run format     # Format code with Biome
 bun run clean      # Clean build artifacts and dependencies
 ```
 
@@ -40,7 +40,7 @@ bun run clean      # Clean build artifacts and dependencies
 
 - ✅ `bun run lint` - Zero Biome errors and warnings
 - ✅ `bun run typecheck` - Zero TypeScript errors
-- ✅ `bun run format` - No formatting changes required
+- ✅ `bun run format` - No Biome formatting changes required
 
 ---
 

@@ -1,4 +1,8 @@
 {
+  "editor.codeActionsOnSave": {
+    "source.organizeImports.biome": "explicit",
+    "source.fixAll.biome": "explicit"
+  },
   "search.exclude": {
     "/patches/": true,
     "/bun.lock": true

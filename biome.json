@@ -1,13 +1,15 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
-  "extends": ["./tooling/style-guide/biome/biome.json"],
-  "files": {
-    "ignore": [
-      "**/node_modules",
-      "**/.turbo",
-      "**/.cache",
-      "**/dist",
-      "**/build"
-    ]
-  }
+	"$schema": "https://biomejs.dev/schemas/2.3.7/schema.json",
+	"extends": ["./tooling/style-guide/biome/biome.json"],
+	"files": {
+		"includes": [
+			"**",
+			"!**/node_modules",
+			"!**/.turbo",
+			"!**/.cache",
+			"!**/dist",
+			"!**/build",
+			"!**/.xentom"
+		]
+	}
 }

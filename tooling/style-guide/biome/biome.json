@@ -1,21 +1,55 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+  "root": false,
+  "$schema": "https://biomejs.dev/schemas/2.3.7/schema.json",
   "formatter": {
-    "enabled": false
+    "enabled": true,
+    "formatWithErrors": false
   },
   "linter": {
     "enabled": true,
     "rules": {
       "recommended": true,
       "style": {
-        "useImportType": "off"
+        "useImportType": {
+          "level": "on",
+          "options": {
+            "style": "inlineType"
+          }
+        }
       },
       "suspicious": {
         "noExplicitAny": "off"
       }
     }
   },
-  "organizeImports": {
-    "enabled": true
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "single",
+      "lineWidth": 80,
+      "trailingCommas": "es5",
+      "semicolons": "always",
+      "indentStyle": "space"
+    }
+  },
+  "assist": {
+    "actions": {
+      "source": {
+        "organizeImports": {
+          "level": "on",
+          "options": {
+            "groups": [
+              "@xentom/**",
+              ["valibot", "zod"],
+              ":BLANK_LINE:",
+              [":BUN:", ":NODE:"],
+              ":PACKAGE:",
+              ":BLANK_LINE:",
+              ":ALIAS:",
+              ":PATH:"
+            ]
+          }
+        }
+      }
+    }
   }
 }

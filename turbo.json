@@ -22,8 +22,7 @@
       "persistent": false
     },
     "format": {
-      "outputs": [".cache/.prettiercache"],
-      "outputLogs": "new-only"
+      "cache": false
     },
     "lint": {
       "dependsOn": ["^topo", "^build"]
