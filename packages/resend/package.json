@@ -24,7 +24,10 @@
     "format": "biome format --write .",
     "typecheck": "tsc --noEmit",
     "clean": "git clean -xdf .cache .turbo node_modules build dist",
-    "dev": "xentom dev"
+    "dev": "xentom dev",
+    "build": "xentom build",
+    "pack": "xentom pack",
+    "publish": "xentom publish"
   },
   "dependencies": {
     "@xentom/integration-framework": "catalog:",
