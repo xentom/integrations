@@ -16,7 +16,7 @@ This is a monorepo for Xentom integrations using:
 
 ```bash
 bun run clean      # Clean all packages and git-ignored files
-bun run lint       # Run ESLint across all packages with caching
+bun run lint       # Run Biome across all packages
 bun run typecheck  # Run TypeScript type checking across all packages
 bun run format     # Format code with Prettier across all packages
 bun run pack       # Build/pack all integration packages
@@ -28,7 +28,7 @@ bun run pack       # Build/pack all integration packages
 bun run dev        # Start development mode using `xentom dev`
 bun run pack       # Build the integration package using `xentom pack`
 bun run publish    # Publish the integration using `xentom publish`
-bun run lint       # Run ESLint for the package
+bun run lint       # Run Biome for the package
 bun run typecheck  # Run TypeScript checking with `tsc --noEmit`
 bun run format     # Format code with Prettier
 bun run clean      # Clean build artifacts and dependencies
@@ -38,7 +38,7 @@ bun run clean      # Clean build artifacts and dependencies
 
 **All integrations MUST pass without errors or warnings:**
 
-- ✅ `bun run lint` - Zero ESLint errors and warnings
+- ✅ `bun run lint` - Zero Biome errors and warnings
 - ✅ `bun run typecheck` - Zero TypeScript errors
 - ✅ `bun run format` - No formatting changes required
 
@@ -67,7 +67,7 @@ bun run clean      # Clean build artifacts and dependencies
 │   └── icon.png                     # Integration icon (required)
 ├── package.json
 ├── tsconfig.json
-└── eslint.config.mjs
+└── biome.json
 ```
 
 ## Common Code Rules
@@ -114,7 +114,7 @@ i.v.string();
 
 - `as any`
 - `@ts-ignore`
-- `eslint-disable-next-line`
+- `biome-ignore lint/...`
 - Type bypasses indicate design problems
 
 ### Variable Management

@@ -20,7 +20,7 @@
   "icon": "./assets/icon.png",
   "main": "./build/index.js",
   "scripts": {
-    "lint": "eslint",
+    "lint": "biome lint --config-path ../../biome.json .",
     "format": "prettier --write . --ignore-path ../../.gitignore --ignore-path ../../.prettierignore",
     "typecheck": "tsc --noEmit",
     "clean": "git clean -xdf .cache .turbo node_modules build dist",
@@ -39,9 +39,9 @@
   "devDependencies": {
     "@xentom/style-guide": "catalog:",
     "@types/bun": "catalog:",
-    "eslint": "catalog:",
     "prettier": "catalog:",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "@biomejs/biome": "catalog:"
   },
   "prettier": "@xentom/style-guide/prettier"
 }

@@ -1,0 +1,13 @@
+{
+  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+  "extends": ["./tooling/style-guide/biome/biome.json"],
+  "files": {
+    "ignore": [
+      "**/node_modules",
+      "**/.turbo",
+      "**/.cache",
+      "**/dist",
+      "**/build"
+    ]
+  }
+}

@@ -1,10 +1,13 @@
 /** @typedef {import("prettier").Config} PrettierConfig */
 /** @typedef {import("@ianvs/prettier-plugin-sort-imports").PluginConfig} SortImportsConfig */
 
+console.log(import.meta.resolve('@ianvs/prettier-plugin-sort-imports', import.meta.url))
 /** @type { PrettierConfig | SortImportsConfig | TailwindConfig } */
 const config = {
   singleQuote: true,
-  plugins: ['@ianvs/prettier-plugin-sort-imports'],
+  plugins: [
+    import.meta.resolve('@ianvs/prettier-plugin-sort-imports', import.meta.url),
+  ],
   importOrder: [
     '^@xentom/(.*)$',
     '^(valibot|zod)$',
