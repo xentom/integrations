@@ -12,7 +12,7 @@
     "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": true,
     "outDir": "${configDir}/dist",
-    "noEmit": false,
+    "noEmit": true,
     "declaration": true,
     "emitDeclarationOnly": true,
 
