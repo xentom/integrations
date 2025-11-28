@@ -71,3 +71,14 @@ export const limit = i.pins.data({
   schema: v.pipe(v.number(), v.integer(), v.minValue(1), v.maxValue(100)),
   control: i.controls.expression(),
 })
+
+export const after = i.pins.data({
+  description:
+    'Pagination cursor. Provide the ID of the last item returned in the previous request to fetch the next page.',
+  schema: v.string(),
+})
+
+export const hasMore = i.pins.data({
+  description: 'Whether there are more items available.',
+  schema: v.boolean(),
+})

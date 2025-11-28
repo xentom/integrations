@@ -1,6 +1,8 @@
 import * as i from '@xentom/integration-framework'
 import * as v from 'valibot'
 
+import type Stripe from 'stripe'
+
 import * as common from './common'
 
 export const id = common.id.with({
@@ -12,39 +14,25 @@ export const id = common.id.with({
   schema: v.pipe(v.string(), v.startsWith('sub_')),
 })
 
-export const customerId = i.pins.data({
-  displayName: 'Customer ID',
-  description: 'The ID of the customer for this subscription.',
-  schema: v.pipe(v.string(), v.startsWith('cus_')),
-  control: i.controls.select({
-    async options({ state }) {
-      const response = await state.stripe.customers.list({ limit: 100 })
-      return response.data.map((customer) => ({
-        value: customer.id,
-        label: customer.name || customer.email || customer.id,
-        suffix: customer.id,
-      }))
-    },
-  }),
-})
-
 export const priceId = i.pins.data({
   displayName: 'Price ID',
   description: 'The ID of the price the customer is subscribed to.',
   schema: v.pipe(v.string(), v.startsWith('price_')),
   control: i.controls.select({
     async options({ state }) {
-      const response = await state.stripe.prices.list({
+      const prices = await state.stripe.prices.list({
         limit: 100,
         expand: ['data.product'],
       })
-      return response.data
+
+      return prices.data
         .filter((price) => price.recurring)
         .map((price) => {
           const productName =
             typeof price.product === 'object' && 'name' in price.product
               ? price.product.name
               : price.product
+
           return {
             value: price.id,
             label: `${productName} - ${price.unit_amount ? price.unit_amount / 100 : 0} ${price.currency.toUpperCase()}/${price.recurring?.interval}`,
@@ -86,4 +74,34 @@ export const trialPeriodDays = i.pins.data({
   description: 'Number of trial period days granted when subscribing.',
   schema: v.pipe(v.number(), v.integer(), v.minValue(1)),
   control: i.controls.expression(),
+})
+
+export const status = i.pins.data<Stripe.SubscriptionListParams.Status>({
+  description: 'The status of the subscription.',
+  schema: v.picklist([
+    'active',
+    'past_due',
+    'unpaid',
+    'canceled',
+    'incomplete',
+    'incomplete_expired',
+    'trialing',
+    'paused',
+    'all',
+    'ended',
+  ]),
+  control: i.controls.select({
+    options: [
+      { value: 'active', label: 'Active' },
+      { value: 'past_due', label: 'Past Due' },
+      { value: 'unpaid', label: 'Unpaid' },
+      { value: 'canceled', label: 'Canceled' },
+      { value: 'incomplete', label: 'Incomplete' },
+      { value: 'incomplete_expired', label: 'Incomplete Expired' },
+      { value: 'trialing', label: 'Trialing' },
+      { value: 'paused', label: 'Paused' },
+      { value: 'all', label: 'All' },
+      { value: 'ended', label: 'Ended' },
+    ],
+  }),
 })

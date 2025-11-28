@@ -21,22 +21,6 @@ export const currency = common.currency.with({
   description: 'Three-letter ISO currency code for the payment.',
 })
 
-export const customerId = i.pins.data({
-  displayName: 'Customer ID',
-  description: 'ID of the customer this payment intent is for.',
-  schema: v.pipe(v.string(), v.startsWith('cus_')),
-  control: i.controls.select({
-    async options({ state }) {
-      const response = await state.stripe.customers.list({ limit: 100 })
-      return response.data.map((customer) => ({
-        value: customer.id,
-        label: customer.name || customer.email || customer.id,
-        suffix: customer.id,
-      }))
-    },
-  }),
-})
-
 export const description = common.description.with({
   description: 'An arbitrary string attached to the payment intent.',
 })

@@ -1,4 +1,4 @@
-export * as checkoutSession from './checkout-session'
+export * as checkout from './checkout'
 export * as common from './common'
 export * as customer from './customer'
 export * as invoice from './invoice'

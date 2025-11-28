@@ -16,7 +16,7 @@ export const createPaymentIntent = nodes.callable({
     currency: pins.paymentIntent.currency.with({
       description: 'Three-letter ISO currency code.',
     }),
-    customerId: pins.paymentIntent.customerId.with({
+    customerId: pins.customer.id.with({
       description: 'ID of the customer this payment is for.',
       optional: true,
     }),
@@ -58,7 +58,9 @@ export const createPaymentIntent = nodes.callable({
       metadata: opts.inputs.metadata,
     })
 
-    return opts.next({ paymentIntent })
+    return opts.next({
+      paymentIntent,
+    })
   },
 })
 
@@ -78,7 +80,10 @@ export const getPaymentIntent = nodes.callable({
     const paymentIntent = await opts.state.stripe.paymentIntents.retrieve(
       opts.inputs.id,
     )
-    return opts.next({ paymentIntent })
+
+    return opts.next({
+      paymentIntent,
+    })
   },
 })
 
@@ -96,7 +101,7 @@ export const updatePaymentIntent = nodes.callable({
       description: 'Updated currency code.',
       optional: true,
     }),
-    customerId: pins.paymentIntent.customerId.with({
+    customerId: pins.customer.id.with({
       description: 'Updated customer ID.',
       optional: true,
     }),
@@ -126,7 +131,9 @@ export const updatePaymentIntent = nodes.callable({
       },
     )
 
-    return opts.next({ paymentIntent })
+    return opts.next({
+      paymentIntent,
+    })
   },
 })
 
@@ -159,7 +166,9 @@ export const confirmPaymentIntent = nodes.callable({
       },
     )
 
-    return opts.next({ paymentIntent })
+    return opts.next({
+      paymentIntent,
+    })
   },
 })
 
@@ -202,7 +211,9 @@ export const cancelPaymentIntent = nodes.callable({
       },
     )
 
-    return opts.next({ paymentIntent })
+    return opts.next({
+      paymentIntent,
+    })
   },
 })
 
@@ -213,7 +224,12 @@ export const listPaymentIntents = nodes.callable({
       description: 'Maximum number of payment intents to return (1-100).',
       optional: true,
     }),
-    customerId: pins.paymentIntent.customerId.with({
+    after: pins.common.after.with({
+      description:
+        'Pagination cursor. Fetch payment intents that come after the given ID.',
+      optional: true,
+    }),
+    customerId: pins.customer.id.with({
       description: 'Filter payment intents by customer ID.',
       optional: true,
     }),
@@ -222,13 +238,20 @@ export const listPaymentIntents = nodes.callable({
     paymentIntents: i.pins.data<Stripe.PaymentIntent[]>({
       description: 'List of payment intent objects.',
     }),
+    hasMore: pins.common.hasMore.with({
+      description: 'Whether there are more payment intents available.',
+    }),
   },
   async run(opts) {
-    const response = await opts.state.stripe.paymentIntents.list({
+    const paymentIntents = await opts.state.stripe.paymentIntents.list({
       limit: opts.inputs.limit,
+      starting_after: opts.inputs.after,
       customer: opts.inputs.customerId,
     })
 
-    return opts.next({ paymentIntents: response.data })
+    return opts.next({
+      paymentIntents: paymentIntents.data,
+      hasMore: paymentIntents.has_more,
+    })
   },
 })

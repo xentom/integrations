@@ -1,7 +1,7 @@
 import * as i from '@xentom/integration-framework'
 import * as v from 'valibot'
 
-import * as common from './common'
+import * as common from '../common'
 
 export const id = common.id.with({
   displayName: 'Checkout Session ID',
@@ -43,22 +43,6 @@ export const cancelUrl = i.pins.data({
   }),
 })
 
-export const customerId = i.pins.data({
-  displayName: 'Customer ID',
-  description: 'ID of an existing customer if available.',
-  schema: v.pipe(v.string(), v.startsWith('cus_')),
-  control: i.controls.select({
-    async options({ state }) {
-      const response = await state.stripe.customers.list({ limit: 100 })
-      return response.data.map((customer) => ({
-        value: customer.id,
-        label: customer.name || customer.email || customer.id,
-        suffix: customer.id,
-      }))
-    },
-  }),
-})
-
 export const customerEmail = common.email.with({
   displayName: 'Customer Email',
   description:
@@ -88,3 +72,4 @@ export const allowPromotionCodes = i.pins.data({
   schema: v.boolean(),
   control: i.controls.switch(),
 })
+

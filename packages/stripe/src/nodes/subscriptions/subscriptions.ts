@@ -1,5 +1,4 @@
 import * as i from '@xentom/integration-framework'
-import * as v from 'valibot'
 
 import type Stripe from 'stripe'
 
@@ -10,7 +9,7 @@ const nodes = i.nodes.group('Subscriptions')
 export const createSubscription = nodes.callable({
   description: 'Create a new subscription for a customer.',
   inputs: {
-    customerId: pins.subscription.customerId.with({
+    customerId: pins.customer.id.with({
       description: 'The ID of the customer to subscribe.',
     }),
     priceId: pins.subscription.priceId.with({
@@ -48,7 +47,9 @@ export const createSubscription = nodes.callable({
       metadata: opts.inputs.metadata,
     })
 
-    return opts.next({ subscription })
+    return opts.next({
+      subscription,
+    })
   },
 })
 
@@ -68,7 +69,10 @@ export const getSubscription = nodes.callable({
     const subscription = await opts.state.stripe.subscriptions.retrieve(
       opts.inputs.id,
     )
-    return opts.next({ subscription })
+
+    return opts.next({
+      subscription,
+    })
   },
 })
 
@@ -110,6 +114,7 @@ export const updateSubscription = nodes.callable({
     if (opts.inputs.priceId) {
       const currentSubscription =
         await opts.state.stripe.subscriptions.retrieve(opts.inputs.id)
+
       const firstItem = currentSubscription.items.data[0]
       if (firstItem) {
         updateParams.items = [
@@ -126,7 +131,9 @@ export const updateSubscription = nodes.callable({
       updateParams,
     )
 
-    return opts.next({ subscription })
+    return opts.next({
+      subscription,
+    })
   },
 })
 
@@ -148,22 +155,15 @@ export const cancelSubscription = nodes.callable({
     }),
   },
   async run(opts) {
-    let subscription: Stripe.Subscription
-
-    if (opts.inputs.cancelAtPeriodEnd) {
-      subscription = await opts.state.stripe.subscriptions.update(
-        opts.inputs.id,
-        {
+    const subscription = opts.inputs.cancelAtPeriodEnd
+      ? await opts.state.stripe.subscriptions.update(opts.inputs.id, {
           cancel_at_period_end: true,
-        },
-      )
-    } else {
-      subscription = await opts.state.stripe.subscriptions.cancel(
-        opts.inputs.id,
-      )
-    }
+        })
+      : await opts.state.stripe.subscriptions.cancel(opts.inputs.id)
 
-    return opts.next({ subscription })
+    return opts.next({
+      subscription,
+    })
   },
 })
 
@@ -174,38 +174,17 @@ export const listSubscriptions = nodes.callable({
       description: 'Maximum number of subscriptions to return (1-100).',
       optional: true,
     }),
-    customerId: pins.subscription.customerId.with({
+    after: pins.common.after.with({
+      description:
+        'Pagination cursor. Fetch subscriptions that come after the given ID.',
+      optional: true,
+    }),
+    customerId: pins.customer.id.with({
       description: 'Filter subscriptions by customer ID.',
       optional: true,
     }),
-    status: i.pins.data({
+    status: pins.subscription.status.with({
       description: 'Filter subscriptions by status.',
-      schema: v.picklist([
-        'active',
-        'past_due',
-        'unpaid',
-        'canceled',
-        'incomplete',
-        'incomplete_expired',
-        'trialing',
-        'paused',
-        'all',
-        'ended',
-      ]),
-      control: i.controls.select({
-        options: [
-          { value: 'active', label: 'Active' },
-          { value: 'past_due', label: 'Past Due' },
-          { value: 'unpaid', label: 'Unpaid' },
-          { value: 'canceled', label: 'Canceled' },
-          { value: 'incomplete', label: 'Incomplete' },
-          { value: 'incomplete_expired', label: 'Incomplete Expired' },
-          { value: 'trialing', label: 'Trialing' },
-          { value: 'paused', label: 'Paused' },
-          { value: 'all', label: 'All' },
-          { value: 'ended', label: 'Ended' },
-        ],
-      }),
       optional: true,
     }),
   },
@@ -213,16 +192,25 @@ export const listSubscriptions = nodes.callable({
     subscriptions: i.pins.data<Stripe.Subscription[]>({
       description: 'List of subscription objects.',
     }),
+    hasMore: pins.common.hasMore.with({
+      description: 'Whether there are more subscriptions available.',
+      optional: true,
+    }),
   },
   async run(opts) {
-    const response = await opts.state.stripe.subscriptions.list({
+    const subscriptions = await opts.state.stripe.subscriptions.list({
+      // Pagination
       limit: opts.inputs.limit,
+      starting_after: opts.inputs.after,
+
+      // Filters
       customer: opts.inputs.customerId,
-      status: opts.inputs.status as
-        | Stripe.SubscriptionListParams.Status
-        | undefined,
+      status: opts.inputs.status,
     })
 
-    return opts.next({ subscriptions: response.data })
+    return opts.next({
+      subscriptions: subscriptions.data,
+      hasMore: subscriptions.has_more,
+    })
   },
 })

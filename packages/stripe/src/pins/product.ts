@@ -8,8 +8,11 @@ export const id = common.id.with({
   description: 'The unique identifier for the product.',
   control: i.controls.select({
     async options({ state }) {
-      const response = await state.stripe.products.list({ limit: 100 })
-      return response.data.map((product) => ({
+      const products = await state.stripe.products.list({
+        limit: 100,
+      })
+
+      return products.data.map((product) => ({
         value: product.id,
         label: product.name,
         suffix: product.id,

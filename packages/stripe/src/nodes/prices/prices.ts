@@ -43,7 +43,9 @@ export const createPrice = nodes.callable({
       metadata: opts.inputs.metadata,
     })
 
-    return opts.next({ price })
+    return opts.next({
+      price,
+    })
   },
 })
 
@@ -61,7 +63,10 @@ export const getPrice = nodes.callable({
   },
   async run(opts) {
     const price = await opts.state.stripe.prices.retrieve(opts.inputs.id)
-    return opts.next({ price })
+
+    return opts.next({
+      price,
+    })
   },
 })
 
@@ -93,7 +98,9 @@ export const updatePrice = nodes.callable({
       metadata: opts.inputs.metadata,
     })
 
-    return opts.next({ price })
+    return opts.next({
+      price,
+    })
   },
 })
 
@@ -102,6 +109,11 @@ export const listPrices = nodes.callable({
   inputs: {
     limit: pins.common.limit.with({
       description: 'Maximum number of prices to return (1-100).',
+      optional: true,
+    }),
+    after: pins.common.after.with({
+      description:
+        'Pagination cursor. Fetch prices that come after the given ID.',
       optional: true,
     }),
     productId: pins.product.id.with({
@@ -120,14 +132,21 @@ export const listPrices = nodes.callable({
     prices: i.pins.data<Stripe.Price[]>({
       description: 'List of price objects.',
     }),
+    hasMore: pins.common.hasMore.with({
+      description: 'Whether there are more prices available.',
+    }),
   },
   async run(opts) {
-    const response = await opts.state.stripe.prices.list({
+    const prices = await opts.state.stripe.prices.list({
       limit: opts.inputs.limit,
+      starting_after: opts.inputs.after,
       product: opts.inputs.productId,
       active: opts.inputs.active,
     })
 
-    return opts.next({ prices: response.data })
+    return opts.next({
+      prices: prices.data,
+      hasMore: prices.has_more,
+    })
   },
 })

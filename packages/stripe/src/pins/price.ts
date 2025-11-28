@@ -8,15 +8,17 @@ export const id = common.id.with({
   description: 'The unique identifier for the price.',
   control: i.controls.select({
     async options({ state }) {
-      const response = await state.stripe.prices.list({
+      const prices = await state.stripe.prices.list({
         limit: 100,
         expand: ['data.product'],
       })
-      return response.data.map((price) => {
+
+      return prices.data.map((price) => {
         const productName =
           typeof price.product === 'object' && 'name' in price.product
             ? price.product.name
             : price.product
+
         return {
           value: price.id,
           label: `${productName} - ${price.unit_amount ? price.unit_amount / 100 : 0} ${price.currency.toUpperCase()}`,

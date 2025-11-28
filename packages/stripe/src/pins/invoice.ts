@@ -6,26 +6,20 @@ import * as common from './common'
 export const id = common.id.with({
   displayName: 'Invoice ID',
   description: 'The unique identifier for the invoice.',
-  control: i.controls.text({
-    placeholder: 'in_...',
-  }),
-  schema: v.pipe(v.string(), v.startsWith('in_')),
-})
-
-export const customerId = i.pins.data({
-  displayName: 'Customer ID',
-  description: 'The ID of the customer for this invoice.',
-  schema: v.pipe(v.string(), v.startsWith('cus_')),
   control: i.controls.select({
     async options({ state }) {
-      const response = await state.stripe.customers.list({ limit: 100 })
-      return response.data.map((customer) => ({
-        value: customer.id,
-        label: customer.name || customer.email || customer.id,
-        suffix: customer.id,
+      const invoices = await state.stripe.invoices.list({
+        limit: 100,
+      })
+
+      return invoices.data.map((invoice) => ({
+        value: invoice.id,
+        label: invoice.number ?? invoice.id,
+        suffix: invoice.status ?? undefined,
       }))
     },
   }),
+  schema: v.pipe(v.string(), v.startsWith('in_')),
 })
 
 export const description = common.description.with({

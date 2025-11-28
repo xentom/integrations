@@ -48,7 +48,9 @@ export const createProduct = nodes.callable({
       metadata: opts.inputs.metadata,
     })
 
-    return opts.next({ product })
+    return opts.next({
+      product,
+    })
   },
 })
 
@@ -71,7 +73,9 @@ export const getProduct = nodes.callable({
       throw new Error('Product has been deleted')
     }
 
-    return opts.next({ product })
+    return opts.next({
+      product,
+    })
   },
 })
 
@@ -121,7 +125,9 @@ export const updateProduct = nodes.callable({
       metadata: opts.inputs.metadata,
     })
 
-    return opts.next({ product })
+    return opts.next({
+      product,
+    })
   },
 })
 
@@ -140,7 +146,10 @@ export const deleteProduct = nodes.callable({
   },
   async run(opts) {
     const result = await opts.state.stripe.products.del(opts.inputs.id)
-    return opts.next({ deleted: result.deleted })
+
+    return opts.next({
+      deleted: result.deleted,
+    })
   },
 })
 
@@ -149,6 +158,11 @@ export const listProducts = nodes.callable({
   inputs: {
     limit: pins.common.limit.with({
       description: 'Maximum number of products to return (1-100).',
+      optional: true,
+    }),
+    after: pins.common.after.with({
+      description:
+        'Pagination cursor. Fetch products that come after the given ID.',
       optional: true,
     }),
     active: pins.product.active.with({
@@ -160,13 +174,20 @@ export const listProducts = nodes.callable({
     products: i.pins.data<Stripe.Product[]>({
       description: 'List of product objects.',
     }),
+    hasMore: pins.common.hasMore.with({
+      description: 'Whether there are more products available.',
+    }),
   },
   async run(opts) {
-    const response = await opts.state.stripe.products.list({
+    const products = await opts.state.stripe.products.list({
       limit: opts.inputs.limit,
+      starting_after: opts.inputs.after,
       active: opts.inputs.active,
     })
 
-    return opts.next({ products: response.data })
+    return opts.next({
+      products: products.data,
+      hasMore: products.has_more,
+    })
   },
 })

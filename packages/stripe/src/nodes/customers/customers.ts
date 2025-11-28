@@ -49,7 +49,9 @@ export const createCustomer = nodes.callable({
       metadata: opts.inputs.metadata,
     })
 
-    return opts.next({ customer })
+    return opts.next({
+      customer,
+    })
   },
 })
 
@@ -72,7 +74,9 @@ export const getCustomer = nodes.callable({
       throw new Error('Customer has been deleted')
     }
 
-    return opts.next({ customer })
+    return opts.next({
+      customer,
+    })
   },
 })
 
@@ -122,7 +126,9 @@ export const updateCustomer = nodes.callable({
       metadata: opts.inputs.metadata,
     })
 
-    return opts.next({ customer })
+    return opts.next({
+      customer,
+    })
   },
 })
 
@@ -140,7 +146,10 @@ export const deleteCustomer = nodes.callable({
   },
   async run(opts) {
     const result = await opts.state.stripe.customers.del(opts.inputs.id)
-    return opts.next({ deleted: result.deleted })
+
+    return opts.next({
+      deleted: result.deleted,
+    })
   },
 })
 
@@ -149,6 +158,11 @@ export const listCustomers = nodes.callable({
   inputs: {
     limit: pins.common.limit.with({
       description: 'Maximum number of customers to return (1-100).',
+      optional: true,
+    }),
+    after: pins.common.after.with({
+      description:
+        'Pagination cursor. Fetch customers that come after the given ID.',
       optional: true,
     }),
     email: pins.customer.email.with({
@@ -160,13 +174,20 @@ export const listCustomers = nodes.callable({
     customers: i.pins.data<Stripe.Customer[]>({
       description: 'List of customer objects.',
     }),
+    hasMore: pins.common.hasMore.with({
+      description: 'Whether there are more customers available.',
+    }),
   },
   async run(opts) {
-    const response = await opts.state.stripe.customers.list({
+    const customers = await opts.state.stripe.customers.list({
       limit: opts.inputs.limit,
+      starting_after: opts.inputs.after,
       email: opts.inputs.email,
     })
 
-    return opts.next({ customers: response.data })
+    return opts.next({
+      customers: customers.data,
+      hasMore: customers.has_more,
+    })
   },
 })

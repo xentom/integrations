@@ -4,36 +4,36 @@ import type Stripe from 'stripe'
 
 import * as pins from '@/pins'
 
-const nodes = i.nodes.group('Checkout')
+const nodes = i.nodes.group('Checkout/Session')
 
 export const createCheckoutSession = nodes.callable({
   description: 'Create a new Stripe Checkout session for collecting payments.',
   inputs: {
-    mode: pins.checkoutSession.mode.with({
+    mode: pins.checkout.session.mode.with({
       description: 'The mode of the Checkout Session.',
     }),
-    successUrl: pins.checkoutSession.successUrl.with({
+    successUrl: pins.checkout.session.successUrl.with({
       description: 'URL to redirect after successful checkout.',
     }),
-    cancelUrl: pins.checkoutSession.cancelUrl.with({
+    cancelUrl: pins.checkout.session.cancelUrl.with({
       description: 'URL to redirect when checkout is canceled.',
     }),
-    lineItems: pins.checkoutSession.lineItems.with({
+    lineItems: pins.checkout.session.lineItems.with({
       description: 'List of items the customer is purchasing.',
     }),
-    customerId: pins.checkoutSession.customerId.with({
+    customerId: pins.customer.id.with({
       description: 'ID of an existing customer.',
       optional: true,
     }),
-    customerEmail: pins.checkoutSession.customerEmail.with({
+    customerEmail: pins.checkout.session.customerEmail.with({
       description: 'Email for a new customer.',
       optional: true,
     }),
-    allowPromotionCodes: pins.checkoutSession.allowPromotionCodes.with({
+    allowPromotionCodes: pins.checkout.session.allowPromotionCodes.with({
       description: 'Allow customer to enter promotion codes.',
       optional: true,
     }),
-    metadata: pins.checkoutSession.metadata.with({
+    metadata: pins.checkout.session.metadata.with({
       description: 'Set of key-value pairs for additional information.',
       optional: true,
     }),
@@ -42,9 +42,10 @@ export const createCheckoutSession = nodes.callable({
     session: i.pins.data<Stripe.Checkout.Session>({
       description: 'The created checkout session object.',
     }),
-    url: i.pins.data<string>({
+    url: i.pins.data<string, string, true>({
       displayName: 'Checkout URL',
       description: 'The URL to redirect the customer to for payment.',
+      optional: true,
     }),
   },
   async run(opts) {
@@ -61,7 +62,7 @@ export const createCheckoutSession = nodes.callable({
 
     return opts.next({
       session,
-      url: session.url || '',
+      url: session.url ?? undefined,
     })
   },
 })
@@ -69,7 +70,7 @@ export const createCheckoutSession = nodes.callable({
 export const getCheckoutSession = nodes.callable({
   description: 'Retrieve a Checkout Session by its ID.',
   inputs: {
-    id: pins.checkoutSession.id.with({
+    id: pins.checkout.session.id.with({
       description: 'The ID of the checkout session to retrieve.',
     }),
   },
@@ -82,14 +83,17 @@ export const getCheckoutSession = nodes.callable({
     const session = await opts.state.stripe.checkout.sessions.retrieve(
       opts.inputs.id,
     )
-    return opts.next({ session })
+
+    return opts.next({
+      session,
+    })
   },
 })
 
 export const expireCheckoutSession = nodes.callable({
   description: 'Expire an open Checkout Session.',
   inputs: {
-    id: pins.checkoutSession.id.with({
+    id: pins.checkout.session.id.with({
       description: 'The ID of the checkout session to expire.',
     }),
   },
@@ -102,7 +106,10 @@ export const expireCheckoutSession = nodes.callable({
     const session = await opts.state.stripe.checkout.sessions.expire(
       opts.inputs.id,
     )
-    return opts.next({ session })
+
+    return opts.next({
+      session,
+    })
   },
 })
 
@@ -113,8 +120,12 @@ export const listCheckoutSessions = nodes.callable({
       description: 'Maximum number of sessions to return (1-100).',
       optional: true,
     }),
-    customerId: pins.checkoutSession.customerId.with({
-      displayName: 'Customer ID',
+    after: pins.common.after.with({
+      description:
+        'Pagination cursor. Fetch sessions that come after the given ID.',
+      optional: true,
+    }),
+    customerId: pins.customer.id.with({
       description: 'Filter sessions by customer ID.',
       optional: true,
     }),
@@ -123,13 +134,20 @@ export const listCheckoutSessions = nodes.callable({
     sessions: i.pins.data<Stripe.Checkout.Session[]>({
       description: 'List of checkout session objects.',
     }),
+    hasMore: pins.common.hasMore.with({
+      description: 'Whether there are more sessions available.',
+    }),
   },
   async run(opts) {
-    const response = await opts.state.stripe.checkout.sessions.list({
+    const sessions = await opts.state.stripe.checkout.sessions.list({
       limit: opts.inputs.limit,
+      starting_after: opts.inputs.after,
       customer: opts.inputs.customerId,
     })
 
-    return opts.next({ sessions: response.data })
+    return opts.next({
+      sessions: sessions.data,
+      hasMore: sessions.has_more,
+    })
   },
 })

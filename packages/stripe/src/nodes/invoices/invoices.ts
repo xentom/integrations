@@ -10,7 +10,7 @@ const nodes = i.nodes.group('Invoices')
 export const createInvoice = nodes.callable({
   description: 'Create a new invoice for a customer.',
   inputs: {
-    customerId: pins.invoice.customerId.with({
+    customerId: pins.customer.id.with({
       description: 'The ID of the customer to invoice.',
     }),
     description: pins.invoice.description.with({
@@ -49,7 +49,9 @@ export const createInvoice = nodes.callable({
       metadata: opts.inputs.metadata,
     })
 
-    return opts.next({ invoice })
+    return opts.next({
+      invoice,
+    })
   },
 })
 
@@ -67,7 +69,10 @@ export const getInvoice = nodes.callable({
   },
   async run(opts) {
     const invoice = await opts.state.stripe.invoices.retrieve(opts.inputs.id)
-    return opts.next({ invoice })
+
+    return opts.next({
+      invoice,
+    })
   },
 })
 
@@ -102,7 +107,9 @@ export const updateInvoice = nodes.callable({
       metadata: opts.inputs.metadata,
     })
 
-    return opts.next({ invoice })
+    return opts.next({
+      invoice,
+    })
   },
 })
 
@@ -122,7 +129,10 @@ export const finalizeInvoice = nodes.callable({
     const invoice = await opts.state.stripe.invoices.finalizeInvoice(
       opts.inputs.id,
     )
-    return opts.next({ invoice })
+
+    return opts.next({
+      invoice,
+    })
   },
 })
 
@@ -140,7 +150,10 @@ export const payInvoice = nodes.callable({
   },
   async run(opts) {
     const invoice = await opts.state.stripe.invoices.pay(opts.inputs.id)
-    return opts.next({ invoice })
+
+    return opts.next({
+      invoice,
+    })
   },
 })
 
@@ -158,7 +171,10 @@ export const sendInvoice = nodes.callable({
   },
   async run(opts) {
     const invoice = await opts.state.stripe.invoices.sendInvoice(opts.inputs.id)
-    return opts.next({ invoice })
+
+    return opts.next({
+      invoice,
+    })
   },
 })
 
@@ -176,7 +192,10 @@ export const voidInvoice = nodes.callable({
   },
   async run(opts) {
     const invoice = await opts.state.stripe.invoices.voidInvoice(opts.inputs.id)
-    return opts.next({ invoice })
+
+    return opts.next({
+      invoice,
+    })
   },
 })
 
@@ -187,7 +206,12 @@ export const listInvoices = nodes.callable({
       description: 'Maximum number of invoices to return (1-100).',
       optional: true,
     }),
-    customerId: pins.invoice.customerId.with({
+    after: pins.common.after.with({
+      description:
+        'Pagination cursor. Fetch invoices that come after the given ID.',
+      optional: true,
+    }),
+    customerId: pins.customer.id.with({
       description: 'Filter invoices by customer ID.',
       optional: true,
     }),
@@ -210,14 +234,21 @@ export const listInvoices = nodes.callable({
     invoices: i.pins.data<Stripe.Invoice[]>({
       description: 'List of invoice objects.',
     }),
+    hasMore: pins.common.hasMore.with({
+      description: 'Whether there are more invoices available.',
+    }),
   },
   async run(opts) {
-    const response = await opts.state.stripe.invoices.list({
+    const invoices = await opts.state.stripe.invoices.list({
       limit: opts.inputs.limit,
+      starting_after: opts.inputs.after,
       customer: opts.inputs.customerId,
       status: opts.inputs.status as Stripe.InvoiceListParams.Status | undefined,
     })
 
-    return opts.next({ invoices: response.data })
+    return opts.next({
+      invoices: invoices.data,
+      hasMore: invoices.has_more,
+    })
   },
 })
