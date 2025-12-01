@@ -5,7 +5,6 @@
   "displayName": "Stripe",
   "description": "Integrate Stripe to manage payments, customers, subscriptions, and invoices in your workflows.",
   "categories": [
-    "Experimental",
     "Commerce"
   ],
   "homepage": "https://xentom.com/integrations/xentom/stripe",
