@@ -1,7 +1,7 @@
 {
   "$schema": "https://assets.xentom.com/schemas/package.json",
   "name": "@xentom/slack",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "displayName": "Slack",
   "description": "Automate Slack messaging workflows and manage workspace content from Xentom.",
   "categories": [

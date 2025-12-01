@@ -65,7 +65,9 @@ export const id = i.pins.data({
         cursor = response.response_metadata?.next_cursor || undefined
       } while (cursor)
 
-      return options
+      return {
+        items: options,
+      }
     },
   }),
 })
