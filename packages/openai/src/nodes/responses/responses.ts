@@ -17,12 +17,14 @@ export const createResponse = nodes.callable({
       control: i.controls.select<string>({
         defaultValue: 'gpt-4o',
         options(opts) {
-          return opts.state.models
-            .sort((a, b) => b.created - a.created)
-            .map((model) => ({
-              value: model.id,
-              label: model.id,
-            }))
+          return {
+            items: opts.state.models
+              .sort((a, b) => b.created - a.created)
+              .map((model) => ({
+                value: model.id,
+                label: model.id,
+              })),
+          }
         },
       }),
     }),
