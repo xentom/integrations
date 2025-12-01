@@ -3,6 +3,18 @@ import * as v from 'valibot'
 
 import * as common from './common'
 
+export const eventType = i.pins.data({
+  description: 'The type of product event to trigger on.',
+  control: i.controls.select({
+    options: [
+      { label: 'Created', value: 'created' },
+      { label: 'Updated', value: 'updated' },
+      { label: 'Deleted', value: 'deleted' },
+    ],
+    defaultValue: 'created',
+  } as const),
+})
+
 export const id = common.id.with({
   displayName: 'Product ID',
   description: 'The unique identifier for the product.',

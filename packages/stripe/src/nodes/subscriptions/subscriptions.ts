@@ -6,6 +6,49 @@ import * as pins from '@/pins'
 
 const nodes = i.nodes.group('Subscriptions')
 
+export const onSubscription = i.generic(
+  <I extends i.GenericInputs<typeof inputs>>() => {
+    const inputs = {
+      eventType: pins.subscription.eventType.with({
+        displayName: 'When',
+      }),
+    }
+
+    type Event = Extract<
+      Stripe.Event,
+      { type: `customer.subscription.${I['eventType']}` }
+    >
+
+    return nodes.trigger({
+      description: 'Triggered when a subscription event is received.',
+      inputs,
+      outputs: {
+        subscription: i.pins.data<Event['data']['object']>(),
+      },
+      async subscribe(opts) {
+        function onSubscriptionEvent(event: Stripe.Event) {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+          void opts.next({
+            subscription: event.data.object,
+          } as any)
+        }
+
+        opts.state.events.on(
+          `customer.subscription.${opts.inputs.eventType}`,
+          onSubscriptionEvent,
+        )
+
+        return () => {
+          opts.state.events.off(
+            `customer.subscription.${opts.inputs.eventType}`,
+            onSubscriptionEvent,
+          )
+        }
+      },
+    })
+  },
+)
+
 export const createSubscription = nodes.callable({
   description: 'Create a new subscription for a customer.',
   inputs: {

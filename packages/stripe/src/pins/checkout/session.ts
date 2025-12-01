@@ -3,6 +3,19 @@ import * as v from 'valibot'
 
 import * as common from '../common'
 
+export const eventType = i.pins.data({
+  description: 'The type of checkout session event to trigger on.',
+  control: i.controls.select({
+    options: [
+      { label: 'Completed', value: 'completed' },
+      { label: 'Async Payment Succeeded', value: 'async_payment_succeeded' },
+      { label: 'Async Payment Failed', value: 'async_payment_failed' },
+      { label: 'Expired', value: 'expired' },
+    ],
+    defaultValue: 'completed',
+  } as const),
+})
+
 export const id = common.id.with({
   displayName: 'Checkout Session ID',
   description: 'The unique identifier for the checkout session.',
@@ -72,4 +85,3 @@ export const allowPromotionCodes = i.pins.data({
   schema: v.boolean(),
   control: i.controls.switch(),
 })
-

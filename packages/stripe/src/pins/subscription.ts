@@ -5,6 +5,23 @@ import type Stripe from 'stripe'
 
 import * as common from './common'
 
+export const eventType = i.pins.data({
+  description: 'The type of subscription event to trigger on.',
+  control: i.controls.select({
+    options: [
+      { label: 'Created', value: 'created' },
+      { label: 'Updated', value: 'updated' },
+      { label: 'Deleted', value: 'deleted' },
+      { label: 'Paused', value: 'paused' },
+      { label: 'Resumed', value: 'resumed' },
+      { label: 'Trial Will End', value: 'trial_will_end' },
+      { label: 'Pending Update Applied', value: 'pending_update_applied' },
+      { label: 'Pending Update Expired', value: 'pending_update_expired' },
+    ],
+    defaultValue: 'created',
+  } as const),
+})
+
 export const id = common.id.with({
   displayName: 'Subscription ID',
   description: 'The unique identifier for the subscription.',

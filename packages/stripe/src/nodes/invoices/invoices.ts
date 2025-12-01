@@ -1,11 +1,48 @@
-import * as i from '@xentom/integration-framework'
-import * as v from 'valibot'
+import * as i from '@xentom/integration-framework';
+import * as v from 'valibot';
 
-import type Stripe from 'stripe'
+import type Stripe from 'stripe';
 
-import * as pins from '@/pins'
+import * as pins from '@/pins';
 
-const nodes = i.nodes.group('Invoices')
+const nodes = i.nodes.group('Invoices');
+
+export const onInvoice = i.generic(<
+  I extends i.GenericInputs<typeof inputs>
+>() => {
+  const inputs = {
+    eventType: pins.invoice.eventType.with({
+      displayName: 'When',
+    }),
+  };
+
+  type Event = Extract<Stripe.Event, { type: `invoice.${I['eventType']}` }>;
+
+  return nodes.trigger({
+    description: 'Triggered when an invoice event is received.',
+    inputs,
+    outputs: {
+      invoice: i.pins.data<Event['data']['object']>(),
+    },
+    async subscribe(opts) {
+      function onInvoiceEvent(event: Stripe.Event) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+        void opts.next({
+          invoice: event.data.object,
+        } as any);
+      }
+
+      opts.state.events.on(`invoice.${opts.inputs.eventType}`, onInvoiceEvent);
+
+      return () => {
+        opts.state.events.off(
+          `invoice.${opts.inputs.eventType}`,
+          onInvoiceEvent
+        );
+      };
+    },
+  });
+});
 
 export const createInvoice = nodes.callable({
   description: 'Create a new invoice for a customer.',
@@ -47,13 +84,13 @@ export const createInvoice = nodes.callable({
       days_until_due: opts.inputs.daysUntilDue,
       footer: opts.inputs.footer,
       metadata: opts.inputs.metadata,
-    })
+    });
 
     return opts.next({
       invoice,
-    })
+    });
   },
-})
+});
 
 export const getInvoice = nodes.callable({
   description: 'Retrieve an invoice by its ID.',
@@ -68,13 +105,13 @@ export const getInvoice = nodes.callable({
     }),
   },
   async run(opts) {
-    const invoice = await opts.state.stripe.invoices.retrieve(opts.inputs.id)
+    const invoice = await opts.state.stripe.invoices.retrieve(opts.inputs.id);
 
     return opts.next({
       invoice,
-    })
+    });
   },
-})
+});
 
 export const updateInvoice = nodes.callable({
   description: 'Update an existing draft invoice.',
@@ -105,13 +142,13 @@ export const updateInvoice = nodes.callable({
       description: opts.inputs.description,
       footer: opts.inputs.footer,
       metadata: opts.inputs.metadata,
-    })
+    });
 
     return opts.next({
       invoice,
-    })
+    });
   },
-})
+});
 
 export const finalizeInvoice = nodes.callable({
   description: 'Finalize a draft invoice to make it ready for payment.',
@@ -127,14 +164,14 @@ export const finalizeInvoice = nodes.callable({
   },
   async run(opts) {
     const invoice = await opts.state.stripe.invoices.finalizeInvoice(
-      opts.inputs.id,
-    )
+      opts.inputs.id
+    );
 
     return opts.next({
       invoice,
-    })
+    });
   },
-})
+});
 
 export const payInvoice = nodes.callable({
   description: 'Pay an open invoice.',
@@ -149,13 +186,13 @@ export const payInvoice = nodes.callable({
     }),
   },
   async run(opts) {
-    const invoice = await opts.state.stripe.invoices.pay(opts.inputs.id)
+    const invoice = await opts.state.stripe.invoices.pay(opts.inputs.id);
 
     return opts.next({
       invoice,
-    })
+    });
   },
-})
+});
 
 export const sendInvoice = nodes.callable({
   description: 'Send an invoice to the customer by email.',
@@ -170,13 +207,15 @@ export const sendInvoice = nodes.callable({
     }),
   },
   async run(opts) {
-    const invoice = await opts.state.stripe.invoices.sendInvoice(opts.inputs.id)
+    const invoice = await opts.state.stripe.invoices.sendInvoice(
+      opts.inputs.id
+    );
 
     return opts.next({
       invoice,
-    })
+    });
   },
-})
+});
 
 export const voidInvoice = nodes.callable({
   description: 'Void an invoice. This marks it as uncollectable.',
@@ -191,13 +230,15 @@ export const voidInvoice = nodes.callable({
     }),
   },
   async run(opts) {
-    const invoice = await opts.state.stripe.invoices.voidInvoice(opts.inputs.id)
+    const invoice = await opts.state.stripe.invoices.voidInvoice(
+      opts.inputs.id
+    );
 
     return opts.next({
       invoice,
-    })
+    });
   },
-})
+});
 
 export const listInvoices = nodes.callable({
   description: 'List all invoices in your Stripe account.',
@@ -244,11 +285,11 @@ export const listInvoices = nodes.callable({
       starting_after: opts.inputs.after,
       customer: opts.inputs.customerId,
       status: opts.inputs.status as Stripe.InvoiceListParams.Status | undefined,
-    })
+    });
 
     return opts.next({
       invoices: invoices.data,
       hasMore: invoices.has_more,
-    })
+    });
   },
-})
+});

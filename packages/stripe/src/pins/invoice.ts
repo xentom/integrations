@@ -3,6 +3,24 @@ import * as v from 'valibot'
 
 import * as common from './common'
 
+export const eventType = i.pins.data({
+  description: 'The type of invoice event to trigger on.',
+  control: i.controls.select({
+    options: [
+      { label: 'Created', value: 'created' },
+      { label: 'Updated', value: 'updated' },
+      { label: 'Deleted', value: 'deleted' },
+      { label: 'Finalized', value: 'finalized' },
+      { label: 'Paid', value: 'paid' },
+      { label: 'Payment Failed', value: 'payment_failed' },
+      { label: 'Payment Succeeded', value: 'payment_succeeded' },
+      { label: 'Sent', value: 'sent' },
+      { label: 'Voided', value: 'voided' },
+    ],
+    defaultValue: 'created',
+  } as const),
+})
+
 export const id = common.id.with({
   displayName: 'Invoice ID',
   description: 'The unique identifier for the invoice.',

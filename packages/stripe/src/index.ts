@@ -1,6 +1,7 @@
 import * as i from '@xentom/integration-framework'
 import * as v from 'valibot'
 
+import { EventEmitter } from 'node:events'
 import Stripe from 'stripe'
 
 import * as nodes from './nodes'
@@ -10,9 +11,14 @@ v.setGlobalConfig({
   abortPipeEarly: true,
 })
 
+type StripeEventMap = {
+  [E in Stripe.Event as E['type']]: [E]
+}
+
 declare module '@xentom/integration-framework' {
   interface IntegrationState {
     stripe: Stripe
+    events: EventEmitter<StripeEventMap>
   }
 }
 
@@ -49,7 +55,41 @@ export default i.integration({
     ),
   }),
 
-  start(opts) {
+  async start(opts) {
     opts.state.stripe = new Stripe(opts.auth.token)
+    opts.state.events = new EventEmitter<StripeEventMap>()
+
+    const endpointSecretKey = `endpoint:${Bun.hash(opts.webhook.url)}:secret`
+    const endpointSecret: string =
+      (await opts.kv.get(endpointSecretKey)) ??
+      (await opts.state.stripe.webhookEndpoints
+        .create({
+          url: opts.webhook.url,
+          enabled_events: ['*'],
+        })
+        .then(async ({ secret }) => {
+          if (!secret) {
+            throw new Error('Failed to create webhook endpoint')
+          }
+
+          await opts.kv.set(endpointSecretKey, secret)
+          return secret
+        }))
+
+    opts.webhook.subscribe(async (request) => {
+      const signature = request.headers.get('stripe-signature')
+      if (!signature) {
+        return new Response('Unauthorized', { status: 401 })
+      }
+
+      const event = await opts.state.stripe.webhooks.constructEventAsync(
+        Buffer.from(await request.arrayBuffer()),
+        signature,
+        endpointSecret,
+      )
+
+      // @ts-expect-error -
+      opts.state.events.emit(event.type, event)
+    })
   },
 })

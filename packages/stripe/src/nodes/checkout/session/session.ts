@@ -6,6 +6,49 @@ import * as pins from '@/pins'
 
 const nodes = i.nodes.group('Checkout/Session')
 
+export const onCheckoutSession = i.generic(
+  <I extends i.GenericInputs<typeof inputs>>() => {
+    const inputs = {
+      eventType: pins.checkout.session.eventType.with({
+        displayName: 'When',
+      }),
+    }
+
+    type Event = Extract<
+      Stripe.Event,
+      { type: `checkout.session.${I['eventType']}` }
+    >
+
+    return nodes.trigger({
+      description: 'Triggered when a checkout session event is received.',
+      inputs,
+      outputs: {
+        session: i.pins.data<Event['data']['object']>(),
+      },
+      async subscribe(opts) {
+        function onCheckoutSessionEvent(event: Stripe.Event) {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+          void opts.next({
+            session: event.data.object,
+          } as any)
+        }
+
+        opts.state.events.on(
+          `checkout.session.${opts.inputs.eventType}`,
+          onCheckoutSessionEvent,
+        )
+
+        return () => {
+          opts.state.events.off(
+            `checkout.session.${opts.inputs.eventType}`,
+            onCheckoutSessionEvent,
+          )
+        }
+      },
+    })
+  },
+)
+
 export const createCheckoutSession = nodes.callable({
   description: 'Create a new Stripe Checkout session for collecting payments.',
   inputs: {

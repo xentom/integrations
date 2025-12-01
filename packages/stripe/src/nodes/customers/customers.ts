@@ -6,6 +6,46 @@ import * as pins from '@/pins'
 
 const nodes = i.nodes.group('Customers')
 
+export const onCustomer = i.generic(
+  <I extends i.GenericInputs<typeof inputs>>() => {
+    const inputs = {
+      eventType: pins.customer.eventType.with({
+        displayName: 'When',
+      }),
+    }
+
+    type Event = Extract<Stripe.Event, { type: `customer.${I['eventType']}` }>
+
+    return nodes.trigger({
+      description: 'Triggered when a customer event is received.',
+      inputs,
+      outputs: {
+        customer: i.pins.data<Event['data']['object']>(),
+      },
+      async subscribe(opts) {
+        function onCustomerEvent(event: Stripe.Event) {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+          void opts.next({
+            customer: event.data.object,
+          } as any)
+        }
+
+        opts.state.events.on(
+          `customer.${opts.inputs.eventType}`,
+          onCustomerEvent,
+        )
+
+        return () => {
+          opts.state.events.off(
+            `customer.${opts.inputs.eventType}`,
+            onCustomerEvent,
+          )
+        }
+      },
+    })
+  },
+)
+
 export const createCustomer = nodes.callable({
   description: 'Create a new customer in Stripe.',
   inputs: {

@@ -1,11 +1,45 @@
-import * as i from '@xentom/integration-framework'
-import * as v from 'valibot'
+import * as i from '@xentom/integration-framework';
+import * as v from 'valibot';
 
-import type Stripe from 'stripe'
+import type Stripe from 'stripe';
 
-import * as pins from '@/pins'
+import * as pins from '@/pins';
 
-const nodes = i.nodes.group('Prices')
+const nodes = i.nodes.group('Prices');
+
+export const onPrice = i.generic(<
+  I extends i.GenericInputs<typeof inputs>
+>() => {
+  const inputs = {
+    eventType: pins.price.eventType.with({
+      displayName: 'When',
+    }),
+  };
+
+  type Event = Extract<Stripe.Event, { type: `price.${I['eventType']}` }>;
+
+  return nodes.trigger({
+    description: 'Triggered when a price event is received.',
+    inputs,
+    outputs: {
+      price: i.pins.data<Event['data']['object']>(),
+    },
+    async subscribe(opts) {
+      function onPriceEvent(event: Stripe.Event) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+        void opts.next({
+          price: event.data.object,
+        } as any);
+      }
+
+      opts.state.events.on(`price.${opts.inputs.eventType}`, onPriceEvent);
+
+      return () => {
+        opts.state.events.off(`price.${opts.inputs.eventType}`, onPriceEvent);
+      };
+    },
+  });
+});
 
 export const createPrice = nodes.callable({
   description: 'Create a new price for a product in Stripe.',
@@ -41,13 +75,13 @@ export const createPrice = nodes.callable({
       currency: opts.inputs.currency,
       recurring: opts.inputs.recurring,
       metadata: opts.inputs.metadata,
-    })
+    });
 
     return opts.next({
       price,
-    })
+    });
   },
-})
+});
 
 export const getPrice = nodes.callable({
   description: 'Retrieve a price by its ID.',
@@ -62,13 +96,13 @@ export const getPrice = nodes.callable({
     }),
   },
   async run(opts) {
-    const price = await opts.state.stripe.prices.retrieve(opts.inputs.id)
+    const price = await opts.state.stripe.prices.retrieve(opts.inputs.id);
 
     return opts.next({
       price,
-    })
+    });
   },
-})
+});
 
 export const updatePrice = nodes.callable({
   description: 'Update an existing price in Stripe.',
@@ -96,13 +130,13 @@ export const updatePrice = nodes.callable({
     const price = await opts.state.stripe.prices.update(opts.inputs.id, {
       active: opts.inputs.active,
       metadata: opts.inputs.metadata,
-    })
+    });
 
     return opts.next({
       price,
-    })
+    });
   },
-})
+});
 
 export const listPrices = nodes.callable({
   description: 'List all prices in your Stripe account.',
@@ -142,11 +176,11 @@ export const listPrices = nodes.callable({
       starting_after: opts.inputs.after,
       product: opts.inputs.productId,
       active: opts.inputs.active,
-    })
+    });
 
     return opts.next({
       prices: prices.data,
       hasMore: prices.has_more,
-    })
+    });
   },
-})
+});

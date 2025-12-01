@@ -3,6 +3,26 @@ import * as v from 'valibot'
 
 import * as common from './common'
 
+export const eventType = i.pins.data({
+  description: 'The type of payment intent event to trigger on.',
+  control: i.controls.select({
+    options: [
+      { label: 'Created', value: 'created' },
+      { label: 'Succeeded', value: 'succeeded' },
+      { label: 'Canceled', value: 'canceled' },
+      { label: 'Payment Failed', value: 'payment_failed' },
+      { label: 'Processing', value: 'processing' },
+      { label: 'Requires Action', value: 'requires_action' },
+      {
+        label: 'Amount Capturable Updated',
+        value: 'amount_capturable_updated',
+      },
+      { label: 'Partially Funded', value: 'partially_funded' },
+    ],
+    defaultValue: 'succeeded',
+  } as const),
+})
+
 export const id = common.id.with({
   displayName: 'Payment Intent ID',
   description: 'The unique identifier for the payment intent.',

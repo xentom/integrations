@@ -6,6 +6,43 @@ import * as pins from '@/pins'
 
 const nodes = i.nodes.group('Products')
 
+export const onProduct = i.generic(
+  <I extends i.GenericInputs<typeof inputs>>() => {
+    const inputs = {
+      eventType: pins.product.eventType.with({
+        displayName: 'When',
+      }),
+    }
+
+    type Event = Extract<Stripe.Event, { type: `product.${I['eventType']}` }>
+
+    return nodes.trigger({
+      description: 'Triggered when a product event is received.',
+      inputs,
+      outputs: {
+        product: i.pins.data<Event['data']['object']>(),
+      },
+      async subscribe(opts) {
+        function onProductEvent(event: Stripe.Event) {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+          void opts.next({
+            product: event.data.object,
+          } as any)
+        }
+
+        opts.state.events.on(`product.${opts.inputs.eventType}`, onProductEvent)
+
+        return () => {
+          opts.state.events.off(
+            `product.${opts.inputs.eventType}`,
+            onProductEvent,
+          )
+        }
+      },
+    })
+  },
+)
+
 export const createProduct = nodes.callable({
   description: 'Create a new product in Stripe.',
   inputs: {
