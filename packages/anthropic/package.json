@@ -1,7 +1,7 @@
 {
   "$schema": "https://assets.xentom.com/schemas/package.json",
   "name": "@xentom/anthropic",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "displayName": "Anthropic (Claude)",
   "description": "Integration for Anthropic's Claude AI models, enabling workflows to interact with Claude for natural language processing, text generation, and AI-powered automation.",
   "categories": [

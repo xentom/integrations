@@ -1,7 +1,7 @@
 {
   "$schema": "https://assets.xentom.com/schemas/package.json",
   "name": "@xentom/essentials",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "displayName": "Essentials",
   "description": "Add essentials to trigger workflows on schedules or manual runs and perform core actions like sending emails, making HTTP requests, or manipulating data.",
   "categories": [
