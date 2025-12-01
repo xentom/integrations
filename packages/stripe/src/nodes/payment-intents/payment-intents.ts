@@ -1,54 +1,54 @@
-import * as i from '@xentom/integration-framework';
-import * as v from 'valibot';
+import * as i from '@xentom/integration-framework'
+import * as v from 'valibot'
 
-import type Stripe from 'stripe';
+import type Stripe from 'stripe'
 
-import * as pins from '@/pins';
+import * as pins from '@/pins'
 
-const nodes = i.nodes.group('Payment Intents');
+const nodes = i.nodes.group('Payment Intents')
 
-export const onPaymentIntent = i.generic(<
-  I extends i.GenericInputs<typeof inputs>
->() => {
-  const inputs = {
-    eventType: pins.paymentIntent.eventType.with({
-      displayName: 'When',
-    }),
-  };
+export const onPaymentIntent = i.generic(
+  <I extends i.GenericInputs<typeof inputs>>() => {
+    const inputs = {
+      eventType: pins.paymentIntent.eventType.with({
+        displayName: 'When',
+      }),
+    }
 
-  type Event = Extract<
-    Stripe.Event,
-    { type: `payment_intent.${I['eventType']}` }
-  >;
+    type Event = Extract<
+      Stripe.Event,
+      { type: `payment_intent.${I['eventType']}` }
+    >
 
-  return nodes.trigger({
-    description: 'Triggered when a payment intent event is received.',
-    inputs,
-    outputs: {
-      paymentIntent: i.pins.data<Event['data']['object']>(),
-    },
-    async subscribe(opts) {
-      function onPaymentIntentEvent(event: Stripe.Event) {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-        void opts.next({
-          paymentIntent: event.data.object,
-        } as any);
-      }
+    return nodes.trigger({
+      description: 'Triggered when a payment intent event is received.',
+      inputs,
+      outputs: {
+        paymentIntent: i.pins.data<Event['data']['object']>(),
+      },
+      async subscribe(opts) {
+        function onPaymentIntentEvent(event: Stripe.Event) {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+          void opts.next({
+            paymentIntent: event.data.object,
+          } as any)
+        }
 
-      opts.state.events.on(
-        `payment_intent.${opts.inputs.eventType}`,
-        onPaymentIntentEvent
-      );
-
-      return () => {
-        opts.state.events.off(
+        opts.state.events.on(
           `payment_intent.${opts.inputs.eventType}`,
-          onPaymentIntentEvent
-        );
-      };
-    },
-  });
-});
+          onPaymentIntentEvent,
+        )
+
+        return () => {
+          opts.state.events.off(
+            `payment_intent.${opts.inputs.eventType}`,
+            onPaymentIntentEvent,
+          )
+        }
+      },
+    })
+  },
+)
 
 export const createPaymentIntent = nodes.callable({
   description: 'Create a new payment intent for collecting a payment.',
@@ -99,13 +99,13 @@ export const createPaymentIntent = nodes.callable({
       receipt_email: opts.inputs.receiptEmail,
       statement_descriptor: opts.inputs.statementDescriptor,
       metadata: opts.inputs.metadata,
-    });
+    })
 
     return opts.next({
       paymentIntent,
-    });
+    })
   },
-});
+})
 
 export const getPaymentIntent = nodes.callable({
   description: 'Retrieve a payment intent by its ID.',
@@ -121,14 +121,14 @@ export const getPaymentIntent = nodes.callable({
   },
   async run(opts) {
     const paymentIntent = await opts.state.stripe.paymentIntents.retrieve(
-      opts.inputs.id
-    );
+      opts.inputs.id,
+    )
 
     return opts.next({
       paymentIntent,
-    });
+    })
   },
-});
+})
 
 export const updatePaymentIntent = nodes.callable({
   description: 'Update an existing payment intent.',
@@ -171,14 +171,14 @@ export const updatePaymentIntent = nodes.callable({
         customer: opts.inputs.customerId,
         description: opts.inputs.description,
         metadata: opts.inputs.metadata,
-      }
-    );
+      },
+    )
 
     return opts.next({
       paymentIntent,
-    });
+    })
   },
-});
+})
 
 export const confirmPaymentIntent = nodes.callable({
   description: 'Confirm a payment intent to begin the payment process.',
@@ -206,14 +206,14 @@ export const confirmPaymentIntent = nodes.callable({
       opts.inputs.id,
       {
         payment_method: opts.inputs.paymentMethod,
-      }
-    );
+      },
+    )
 
     return opts.next({
       paymentIntent,
-    });
+    })
   },
-});
+})
 
 export const cancelPaymentIntent = nodes.callable({
   description: 'Cancel a payment intent.',
@@ -251,14 +251,14 @@ export const cancelPaymentIntent = nodes.callable({
       {
         cancellation_reason: opts.inputs
           .cancellationReason as Stripe.PaymentIntentCancelParams.CancellationReason,
-      }
-    );
+      },
+    )
 
     return opts.next({
       paymentIntent,
-    });
+    })
   },
-});
+})
 
 export const listPaymentIntents = nodes.callable({
   description: 'List all payment intents in your Stripe account.',
@@ -290,11 +290,11 @@ export const listPaymentIntents = nodes.callable({
       limit: opts.inputs.limit,
       starting_after: opts.inputs.after,
       customer: opts.inputs.customerId,
-    });
+    })
 
     return opts.next({
       paymentIntents: paymentIntents.data,
       hasMore: paymentIntents.has_more,
-    });
+    })
   },
-});
+})
