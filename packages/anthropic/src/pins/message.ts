@@ -33,11 +33,19 @@ export const model = i.pins.data({
   schema: v.string(),
   control: i.controls.select({
     async options(opts) {
-      const models = await opts.state.client.models.list()
-      return models.data.map((model) => ({
-        value: model.id,
-        label: model.display_name,
-      }))
+      const models = await opts.state.client.models.list({
+        limit: opts.pagination.limit,
+        after_id: opts.pagination.after?.toString(),
+        before_id: opts.pagination.before?.toString(),
+      })
+
+      return {
+        hasMore: models.has_more,
+        items: models.data.map((model) => ({
+          value: model.id,
+          label: model.display_name,
+        })),
+      }
     },
     defaultValue: 'claude-sonnet-4-5',
   }),
