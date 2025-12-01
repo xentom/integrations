@@ -1,6 +1,7 @@
 import * as i from '@xentom/integration-framework'
 import * as v from 'valibot'
 
+import { getPagination } from '@/utils/pagination'
 import * as common from './common'
 
 export const eventType = i.pins.data({
@@ -19,24 +20,33 @@ export const id = common.id.with({
   displayName: 'Price ID',
   description: 'The unique identifier for the price.',
   control: i.controls.select({
-    async options({ state }) {
-      const prices = await state.stripe.prices.list({
-        limit: 100,
-        expand: ['data.product'],
-      })
+    async options({ state, pagination, search }) {
+      const prices = search
+        ? await state.stripe.prices.search({
+            ...getPagination(pagination),
+            query: `id~"${search}"`,
+            expand: ['data.product'],
+          })
+        : await state.stripe.prices.list({
+            ...getPagination(pagination),
+            expand: ['data.product'],
+          })
 
-      return prices.data.map((price) => {
-        const productName =
-          typeof price.product === 'object' && 'name' in price.product
-            ? price.product.name
-            : price.product
+      return {
+        hasMore: prices.has_more,
+        items: prices.data.map((price) => {
+          const productName =
+            typeof price.product === 'object' && 'name' in price.product
+              ? price.product.name
+              : price.product
 
-        return {
-          value: price.id,
-          label: `${productName} - ${price.unit_amount ? price.unit_amount / 100 : 0} ${price.currency.toUpperCase()}`,
-          suffix: price.id,
-        }
-      })
+          return {
+            value: price.id,
+            label: `${productName} - ${price.unit_amount ? price.unit_amount / 100 : 0} ${price.currency.toUpperCase()}`,
+            suffix: price.id,
+          }
+        }),
+      }
     },
   }),
   schema: v.pipe(v.string(), v.startsWith('price_')),

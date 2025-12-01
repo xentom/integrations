@@ -1,6 +1,7 @@
 import * as i from '@xentom/integration-framework'
 import * as v from 'valibot'
 
+import { getPagination } from '@/utils/pagination'
 import * as common from './common'
 
 export const eventType = i.pins.data({
@@ -19,16 +20,24 @@ export const id = common.id.with({
   displayName: 'Product ID',
   description: 'The unique identifier for the product.',
   control: i.controls.select({
-    async options({ state }) {
-      const products = await state.stripe.products.list({
-        limit: 100,
-      })
+    async options({ state, pagination, search }) {
+      const products = search
+        ? await state.stripe.products.search({
+            ...getPagination(pagination),
+            query: `name~"${search}"`,
+          })
+        : await state.stripe.products.list({
+            ...getPagination(pagination),
+          })
 
-      return products.data.map((product) => ({
-        value: product.id,
-        label: product.name,
-        suffix: product.id,
-      }))
+      return {
+        hasMore: products.has_more,
+        items: products.data.map((product) => ({
+          value: product.id,
+          label: product.name,
+          suffix: product.id,
+        })),
+      }
     },
   }),
   schema: v.pipe(v.string(), v.startsWith('prod_')),

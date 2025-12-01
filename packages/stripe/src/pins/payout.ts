@@ -1,6 +1,7 @@
 import * as i from '@xentom/integration-framework'
 import * as v from 'valibot'
 
+import { getPagination } from '@/utils/pagination'
 import * as common from './common'
 
 export const eventType = i.pins.data({
@@ -22,16 +23,19 @@ export const id = common.id.with({
   displayName: 'Payout ID',
   description: 'The unique identifier for the payout.',
   control: i.controls.select({
-    async options({ state }) {
+    async options({ state, pagination }) {
       const payouts = await state.stripe.payouts.list({
-        limit: 100,
+        ...getPagination(pagination),
       })
 
-      return payouts.data.map((payout) => ({
-        value: payout.id,
-        label: `${payout.amount / 100} ${payout.currency.toUpperCase()}`,
-        suffix: payout.status,
-      }))
+      return {
+        hasMore: payouts.has_more,
+        items: payouts.data.map((payout) => ({
+          value: payout.id,
+          label: `${payout.amount / 100} ${payout.currency.toUpperCase()}`,
+          suffix: payout.status,
+        })),
+      }
     },
   }),
   schema: v.pipe(v.string(), v.startsWith('po_')),

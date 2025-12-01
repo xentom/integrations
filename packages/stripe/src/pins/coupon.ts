@@ -1,6 +1,7 @@
 import * as i from '@xentom/integration-framework'
 import * as v from 'valibot'
 
+import { getPagination } from '@/utils/pagination'
 import * as common from './common'
 
 export const eventType = i.pins.data({
@@ -20,16 +21,19 @@ export const id = i.pins.data({
   description: 'The unique identifier for the coupon.',
   schema: v.pipe(v.string(), v.nonEmpty()),
   control: i.controls.select({
-    async options({ state }) {
+    async options({ state, pagination }) {
       const coupons = await state.stripe.coupons.list({
-        limit: 100,
+        ...getPagination(pagination),
       })
 
-      return coupons.data.map((coupon) => ({
-        value: coupon.id,
-        label: coupon.name || coupon.id,
-        suffix: coupon.id,
-      }))
+      return {
+        hasMore: coupons.has_more,
+        items: coupons.data.map((coupon) => ({
+          value: coupon.id,
+          label: coupon.name || coupon.id,
+          suffix: coupon.id,
+        })),
+      }
     },
   }),
 })

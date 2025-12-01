@@ -3,6 +3,7 @@ import * as v from 'valibot'
 
 import type Stripe from 'stripe'
 
+import { getPagination } from '@/utils/pagination'
 import * as common from './common'
 
 export const eventType = i.pins.data({
@@ -26,16 +27,24 @@ export const id = common.id.with({
   displayName: 'Subscription ID',
   description: 'The unique identifier for the subscription.',
   control: i.controls.select({
-    async options({ state }) {
-      const subscriptions = await state.stripe.subscriptions.list({
-        limit: 100,
-      })
+    async options({ state, pagination, search }) {
+      const subscriptions = search
+        ? await state.stripe.subscriptions.search({
+            ...getPagination(pagination),
+            query: `id~"${search}"`,
+          })
+        : await state.stripe.subscriptions.list({
+            ...getPagination(pagination),
+          })
 
-      return subscriptions.data.map((sub) => ({
-        value: sub.id,
-        label: sub.id,
-        suffix: sub.status,
-      }))
+      return {
+        hasMore: subscriptions.has_more,
+        items: subscriptions.data.map((sub) => ({
+          value: sub.id,
+          label: sub.id,
+          suffix: sub.status,
+        })),
+      }
     },
   }),
   schema: v.pipe(v.string(), v.startsWith('sub_')),
@@ -46,15 +55,22 @@ export const priceId = i.pins.data({
   description: 'The ID of the price the customer is subscribed to.',
   schema: v.pipe(v.string(), v.startsWith('price_')),
   control: i.controls.select({
-    async options({ state }) {
-      const prices = await state.stripe.prices.list({
-        limit: 100,
-        expand: ['data.product'],
-      })
+    async options({ state, pagination, search }) {
+      const prices = search
+        ? await state.stripe.prices.search({
+            ...getPagination(pagination),
+            query: `id~"${search}" AND type:"recurring"`,
+            expand: ['data.product'],
+          })
+        : await state.stripe.prices.list({
+            ...getPagination(pagination),
+            expand: ['data.product'],
+            type: 'recurring',
+          })
 
-      return prices.data
-        .filter((price) => price.recurring)
-        .map((price) => {
+      return {
+        hasMore: prices.has_more,
+        items: prices.data.map((price) => {
           const productName =
             typeof price.product === 'object' && 'name' in price.product
               ? price.product.name
@@ -65,7 +81,8 @@ export const priceId = i.pins.data({
             label: `${productName} - ${price.unit_amount ? price.unit_amount / 100 : 0} ${price.currency.toUpperCase()}/${price.recurring?.interval}`,
             suffix: price.id,
           }
-        })
+        }),
+      }
     },
   }),
 })

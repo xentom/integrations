@@ -3,6 +3,7 @@ import * as v from 'valibot'
 
 import type Stripe from 'stripe'
 
+import { getPagination } from '@/utils/pagination'
 import * as common from './common'
 
 export const eventType = i.pins.data({
@@ -22,16 +23,19 @@ export const id = i.pins.data({
   description: 'The unique identifier for the plan.',
   schema: v.pipe(v.string(), v.nonEmpty()),
   control: i.controls.select({
-    async options({ state }) {
+    async options({ state, pagination }) {
       const plans = await state.stripe.plans.list({
-        limit: 100,
+        ...getPagination(pagination),
       })
 
-      return plans.data.map((plan) => ({
-        value: plan.id,
-        label: plan.nickname || plan.id,
-        suffix: `${plan.amount ? plan.amount / 100 : 0} ${plan.currency.toUpperCase()}/${plan.interval}`,
-      }))
+      return {
+        hasMore: plans.has_more,
+        items: plans.data.map((plan) => ({
+          value: plan.id,
+          label: plan.nickname || plan.id,
+          suffix: `${plan.amount ? plan.amount / 100 : 0} ${plan.currency.toUpperCase()}/${plan.interval}`,
+        })),
+      }
     },
   }),
 })
@@ -49,16 +53,24 @@ export const productId = i.pins.data({
   description: 'The product whose pricing the plan determines.',
   schema: v.pipe(v.string(), v.startsWith('prod_')),
   control: i.controls.select({
-    async options({ state }) {
-      const products = await state.stripe.products.list({
-        limit: 100,
-      })
+    async options({ state, pagination, search }) {
+      const products = search
+        ? await state.stripe.products.search({
+            ...getPagination(pagination),
+            query: `name~"${search}"`,
+          })
+        : await state.stripe.products.list({
+            ...getPagination(pagination),
+          })
 
-      return products.data.map((product) => ({
-        value: product.id,
-        label: product.name,
-        suffix: product.id,
-      }))
+      return {
+        hasMore: products.has_more,
+        items: products.data.map((product) => ({
+          value: product.id,
+          label: product.name,
+          suffix: product.id,
+        })),
+      }
     },
   }),
 })

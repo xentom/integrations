@@ -3,6 +3,7 @@ import * as v from 'valibot'
 
 import type Stripe from 'stripe'
 
+import { getPagination } from '@/utils/pagination'
 import * as common from './common'
 
 export const eventType = i.pins.data({
@@ -21,16 +22,19 @@ export const id = common.id.with({
   displayName: 'Refund ID',
   description: 'The unique identifier for the refund.',
   control: i.controls.select({
-    async options({ state }) {
+    async options({ state, pagination }) {
       const refunds = await state.stripe.refunds.list({
-        limit: 100,
+        ...getPagination(pagination),
       })
 
-      return refunds.data.map((refund) => ({
-        value: refund.id,
-        label: `${refund.amount / 100} ${refund.currency.toUpperCase()}`,
-        suffix: refund.status ?? undefined,
-      }))
+      return {
+        hasMore: refunds.has_more,
+        items: refunds.data.map((refund) => ({
+          value: refund.id,
+          label: `${refund.amount / 100} ${refund.currency.toUpperCase()}`,
+          suffix: refund.status ?? undefined,
+        })),
+      }
     },
   }),
   schema: v.pipe(v.string(), v.startsWith('re_')),

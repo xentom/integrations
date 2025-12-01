@@ -1,6 +1,7 @@
 import * as i from '@xentom/integration-framework'
 import * as v from 'valibot'
 
+import { getPagination } from '@/utils/pagination'
 import * as common from './common'
 
 export const eventType = i.pins.data({
@@ -27,16 +28,24 @@ export const id = common.id.with({
   displayName: 'Payment Intent ID',
   description: 'The unique identifier for the payment intent.',
   control: i.controls.select({
-    async options({ state }) {
-      const paymentIntents = await state.stripe.paymentIntents.list({
-        limit: 100,
-      })
+    async options({ state, pagination, search }) {
+      const paymentIntents = search
+        ? await state.stripe.paymentIntents.search({
+            ...getPagination(pagination),
+            query: `id~"${search}"`,
+          })
+        : await state.stripe.paymentIntents.list({
+            ...getPagination(pagination),
+          })
 
-      return paymentIntents.data.map((pi) => ({
-        value: pi.id,
-        label: `${pi.amount / 100} ${pi.currency.toUpperCase()}`,
-        suffix: pi.status,
-      }))
+      return {
+        hasMore: paymentIntents.has_more,
+        items: paymentIntents.data.map((pi) => ({
+          value: pi.id,
+          label: `${pi.amount / 100} ${pi.currency.toUpperCase()}`,
+          suffix: pi.status,
+        })),
+      }
     },
   }),
   schema: v.pipe(v.string(), v.startsWith('pi_')),
