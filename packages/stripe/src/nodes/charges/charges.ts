@@ -1,44 +1,47 @@
-import * as i from '@xentom/integration-framework';
+import * as i from '@xentom/integration-framework'
 
-import type Stripe from 'stripe';
+import type Stripe from 'stripe'
 
-import * as pins from '@/pins';
+import * as pins from '@/pins'
 
-const nodes = i.nodes.group('Charges');
+const nodes = i.nodes.group('Charges')
 
-export const onCharge = i.generic(<
-  I extends i.GenericInputs<typeof inputs>
->() => {
-  const inputs = {
-    eventType: pins.charge.eventType.with({
-      displayName: 'When',
-    }),
-  };
+export const onCharge = i.generic(
+  <I extends i.GenericInputs<typeof inputs>>() => {
+    const inputs = {
+      eventType: pins.charge.eventType.with({
+        displayName: 'When',
+      }),
+    }
 
-  type Event = Extract<Stripe.Event, { type: `charge.${I['eventType']}` }>;
+    type Event = Extract<Stripe.Event, { type: `charge.${I['eventType']}` }>
 
-  return nodes.trigger({
-    description: 'Triggered when a charge event is received.',
-    inputs,
-    outputs: {
-      charge: i.pins.data<Event['data']['object']>(),
-    },
-    async subscribe(opts) {
-      function onChargeEvent(event: Stripe.Event) {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-        void opts.next({
-          charge: event.data.object,
-        } as any);
-      }
+    return nodes.trigger({
+      description: 'Triggered when a charge event is received.',
+      inputs,
+      outputs: {
+        charge: i.pins.data<Event['data']['object']>(),
+      },
+      async subscribe(opts) {
+        function onChargeEvent(event: Stripe.Event) {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+          void opts.next({
+            charge: event.data.object,
+          } as any)
+        }
 
-      opts.state.events.on(`charge.${opts.inputs.eventType}`, onChargeEvent);
+        opts.state.events.on(`charge.${opts.inputs.eventType}`, onChargeEvent)
 
-      return () => {
-        opts.state.events.off(`charge.${opts.inputs.eventType}`, onChargeEvent);
-      };
-    },
-  });
-});
+        return () => {
+          opts.state.events.off(
+            `charge.${opts.inputs.eventType}`,
+            onChargeEvent,
+          )
+        }
+      },
+    })
+  },
+)
 
 export const createCharge = nodes.callable({
   description: 'Create a new charge to charge a payment source.',
@@ -95,13 +98,13 @@ export const createCharge = nodes.callable({
       capture: opts.inputs.capture,
       statement_descriptor: opts.inputs.statementDescriptor,
       metadata: opts.inputs.metadata,
-    });
+    })
 
     return opts.next({
       charge,
-    });
+    })
   },
-});
+})
 
 export const getCharge = nodes.callable({
   description: 'Retrieve a charge by its ID.',
@@ -116,13 +119,13 @@ export const getCharge = nodes.callable({
     }),
   },
   async run(opts) {
-    const charge = await opts.state.stripe.charges.retrieve(opts.inputs.id);
+    const charge = await opts.state.stripe.charges.retrieve(opts.inputs.id)
 
     return opts.next({
       charge,
-    });
+    })
   },
-});
+})
 
 export const updateCharge = nodes.callable({
   description: 'Update an existing charge.',
@@ -153,13 +156,13 @@ export const updateCharge = nodes.callable({
       description: opts.inputs.description,
       metadata: opts.inputs.metadata,
       receipt_email: opts.inputs.receiptEmail,
-    });
+    })
 
     return opts.next({
       charge,
-    });
+    })
   },
-});
+})
 
 export const captureCharge = nodes.callable({
   description: 'Capture a previously authorized charge.',
@@ -191,13 +194,13 @@ export const captureCharge = nodes.callable({
       amount: opts.inputs.amount,
       receipt_email: opts.inputs.receiptEmail,
       statement_descriptor: opts.inputs.statementDescriptor,
-    });
+    })
 
     return opts.next({
       charge,
-    });
+    })
   },
-});
+})
 
 export const listCharges = nodes.callable({
   description: 'List all charges in your Stripe account.',
@@ -229,11 +232,11 @@ export const listCharges = nodes.callable({
       limit: opts.inputs.limit,
       starting_after: opts.inputs.after,
       customer: opts.inputs.customerId,
-    });
+    })
 
     return opts.next({
       charges: charges.data,
       hasMore: charges.has_more,
-    });
+    })
   },
-});
+})

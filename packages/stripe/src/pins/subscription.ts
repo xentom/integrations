@@ -25,8 +25,18 @@ export const eventType = i.pins.data({
 export const id = common.id.with({
   displayName: 'Subscription ID',
   description: 'The unique identifier for the subscription.',
-  control: i.controls.text({
-    placeholder: 'sub_...',
+  control: i.controls.select({
+    async options({ state }) {
+      const subscriptions = await state.stripe.subscriptions.list({
+        limit: 100,
+      })
+
+      return subscriptions.data.map((sub) => ({
+        value: sub.id,
+        label: sub.id,
+        suffix: sub.status,
+      }))
+    },
   }),
   schema: v.pipe(v.string(), v.startsWith('sub_')),
 })

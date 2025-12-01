@@ -1,44 +1,47 @@
-import * as i from '@xentom/integration-framework';
+import * as i from '@xentom/integration-framework'
 
-import type Stripe from 'stripe';
+import type Stripe from 'stripe'
 
-import * as pins from '@/pins';
+import * as pins from '@/pins'
 
-const nodes = i.nodes.group('Coupons');
+const nodes = i.nodes.group('Coupons')
 
-export const onCoupon = i.generic(<
-  I extends i.GenericInputs<typeof inputs>
->() => {
-  const inputs = {
-    eventType: pins.coupon.eventType.with({
-      displayName: 'When',
-    }),
-  };
+export const onCoupon = i.generic(
+  <I extends i.GenericInputs<typeof inputs>>() => {
+    const inputs = {
+      eventType: pins.coupon.eventType.with({
+        displayName: 'When',
+      }),
+    }
 
-  type Event = Extract<Stripe.Event, { type: `coupon.${I['eventType']}` }>;
+    type Event = Extract<Stripe.Event, { type: `coupon.${I['eventType']}` }>
 
-  return nodes.trigger({
-    description: 'Triggered when a coupon event is received.',
-    inputs,
-    outputs: {
-      coupon: i.pins.data<Event['data']['object']>(),
-    },
-    async subscribe(opts) {
-      function onCouponEvent(event: Stripe.Event) {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-        void opts.next({
-          coupon: event.data.object,
-        } as any);
-      }
+    return nodes.trigger({
+      description: 'Triggered when a coupon event is received.',
+      inputs,
+      outputs: {
+        coupon: i.pins.data<Event['data']['object']>(),
+      },
+      async subscribe(opts) {
+        function onCouponEvent(event: Stripe.Event) {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+          void opts.next({
+            coupon: event.data.object,
+          } as any)
+        }
 
-      opts.state.events.on(`coupon.${opts.inputs.eventType}`, onCouponEvent);
+        opts.state.events.on(`coupon.${opts.inputs.eventType}`, onCouponEvent)
 
-      return () => {
-        opts.state.events.off(`coupon.${opts.inputs.eventType}`, onCouponEvent);
-      };
-    },
-  });
-});
+        return () => {
+          opts.state.events.off(
+            `coupon.${opts.inputs.eventType}`,
+            onCouponEvent,
+          )
+        }
+      },
+    })
+  },
+)
 
 export const createCoupon = nodes.callable({
   description: 'Create a new coupon for discounts.',
@@ -98,13 +101,13 @@ export const createCoupon = nodes.callable({
       max_redemptions: opts.inputs.maxRedemptions,
       redeem_by: opts.inputs.redeemBy,
       metadata: opts.inputs.metadata,
-    });
+    })
 
     return opts.next({
       coupon,
-    });
+    })
   },
-});
+})
 
 export const getCoupon = nodes.callable({
   description: 'Retrieve a coupon by its ID.',
@@ -119,13 +122,13 @@ export const getCoupon = nodes.callable({
     }),
   },
   async run(opts) {
-    const coupon = await opts.state.stripe.coupons.retrieve(opts.inputs.id);
+    const coupon = await opts.state.stripe.coupons.retrieve(opts.inputs.id)
 
     return opts.next({
       coupon,
-    });
+    })
   },
-});
+})
 
 export const updateCoupon = nodes.callable({
   description: 'Update an existing coupon.',
@@ -151,13 +154,13 @@ export const updateCoupon = nodes.callable({
     const coupon = await opts.state.stripe.coupons.update(opts.inputs.id, {
       name: opts.inputs.name,
       metadata: opts.inputs.metadata,
-    });
+    })
 
     return opts.next({
       coupon,
-    });
+    })
   },
-});
+})
 
 export const deleteCoupon = nodes.callable({
   description: 'Delete a coupon. Cannot be undone.',
@@ -172,13 +175,13 @@ export const deleteCoupon = nodes.callable({
     }),
   },
   async run(opts) {
-    const result = await opts.state.stripe.coupons.del(opts.inputs.id);
+    const result = await opts.state.stripe.coupons.del(opts.inputs.id)
 
     return opts.next({
       deleted: result.deleted,
-    });
+    })
   },
-});
+})
 
 export const listCoupons = nodes.callable({
   description: 'List all coupons in your Stripe account.',
@@ -205,11 +208,11 @@ export const listCoupons = nodes.callable({
     const coupons = await opts.state.stripe.coupons.list({
       limit: opts.inputs.limit,
       starting_after: opts.inputs.after,
-    });
+    })
 
     return opts.next({
       coupons: coupons.data,
       hasMore: coupons.has_more,
-    });
+    })
   },
-});
+})

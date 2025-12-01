@@ -1,44 +1,47 @@
-import * as i from '@xentom/integration-framework';
+import * as i from '@xentom/integration-framework'
 
-import type Stripe from 'stripe';
+import type Stripe from 'stripe'
 
-import * as pins from '@/pins';
+import * as pins from '@/pins'
 
-const nodes = i.nodes.group('Sources');
+const nodes = i.nodes.group('Sources')
 
-export const onSource = i.generic(<
-  I extends i.GenericInputs<typeof inputs>
->() => {
-  const inputs = {
-    eventType: pins.source.eventType.with({
-      displayName: 'When',
-    }),
-  };
+export const onSource = i.generic(
+  <I extends i.GenericInputs<typeof inputs>>() => {
+    const inputs = {
+      eventType: pins.source.eventType.with({
+        displayName: 'When',
+      }),
+    }
 
-  type Event = Extract<Stripe.Event, { type: `source.${I['eventType']}` }>;
+    type Event = Extract<Stripe.Event, { type: `source.${I['eventType']}` }>
 
-  return nodes.trigger({
-    description: 'Triggered when a source event is received.',
-    inputs,
-    outputs: {
-      source: i.pins.data<Event['data']['object']>(),
-    },
-    async subscribe(opts) {
-      function onSourceEvent(event: Stripe.Event) {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-        void opts.next({
-          source: event.data.object,
-        } as any);
-      }
+    return nodes.trigger({
+      description: 'Triggered when a source event is received.',
+      inputs,
+      outputs: {
+        source: i.pins.data<Event['data']['object']>(),
+      },
+      async subscribe(opts) {
+        function onSourceEvent(event: Stripe.Event) {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+          void opts.next({
+            source: event.data.object,
+          } as any)
+        }
 
-      opts.state.events.on(`source.${opts.inputs.eventType}`, onSourceEvent);
+        opts.state.events.on(`source.${opts.inputs.eventType}`, onSourceEvent)
 
-      return () => {
-        opts.state.events.off(`source.${opts.inputs.eventType}`, onSourceEvent);
-      };
-    },
-  });
-});
+        return () => {
+          opts.state.events.off(
+            `source.${opts.inputs.eventType}`,
+            onSourceEvent,
+          )
+        }
+      },
+    })
+  },
+)
 
 export const createSource = nodes.callable({
   description:
@@ -101,13 +104,13 @@ export const createSource = nodes.callable({
       statement_descriptor: opts.inputs.statementDescriptor,
       token: opts.inputs.token,
       metadata: opts.inputs.metadata,
-    });
+    })
 
     return opts.next({
       source,
-    });
+    })
   },
-});
+})
 
 export const getSource = nodes.callable({
   description: 'Retrieve a source by its ID.',
@@ -122,13 +125,13 @@ export const getSource = nodes.callable({
     }),
   },
   async run(opts) {
-    const source = await opts.state.stripe.sources.retrieve(opts.inputs.id);
+    const source = await opts.state.stripe.sources.retrieve(opts.inputs.id)
 
     return opts.next({
       source,
-    });
+    })
   },
-});
+})
 
 export const updateSource = nodes.callable({
   description: 'Update an existing source.',
@@ -159,13 +162,13 @@ export const updateSource = nodes.callable({
       amount: opts.inputs.amount,
       owner: opts.inputs.owner,
       metadata: opts.inputs.metadata,
-    });
+    })
 
     return opts.next({
       source,
-    });
+    })
   },
-});
+})
 
 export const listSourceTransactions = nodes.callable({
   description: 'List transactions that have been created for a source.',
@@ -197,12 +200,12 @@ export const listSourceTransactions = nodes.callable({
       {
         limit: opts.inputs.limit,
         starting_after: opts.inputs.after,
-      }
-    );
+      },
+    )
 
     return opts.next({
       transactions: transactions.data,
       hasMore: transactions.has_more,
-    });
+    })
   },
-});
+})

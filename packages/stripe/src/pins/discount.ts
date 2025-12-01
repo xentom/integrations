@@ -1,4 +1,4 @@
-import * as i from '@xentom/integration-framework';
+import * as i from '@xentom/integration-framework'
 
 export const eventType = i.pins.data({
   description: 'The type of discount event to trigger on.',
@@ -10,4 +10,4 @@ export const eventType = i.pins.data({
     ],
     defaultValue: 'created',
   } as const),
-});
+})

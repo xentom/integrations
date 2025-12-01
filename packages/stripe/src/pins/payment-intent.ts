@@ -26,8 +26,18 @@ export const eventType = i.pins.data({
 export const id = common.id.with({
   displayName: 'Payment Intent ID',
   description: 'The unique identifier for the payment intent.',
-  control: i.controls.text({
-    placeholder: 'pi_...',
+  control: i.controls.select({
+    async options({ state }) {
+      const paymentIntents = await state.stripe.paymentIntents.list({
+        limit: 100,
+      })
+
+      return paymentIntents.data.map((pi) => ({
+        value: pi.id,
+        label: `${pi.amount / 100} ${pi.currency.toUpperCase()}`,
+        suffix: pi.status,
+      }))
+    },
   }),
   schema: v.pipe(v.string(), v.startsWith('pi_')),
 })

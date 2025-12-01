@@ -20,28 +20,20 @@ export const eventType = i.pins.data({
 export const id = common.id.with({
   displayName: 'Refund ID',
   description: 'The unique identifier for the refund.',
-  control: i.controls.text({
-    placeholder: 're_...',
+  control: i.controls.select({
+    async options({ state }) {
+      const refunds = await state.stripe.refunds.list({
+        limit: 100,
+      })
+
+      return refunds.data.map((refund) => ({
+        value: refund.id,
+        label: `${refund.amount / 100} ${refund.currency.toUpperCase()}`,
+        suffix: refund.status ?? undefined,
+      }))
+    },
   }),
   schema: v.pipe(v.string(), v.startsWith('re_')),
-})
-
-export const chargeId = i.pins.data({
-  displayName: 'Charge ID',
-  description: 'The ID of the charge to refund.',
-  schema: v.pipe(v.string(), v.startsWith('ch_')),
-  control: i.controls.text({
-    placeholder: 'ch_...',
-  }),
-})
-
-export const paymentIntentId = i.pins.data({
-  displayName: 'Payment Intent ID',
-  description: 'The ID of the PaymentIntent to refund.',
-  schema: v.pipe(v.string(), v.startsWith('pi_')),
-  control: i.controls.text({
-    placeholder: 'pi_...',
-  }),
 })
 
 export const amount = common.amount.with({

@@ -21,8 +21,18 @@ export const eventType = i.pins.data({
 export const id = common.id.with({
   displayName: 'Payout ID',
   description: 'The unique identifier for the payout.',
-  control: i.controls.text({
-    placeholder: 'po_...',
+  control: i.controls.select({
+    async options({ state }) {
+      const payouts = await state.stripe.payouts.list({
+        limit: 100,
+      })
+
+      return payouts.data.map((payout) => ({
+        value: payout.id,
+        label: `${payout.amount / 100} ${payout.currency.toUpperCase()}`,
+        suffix: payout.status,
+      }))
+    },
   }),
   schema: v.pipe(v.string(), v.startsWith('po_')),
 })

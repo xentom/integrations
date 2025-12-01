@@ -1,7 +1,7 @@
-import * as i from '@xentom/integration-framework';
-import * as v from 'valibot';
+import * as i from '@xentom/integration-framework'
+import * as v from 'valibot'
 
-import * as common from './common';
+import * as common from './common'
 
 export const eventType = i.pins.data({
   description: 'The type of source event to trigger on.',
@@ -20,7 +20,7 @@ export const eventType = i.pins.data({
     ],
     defaultValue: 'chargeable',
   } as const),
-});
+})
 
 export const id = common.id.with({
   displayName: 'Source ID',
@@ -29,7 +29,7 @@ export const id = common.id.with({
     placeholder: 'src_...',
   }),
   schema: v.pipe(v.string(), v.startsWith('src_')),
-});
+})
 
 export const type = i.pins.data({
   displayName: 'Source Type',
@@ -71,16 +71,16 @@ export const type = i.pins.data({
       { value: 'wechat', label: 'WeChat Pay' },
     ],
   }),
-});
+})
 
 export const amount = common.amount.with({
   description:
     'Amount associated with the source. Required for single-use sources.',
-});
+})
 
 export const currency = common.currency.with({
   description: 'Three-letter ISO currency code for the source.',
-});
+})
 
 export const flow = i.pins.data({
   description: 'The authentication flow of the source.',
@@ -93,7 +93,7 @@ export const flow = i.pins.data({
       { value: 'none', label: 'None' },
     ],
   }),
-});
+})
 
 export const usage = i.pins.data({
   description: 'Whether the source should be reusable or single use.',
@@ -105,12 +105,12 @@ export const usage = i.pins.data({
     ],
     defaultValue: 'single_use',
   }),
-});
+})
 
 export const metadata = common.metadata.with({
   description:
     'Set of key-value pairs for storing additional information about the source.',
-});
+})
 
 export const owner = i.pins.data({
   description: 'Information about the owner of the source.',
@@ -123,7 +123,7 @@ export const owner = i.pins.data({
         line2: v.optional(v.string()),
         postal_code: v.optional(v.string()),
         state: v.optional(v.string()),
-      })
+      }),
     ),
     email: v.optional(v.pipe(v.string(), v.email())),
     name: v.optional(v.string()),
@@ -135,7 +135,7 @@ export const owner = i.pins.data({
       name: 'John Doe',
     },
   }),
-});
+})
 
 export const redirect = i.pins.data({
   description: 'Parameters for redirect flow sources.',
@@ -147,7 +147,7 @@ export const redirect = i.pins.data({
       return_url: 'https://example.com/return',
     },
   }),
-});
+})
 
 export const statementDescriptor = i.pins.data({
   displayName: 'Statement Descriptor',
@@ -157,7 +157,7 @@ export const statementDescriptor = i.pins.data({
   control: i.controls.text({
     placeholder: 'Up to 22 characters',
   }),
-});
+})
 
 export const token = i.pins.data({
   description:
@@ -166,7 +166,7 @@ export const token = i.pins.data({
   control: i.controls.text({
     placeholder: 'tok_...',
   }),
-});
+})
 
 // Customer source specific pins
 export const customerSourceId = i.pins.data({
@@ -176,7 +176,7 @@ export const customerSourceId = i.pins.data({
   control: i.controls.text({
     placeholder: 'card_... or ba_... or src_...',
   }),
-});
+})
 
 export const addressCity = i.pins.data({
   displayName: 'Address City',
@@ -185,7 +185,7 @@ export const addressCity = i.pins.data({
   control: i.controls.text({
     placeholder: 'San Francisco',
   }),
-});
+})
 
 export const addressCountry = i.pins.data({
   displayName: 'Address Country',
@@ -194,7 +194,7 @@ export const addressCountry = i.pins.data({
   control: i.controls.text({
     placeholder: 'US',
   }),
-});
+})
 
 export const addressLine1 = i.pins.data({
   displayName: 'Address Line 1',
@@ -203,7 +203,7 @@ export const addressLine1 = i.pins.data({
   control: i.controls.text({
     placeholder: '123 Main St',
   }),
-});
+})
 
 export const addressLine2 = i.pins.data({
   displayName: 'Address Line 2',
@@ -212,7 +212,7 @@ export const addressLine2 = i.pins.data({
   control: i.controls.text({
     placeholder: 'Apt 4B',
   }),
-});
+})
 
 export const addressState = i.pins.data({
   displayName: 'Address State',
@@ -221,7 +221,7 @@ export const addressState = i.pins.data({
   control: i.controls.text({
     placeholder: 'CA',
   }),
-});
+})
 
 export const addressZip = i.pins.data({
   displayName: 'Address Zip',
@@ -230,21 +230,21 @@ export const addressZip = i.pins.data({
   control: i.controls.text({
     placeholder: '94102',
   }),
-});
+})
 
 export const expMonth = i.pins.data({
   displayName: 'Expiration Month',
   description: 'Card expiration month (1-12).',
   schema: v.pipe(v.number(), v.integer(), v.minValue(1), v.maxValue(12)),
   control: i.controls.expression(),
-});
+})
 
 export const expYear = i.pins.data({
   displayName: 'Expiration Year',
   description: 'Four-digit card expiration year.',
   schema: v.pipe(v.number(), v.integer(), v.minValue(2024)),
   control: i.controls.expression(),
-});
+})
 
 export const cardholderName = i.pins.data({
   displayName: 'Cardholder Name',
@@ -253,7 +253,7 @@ export const cardholderName = i.pins.data({
   control: i.controls.text({
     placeholder: 'John Doe',
   }),
-});
+})
 
 export const bankAccountId = i.pins.data({
   displayName: 'Bank Account ID',
@@ -262,7 +262,7 @@ export const bankAccountId = i.pins.data({
   control: i.controls.text({
     placeholder: 'ba_...',
   }),
-});
+})
 
 export const verificationAmounts = i.pins.data({
   displayName: 'Verification Amounts',
@@ -275,7 +275,7 @@ export const verificationAmounts = i.pins.data({
   control: i.controls.expression({
     defaultValue: [32, 45],
   }),
-});
+})
 
 export const objectType = i.pins.data({
   displayName: 'Object Type',
@@ -287,4 +287,4 @@ export const objectType = i.pins.data({
       { value: 'bank_account', label: 'Bank Account' },
     ],
   }),
-});
+})

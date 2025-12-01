@@ -1,63 +1,63 @@
-import * as i from '@xentom/integration-framework';
+import * as i from '@xentom/integration-framework'
 
-import type Stripe from 'stripe';
+import type Stripe from 'stripe'
 
-import * as pins from '@/pins';
+import * as pins from '@/pins'
 
-const nodes = i.nodes.group('Customers/Sources');
+const nodes = i.nodes.group('Customers/Sources')
 
-export const onCustomerSource = i.generic(<
-  I extends i.GenericInputs<typeof inputs>
->() => {
-  const inputs = {
-    eventType: i.pins.data({
-      displayName: 'When',
-      description: 'The type of customer source event to trigger on.',
-      control: i.controls.select({
-        options: [
-          { label: 'Created', value: 'created' },
-          { label: 'Updated', value: 'updated' },
-          { label: 'Deleted', value: 'deleted' },
-          { label: 'Expiring', value: 'expiring' },
-        ],
-        defaultValue: 'created',
-      } as const),
-    }),
-  };
+export const onCustomerSource = i.generic(
+  <I extends i.GenericInputs<typeof inputs>>() => {
+    const inputs = {
+      eventType: i.pins.data({
+        displayName: 'When',
+        description: 'The type of customer source event to trigger on.',
+        control: i.controls.select({
+          options: [
+            { label: 'Created', value: 'created' },
+            { label: 'Updated', value: 'updated' },
+            { label: 'Deleted', value: 'deleted' },
+            { label: 'Expiring', value: 'expiring' },
+          ],
+          defaultValue: 'created',
+        } as const),
+      }),
+    }
 
-  type Event = Extract<
-    Stripe.Event,
-    { type: `customer.source.${I['eventType']}` }
-  >;
+    type Event = Extract<
+      Stripe.Event,
+      { type: `customer.source.${I['eventType']}` }
+    >
 
-  return nodes.trigger({
-    description: 'Triggered when a customer source event is received.',
-    inputs,
-    outputs: {
-      source: i.pins.data<Event['data']['object']>(),
-    },
-    async subscribe(opts) {
-      function onSourceEvent(event: Stripe.Event) {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-        void opts.next({
-          source: event.data.object,
-        } as any);
-      }
+    return nodes.trigger({
+      description: 'Triggered when a customer source event is received.',
+      inputs,
+      outputs: {
+        source: i.pins.data<Event['data']['object']>(),
+      },
+      async subscribe(opts) {
+        function onSourceEvent(event: Stripe.Event) {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+          void opts.next({
+            source: event.data.object,
+          } as any)
+        }
 
-      opts.state.events.on(
-        `customer.source.${opts.inputs.eventType}`,
-        onSourceEvent
-      );
-
-      return () => {
-        opts.state.events.off(
+        opts.state.events.on(
           `customer.source.${opts.inputs.eventType}`,
-          onSourceEvent
-        );
-      };
-    },
-  });
-});
+          onSourceEvent,
+        )
+
+        return () => {
+          opts.state.events.off(
+            `customer.source.${opts.inputs.eventType}`,
+            onSourceEvent,
+          )
+        }
+      },
+    })
+  },
+)
 
 export const createCustomerSource = nodes.callable({
   description: 'Attach a payment source to a customer.',
@@ -84,14 +84,14 @@ export const createCustomerSource = nodes.callable({
       {
         source: opts.inputs.source,
         metadata: opts.inputs.metadata,
-      }
-    );
+      },
+    )
 
     return opts.next({
       source,
-    });
+    })
   },
-});
+})
 
 export const getCustomerSource = nodes.callable({
   description: 'Retrieve a specific source attached to a customer.',
@@ -111,14 +111,14 @@ export const getCustomerSource = nodes.callable({
   async run(opts) {
     const source = await opts.state.stripe.customers.retrieveSource(
       opts.inputs.customerId,
-      opts.inputs.sourceId
-    );
+      opts.inputs.sourceId,
+    )
 
     return opts.next({
       source,
-    });
+    })
   },
-});
+})
 
 export const updateCustomerSource = nodes.callable({
   description: 'Update a source attached to a customer (card details, etc.).',
@@ -190,14 +190,14 @@ export const updateCustomerSource = nodes.callable({
         exp_year: opts.inputs.expYear?.toString(),
         name: opts.inputs.name,
         metadata: opts.inputs.metadata,
-      }
-    );
+      },
+    )
 
     return opts.next({
       source,
-    });
+    })
   },
-});
+})
 
 export const deleteCustomerSource = nodes.callable({
   description: 'Delete a source attached to a customer.',
@@ -217,16 +217,16 @@ export const deleteCustomerSource = nodes.callable({
   async run(opts) {
     const result = await opts.state.stripe.customers.deleteSource(
       opts.inputs.customerId,
-      opts.inputs.sourceId
-    );
+      opts.inputs.sourceId,
+    )
 
-    const deleted = 'deleted' in result ? result.deleted === true : true;
+    const deleted = 'deleted' in result ? result.deleted === true : true
 
     return opts.next({
       deleted,
-    });
+    })
   },
-});
+})
 
 export const verifyCustomerBankAccount = nodes.callable({
   description:
@@ -253,14 +253,14 @@ export const verifyCustomerBankAccount = nodes.callable({
       opts.inputs.bankAccountId,
       {
         amounts: opts.inputs.amounts,
-      }
-    );
+      },
+    )
 
     return opts.next({
       bankAccount,
-    });
+    })
   },
-});
+})
 
 export const listCustomerSources = nodes.callable({
   description: 'List all sources attached to a customer.',
@@ -297,12 +297,12 @@ export const listCustomerSources = nodes.callable({
         object: opts.inputs.object,
         limit: opts.inputs.limit,
         starting_after: opts.inputs.after,
-      }
-    );
+      },
+    )
 
     return opts.next({
       sources: sources.data,
       hasMore: sources.has_more,
-    });
+    })
   },
-});
+})
