@@ -1,7 +1,7 @@
 {
   "$schema": "https://assets.xentom.com/schemas/package.json",
   "name": "@xentom/stripe",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "displayName": "Stripe",
   "description": "Integrate Stripe to manage payments, customers, subscriptions, and invoices in your workflows.",
   "categories": [
