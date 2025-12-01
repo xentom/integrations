@@ -51,10 +51,12 @@ export const idSelection = id.with({
   control: i.controls.select({
     async options(opts) {
       const channels = await opts.state.teamspeak.channelList()
-      return channels.map((channel) => ({
-        value: channel.cid,
-        suffix: channel.name,
-      }))
+      return {
+        items: channels.map((channel) => ({
+          value: channel.cid,
+          suffix: channel.name,
+        })),
+      }
     },
   }),
 })
@@ -72,16 +74,18 @@ export const parentIdSelection = parentId.with({
   control: i.controls.select({
     async options(opts) {
       const channels = await opts.state.teamspeak.channelList()
-      return [
-        {
-          value: '0',
-          suffix: 'Root Level',
-        },
-        ...channels.map((channel) => ({
-          value: channel.cid,
-          suffix: channel.name,
-        })),
-      ]
+      return {
+        items: [
+          {
+            value: '0',
+            suffix: 'Root Level',
+          },
+          ...channels.map((channel) => ({
+            value: channel.cid,
+            suffix: channel.name,
+          })),
+        ],
+      }
     },
   }),
 })
@@ -99,12 +103,14 @@ export const nameSelection = name.with({
   control: i.controls.select({
     async options(opts) {
       const channels = await opts.state.teamspeak.channelList()
-      return channels.map((channel) => {
-        return {
-          value: channel.name,
-          label: channel.name,
-        }
-      })
+      return {
+        items: channels.map((channel) => {
+          return {
+            value: channel.name,
+            label: channel.name,
+          }
+        }),
+      }
     },
   }),
 })

@@ -1,7 +1,7 @@
 {
   "$schema": "https://assets.xentom.com/schemas/package.json",
   "name": "@xentom/teamspeak",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "displayName": "TeamSpeak",
   "description": "Connect to TeamSpeak servers to manage channels, users, and server settings programmatically.",
   "categories": [
