@@ -3,9 +3,9 @@ import * as v from 'valibot'
 
 import { type EmitterWebhookEvent } from '@octokit/webhooks/types'
 
-import { extractOwnerAndRepo } from '@/helpers/options'
-import { createRepositoryWebhook } from '@/helpers/webhooks'
 import * as pins from '@/pins'
+import { extractOwnerAndRepo } from '@/utils/options'
+import { createRepositoryWebhook } from '@/utils/webhooks'
 
 const nodes = i.nodes.group('Repositories/Actions/Runs')
 

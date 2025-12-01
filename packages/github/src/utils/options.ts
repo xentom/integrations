@@ -18,3 +18,14 @@ export function extractOwnerAndRepo(repository: string): {
   const [owner, repo] = repository.split('/') as [string, string]
   return { owner, repo }
 }
+
+export function hasMoreData(response: { headers: { link?: string } }): boolean {
+  return response.headers.link?.includes('next') ?? false
+}
+
+export function getPagination(opts: i.SelectControlOptionsCallbackOptions) {
+  return {
+    per_page: opts.pagination.limit,
+    page: opts.pagination.page + 1,
+  }
+}

@@ -2,8 +2,8 @@ import * as i from '@xentom/integration-framework'
 
 import { type EmitterWebhookEvent } from '@octokit/webhooks/types'
 
-import { createRepositoryWebhook } from '@/helpers/webhooks'
 import * as pins from '@/pins'
+import { createRepositoryWebhook } from '@/utils/webhooks'
 
 const nodes = i.nodes.group('Repositories/Discussions')
 

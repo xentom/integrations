@@ -1,7 +1,7 @@
 {
   "$schema": "https://assets.xentom.com/schemas/package.json",
   "name": "@xentom/github",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "displayName": "GitHub",
   "description": "Integrate GitHub to trigger workflows from issues, pull requests or commits and automate actions like creating issues or commenting on pull requests.",
   "categories": [

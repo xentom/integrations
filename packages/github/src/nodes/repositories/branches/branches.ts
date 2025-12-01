@@ -2,8 +2,8 @@ import * as i from '@xentom/integration-framework'
 
 import { type components } from '@octokit/openapi-types'
 
-import { extractOwnerAndRepo } from '@/helpers/options'
 import * as pins from '@/pins'
+import { extractOwnerAndRepo } from '@/utils/options'
 
 const nodes = i.nodes.group('Repositories/Branches')
 

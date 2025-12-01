@@ -3,7 +3,12 @@ import * as v from 'valibot'
 
 import { type components } from '@octokit/openapi-types'
 
-import { extractOwnerAndRepo, hasRepositoryNameInput } from '@/helpers/options'
+import {
+  extractOwnerAndRepo,
+  getPagination,
+  hasMoreData,
+  hasRepositoryNameInput,
+} from '@/utils/options'
 
 export const run = i.pins.data<components['schemas']['workflow-run']>({
   displayName: 'Workflow Run',
@@ -23,20 +28,22 @@ export const workflowId = i.pins.data({
     placeholder: 'ci.yml',
     async options(opts) {
       if (!hasRepositoryNameInput(opts)) {
-        return []
+        return { items: [] }
       }
 
-      const workflows = await opts.state.octokit.rest.actions.listRepoWorkflows(
-        {
-          ...extractOwnerAndRepo(opts.node.inputs.repository),
-        },
-      )
+      const response = await opts.state.octokit.rest.actions.listRepoWorkflows({
+        ...extractOwnerAndRepo(opts.node.inputs.repository),
+        ...getPagination(opts),
+      })
 
-      return workflows.data.workflows.map((workflow) => ({
-        label: workflow.name,
-        value: workflow.id,
-        suffix: workflow.path,
-      }))
+      return {
+        hasMore: hasMoreData(response),
+        items: response.data.workflows.map((workflow) => ({
+          label: workflow.name,
+          value: workflow.id,
+          suffix: workflow.path,
+        })),
+      }
     },
   }),
 })
@@ -48,18 +55,22 @@ export const runId = i.pins.data({
     placeholder: '123456789',
     async options(opts) {
       if (!hasRepositoryNameInput(opts)) {
-        return []
+        return { items: [] }
       }
 
-      const runs =
+      const response =
         await opts.state.octokit.rest.actions.listWorkflowRunsForRepo({
           ...extractOwnerAndRepo(opts.node.inputs.repository),
+          ...getPagination(opts),
         })
 
-      return runs.data.workflow_runs.map((run) => ({
-        value: run.id,
-        suffix: `${run.name ?? 'Workflow'} #${run.run_number}`,
-      }))
+      return {
+        hasMore: hasMoreData(response),
+        items: response.data.workflow_runs.map((run) => ({
+          value: run.id,
+          suffix: `${run.name ?? 'Workflow'} #${run.run_number}`,
+        })),
+      }
     },
   }),
 })

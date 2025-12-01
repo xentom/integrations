@@ -3,6 +3,8 @@ import * as v from 'valibot'
 
 import { type components } from '@octokit/openapi-types'
 
+import { getPagination, hasMoreData } from '@/utils/options'
+
 export const item = i.pins.data<components['schemas']['full-repository']>({
   displayName: 'Repository',
 })
@@ -64,11 +66,16 @@ export const name = i.pins.data({
   control: i.controls.select({
     async options(opts) {
       const repositories =
-        await opts.state.octokit.rest.repos.listForAuthenticatedUser()
+        await opts.state.octokit.rest.repos.listForAuthenticatedUser({
+          ...getPagination(opts),
+        })
 
-      return repositories.data.map((repo) => ({
-        value: repo.full_name,
-      }))
+      return {
+        hasMore: hasMoreData(repositories),
+        items: repositories.data.map((repo) => ({
+          value: repo.full_name,
+        })),
+      }
     },
   }),
 })

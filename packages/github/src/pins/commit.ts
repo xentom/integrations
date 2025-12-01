@@ -3,7 +3,12 @@ import * as v from 'valibot'
 
 import { type components } from '@octokit/openapi-types'
 
-import { extractOwnerAndRepo, hasRepositoryNameInput } from '@/helpers/options'
+import {
+  extractOwnerAndRepo,
+  getPagination,
+  hasMoreData,
+  hasRepositoryNameInput,
+} from '@/utils/options'
 
 export const item = i.pins.data<components['schemas']['commit']>({
   displayName: 'Commit',
@@ -20,17 +25,21 @@ export const sha = i.pins.data({
     placeholder: 'Commit SHA',
     async options(opts) {
       if (!hasRepositoryNameInput(opts)) {
-        return []
+        return { items: [] }
       }
 
       const commits = await opts.state.octokit.rest.repos.listCommits({
         ...extractOwnerAndRepo(opts.node.inputs.repository),
+        ...getPagination(opts),
       })
 
-      return commits.data.map((commit) => ({
-        value: commit.sha,
-        suffix: commit.commit.message.split('\n')[0] ?? commit.sha,
-      }))
+      return {
+        hasMore: hasMoreData(commits),
+        items: commits.data.map((commit) => ({
+          value: commit.sha,
+          suffix: commit.commit.message.split('\n')[0] ?? commit.sha,
+        })),
+      }
     },
   }),
 })

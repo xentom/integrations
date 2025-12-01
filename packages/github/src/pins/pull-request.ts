@@ -3,9 +3,14 @@ import * as v from 'valibot'
 
 import { type components } from '@octokit/openapi-types'
 
-import { extractOwnerAndRepo, hasRepositoryNameInput } from '@/helpers/options'
 import * as branch from '@/pins/branch'
 import * as general from '@/pins/general'
+import {
+  extractOwnerAndRepo,
+  getPagination,
+  hasMoreData,
+  hasRepositoryNameInput,
+} from '@/utils/options'
 
 export const title = i.pins.data({
   description: 'The title of the pull request',
@@ -23,17 +28,21 @@ export const number = i.pins.data({
   control: i.controls.select({
     async options(opts) {
       if (!hasRepositoryNameInput(opts)) {
-        return []
+        return { items: [] }
       }
 
-      const pullRequests = await opts.state.octokit.rest.pulls.list({
+      const pulls = await opts.state.octokit.rest.pulls.list({
         ...extractOwnerAndRepo(opts.node.inputs.repository),
+        ...getPagination(opts),
       })
 
-      return pullRequests.data.map((pullRequest) => ({
-        value: pullRequest.number,
-        suffix: pullRequest.title,
-      }))
+      return {
+        hasMore: hasMoreData(pulls),
+        items: pulls.data.map((pull) => ({
+          value: pull.number,
+          suffix: pull.title,
+        })),
+      }
     },
   }),
 })

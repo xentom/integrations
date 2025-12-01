@@ -3,7 +3,12 @@ import * as v from 'valibot'
 
 import { type components } from '@octokit/openapi-types'
 
-import { extractOwnerAndRepo, hasRepositoryNameInput } from '@/helpers/options'
+import {
+  extractOwnerAndRepo,
+  getPagination,
+  hasMoreData,
+  hasRepositoryNameInput,
+} from '@/utils/options'
 
 export const item = i.pins.data<components['schemas']['release']>({
   displayName: 'Release',
@@ -42,18 +47,22 @@ export const id = i.pins.data({
   control: i.controls.select({
     async options(opts) {
       if (!hasRepositoryNameInput(opts)) {
-        return []
+        return { items: [] }
       }
 
       const releases = await opts.state.octokit.rest.repos.listReleases({
         ...extractOwnerAndRepo(opts.node.inputs.repository),
+        ...getPagination(opts),
       })
 
-      return releases.data.map((release) => ({
-        label: release.name ?? release.tag_name,
-        value: release.id,
-        suffix: release.tag_name,
-      }))
+      return {
+        hasMore: hasMoreData(releases),
+        items: releases.data.map((release) => ({
+          label: release.name ?? release.tag_name,
+          value: release.id,
+          suffix: release.tag_name,
+        })),
+      }
     },
   }),
 })

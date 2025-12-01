@@ -3,8 +3,13 @@ import * as v from 'valibot'
 
 import { type components } from '@octokit/openapi-types'
 
-import { extractOwnerAndRepo, hasRepositoryNameInput } from '@/helpers/options'
 import * as general from '@/pins/general'
+import {
+  extractOwnerAndRepo,
+  getPagination,
+  hasMoreData,
+  hasRepositoryNameInput,
+} from '@/utils/options'
 
 export const item = i.pins.data<components['schemas']['issue']>({
   displayName: 'Issue',
@@ -140,17 +145,21 @@ export const labels = i.pins.data({
     multiple: true,
     async options(opts) {
       if (!hasRepositoryNameInput(opts)) {
-        return []
+        return { items: [] }
       }
 
       const labels = await opts.state.octokit.rest.issues.listLabelsForRepo({
         ...extractOwnerAndRepo(opts.node.inputs.repository),
+        ...getPagination(opts),
       })
 
-      return labels.data.map((label) => ({
-        label: label.name,
-        value: label.name,
-      }))
+      return {
+        hasMore: hasMoreData(labels),
+        items: labels.data.map((label) => ({
+          label: label.name,
+          value: label.name,
+        })),
+      }
     },
   }),
 })
@@ -162,18 +171,22 @@ export const assignees = i.pins.data({
     multiple: true,
     async options(opts) {
       if (!hasRepositoryNameInput(opts)) {
-        return []
+        return { items: [] }
       }
 
       const collaborators =
         await opts.state.octokit.rest.repos.listCollaborators({
           ...extractOwnerAndRepo(opts.node.inputs.repository),
+          ...getPagination(opts),
         })
 
-      return collaborators.data.map((user) => ({
-        label: user.login,
-        value: user.login,
-      }))
+      return {
+        hasMore: hasMoreData(collaborators),
+        items: collaborators.data.map((collaborator) => ({
+          label: collaborator.login,
+          value: collaborator.login,
+        })),
+      }
     },
   }),
 })

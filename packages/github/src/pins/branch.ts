@@ -1,7 +1,12 @@
 import * as i from '@xentom/integration-framework'
 import * as v from 'valibot'
 
-import { extractOwnerAndRepo, hasRepositoryNameInput } from '@/helpers/options'
+import {
+  extractOwnerAndRepo,
+  getPagination,
+  hasMoreData,
+  hasRepositoryNameInput,
+} from '@/utils/options'
 
 export const name = i.pins.data({
   description: 'The branch name',
@@ -9,16 +14,20 @@ export const name = i.pins.data({
   control: i.controls.select({
     async options(opts) {
       if (!hasRepositoryNameInput(opts)) {
-        return []
+        return { items: [] }
       }
 
       const branches = await opts.state.octokit.rest.repos.listBranches({
         ...extractOwnerAndRepo(opts.node.inputs.repository),
+        ...getPagination(opts),
       })
 
-      return branches.data.map((branch) => ({
-        value: branch.name,
-      }))
+      return {
+        hasMore: hasMoreData(branches),
+        items: branches.data.map((branch) => ({
+          value: branch.name,
+        })),
+      }
     },
   }),
 })
