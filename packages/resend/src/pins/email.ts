@@ -2,6 +2,7 @@ import * as i from '@xentom/integration-framework'
 import * as v from 'valibot'
 
 import * as common from '@/pins/common'
+import { getPagination } from '@/utils/pagination'
 
 const EmailSchmea = v.pipe(v.string(), v.trim(), v.email())
 
@@ -9,19 +10,23 @@ export const id = common.uuid.with({
   displayName: 'Email ID',
   description: 'The unique identifier for the email.',
   control: i.controls.select({
-    async options({ state }) {
-      const response = await state.resend.emails.list()
+    async options({ state, pagination }) {
+      const response = await state.resend.emails.list({
+        ...getPagination(pagination),
+      })
+
       if (!response.data) {
-        return []
+        return { items: [] }
       }
 
-      return response.data.data.map((email) => {
-        return {
+      return {
+        hasMore: response.data.has_more,
+        items: response.data.data.map((email) => ({
           value: email.id,
           label: email.subject,
           suffix: email.id,
-        }
-      })
+        })),
+      }
     },
   }),
 })

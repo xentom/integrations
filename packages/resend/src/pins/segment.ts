@@ -4,6 +4,7 @@ import * as v from 'valibot'
 import { type Segment } from 'resend'
 
 import * as common from '@/pins/common'
+import { getPagination } from '@/utils/pagination'
 
 export const item = i.pins.data<Segment>({
   description: 'A segment containing contacts.',
@@ -19,19 +20,23 @@ export const id = common.uuid.with({
   displayName: 'Segment ID',
   description: 'The unique identifier for the segment.',
   control: i.controls.select({
-    async options({ state }) {
-      const response = await state.resend.segments.list()
+    async options({ state, pagination }) {
+      const response = await state.resend.segments.list({
+        ...getPagination(pagination),
+      })
+
       if (!response.data) {
-        return []
+        return { items: [] }
       }
 
-      return response.data.data.map((segment) => {
-        return {
+      return {
+        hasMore: response.data.has_more,
+        items: response.data.data.map((segment) => ({
           value: segment.id,
           label: segment.name,
           suffix: segment.id,
-        }
-      })
+        })),
+      }
     },
   }),
 })

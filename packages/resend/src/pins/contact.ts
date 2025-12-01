@@ -4,6 +4,7 @@ import * as v from 'valibot'
 import { type Contact } from 'resend'
 
 import * as common from '@/pins/common'
+import { getPagination } from '@/utils/pagination'
 
 export const item = i.pins.data<Contact>({
   description: 'Contact object.',
@@ -17,20 +18,23 @@ export const id = common.uuid.with({
   displayName: 'Contact ID',
   description: 'The unique identifier for the contact.',
   control: i.controls.select({
-    async options({ state }) {
-      const response = await state.resend.contacts.list()
+    async options({ state, pagination }) {
+      const response = await state.resend.contacts.list({
+        ...getPagination(pagination),
+      })
 
       if (!response.data) {
-        return []
+        return { items: [] }
       }
 
-      return response.data.data.map((contact) => {
-        return {
+      return {
+        hasMore: response.data.has_more,
+        items: response.data.data.map((contact) => ({
           value: contact.id,
           label: contact.email,
           suffix: contact.id,
-        }
-      })
+        })),
+      }
     },
   }),
 })

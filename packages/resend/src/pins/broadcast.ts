@@ -3,6 +3,7 @@ import * as v from 'valibot'
 
 import { type Broadcast } from 'resend'
 
+import { getPagination } from '@/utils/pagination'
 import * as common from './common'
 
 export const item = i.pins.data<Broadcast>({
@@ -19,19 +20,23 @@ export const id = common.uuid.with({
   displayName: 'Domain ID',
   description: 'The unique identifier for the domain.',
   control: i.controls.select({
-    async options({ state }) {
-      const response = await state.resend.broadcasts.list()
+    async options({ state, pagination }) {
+      const response = await state.resend.broadcasts.list({
+        ...getPagination(pagination),
+      })
+
       if (!response.data) {
-        return []
+        return { items: [] }
       }
 
-      return response.data.data.map((broadcast) => {
-        return {
+      return {
+        hasMore: response.data.has_more,
+        items: response.data.data.map((broadcast) => ({
           value: broadcast.id,
           label: broadcast.name,
           suffix: broadcast.id,
-        }
-      })
+        })),
+      }
     },
   }),
 })

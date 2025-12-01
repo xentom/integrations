@@ -3,6 +3,7 @@ import * as v from 'valibot'
 
 import { type Domain, type DomainRegion } from 'resend'
 
+import { getPagination } from '@/utils/pagination'
 import * as common from './common'
 
 export const item = i.pins.data<Domain>({
@@ -17,19 +18,23 @@ export const id = common.uuid.with({
   displayName: 'Domain ID',
   description: 'The unique identifier for the domain.',
   control: i.controls.select({
-    async options({ state }) {
-      const response = await state.resend.domains.list()
+    async options({ state, pagination }) {
+      const response = await state.resend.domains.list({
+        ...getPagination(pagination),
+      })
+
       if (!response.data) {
-        return []
+        return { items: [] }
       }
 
-      return response.data.data.map((domain) => {
-        return {
+      return {
+        hasMore: response.data.has_more,
+        items: response.data.data.map((domain) => ({
           value: domain.id,
           label: domain.name,
           suffix: domain.id,
-        }
-      })
+        })),
+      }
     },
   }),
 })
