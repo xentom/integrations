@@ -1,0 +1,43 @@
+{
+  "$schema": "https://assets.xentom.com/schemas/package.json",
+  "name": "@xentom/notion",
+  "version": "0.0.2",
+  "displayName": "Notion",
+  "description": "Integrate Notion to automate database queries, page creation, and content management within your workflows.",
+  "categories": [
+    "Productivity"
+  ],
+  "homepage": "https://xentom.com/integrations/xentom/notion",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xentom/integrations.git",
+    "directory": "packages/notion"
+  },
+  "bugs": {
+    "url": "https://github.com/xentom/integrations/issues"
+  },
+  "type": "module",
+  "icon": "./assets/icon.webp",
+  "main": "./build/index.js",
+  "scripts": {
+    "lint": "biome lint .",
+    "format": "biome format --write .",
+    "typecheck": "tsc --noEmit",
+    "clean": "git clean -xdf .cache .turbo node_modules build dist",
+    "dev": "xentom dev",
+    "build": "xentom build",
+    "pack": "xentom pack",
+    "publish": "xentom publish"
+  },
+  "dependencies": {
+    "@notionhq/client": "^2.2.15",
+    "@xentom/integration-framework": "catalog:",
+    "valibot": "catalog:"
+  },
+  "devDependencies": {
+    "@xentom/style-guide": "catalog:",
+    "@types/bun": "catalog:",
+    "typescript": "catalog:",
+    "@biomejs/biome": "catalog:"
+  }
+}
