@@ -94,7 +94,7 @@
     },
     "packages/notion": {
       "name": "@xentom/notion",
-      "version": "0.0.1",
+      "version": "0.0.2",
       "dependencies": {
         "@notionhq/client": "^2.2.15",
         "@xentom/integration-framework": "catalog:",
@@ -145,6 +145,20 @@
       "dependencies": {
         "@slack/socket-mode": "^2.0.5",
         "@slack/web-api": "^7.12.0",
+        "@xentom/integration-framework": "catalog:",
+        "valibot": "catalog:",
+      },
+      "devDependencies": {
+        "@biomejs/biome": "catalog:",
+        "@types/bun": "catalog:",
+        "@xentom/style-guide": "catalog:",
+        "typescript": "catalog:",
+      },
+    },
+    "packages/storage": {
+      "name": "@xentom/storage",
+      "version": "0.0.1",
+      "dependencies": {
         "@xentom/integration-framework": "catalog:",
         "valibot": "catalog:",
       },
@@ -350,6 +364,8 @@
     "@xentom/resend": ["@xentom/resend@workspace:packages/resend"],
 
     "@xentom/slack": ["@xentom/slack@workspace:packages/slack"],
+
+    "@xentom/storage": ["@xentom/storage@workspace:packages/storage"],
 
     "@xentom/stripe": ["@xentom/stripe@workspace:packages/stripe"],
 

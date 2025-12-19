@@ -1,0 +1,42 @@
+{
+  "$schema": "https://assets.xentom.com/schemas/package.json",
+  "name": "@xentom/storage",
+  "version": "0.0.2",
+  "displayName": "Storage",
+  "description": "Persistent key-value storage for workflow data. Store, retrieve, and delete values that persist across workflow runs.",
+  "categories": [
+    "Storage"
+  ],
+  "homepage": "https://xentom.com/integrations/xentom/storage",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xentom/integrations.git",
+    "directory": "packages/storage"
+  },
+  "bugs": {
+    "url": "https://github.com/xentom/integrations/issues"
+  },
+  "type": "module",
+  "icon": "./assets/icon.webp",
+  "main": "./build/index.js",
+  "scripts": {
+    "lint": "biome lint .",
+    "format": "biome format --write .",
+    "typecheck": "tsc --noEmit",
+    "clean": "git clean -xdf .cache .turbo node_modules build dist",
+    "dev": "xentom dev",
+    "build": "xentom build",
+    "pack": "xentom pack",
+    "publish": "xentom publish"
+  },
+  "dependencies": {
+    "@xentom/integration-framework": "catalog:",
+    "valibot": "catalog:"
+  },
+  "devDependencies": {
+    "@xentom/style-guide": "catalog:",
+    "@types/bun": "catalog:",
+    "typescript": "catalog:",
+    "@biomejs/biome": "catalog:"
+  }
+}
