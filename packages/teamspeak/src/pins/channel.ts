@@ -158,7 +158,7 @@ export const type = i.pins.data<ChannelType>({
       { value: ChannelType.SEMI_PERMANENT, label: 'Semi-Permanent' },
       { value: ChannelType.PERMANENT, label: 'Permanent' },
     ],
-    defaultValue: ChannelType.TEMPORARY,
+    defaultValue: ChannelType.PERMANENT,
   }),
 })
 

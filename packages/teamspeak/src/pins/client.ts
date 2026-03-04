@@ -41,3 +41,26 @@ export const items = {
     ),
   }),
 }
+
+export const id = i.pins.data({
+  displayName: 'ID',
+  description: 'The ID of a TeamSpeak client',
+  schema: v.string(),
+  control: i.controls.text({
+    placeholder: '1',
+  }),
+})
+
+export const idSelection = id.with({
+  control: i.controls.select({
+    async options(opts) {
+      const clients = await opts.state.teamspeak.clientList()
+      return {
+        items: clients.map((client) => ({
+          value: client.clid,
+          suffix: client.nickname,
+        })),
+      }
+    },
+  }),
+})
