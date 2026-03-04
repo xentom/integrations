@@ -1,6 +1,5 @@
 ---
 description: Create a new integration
-argument-hint: [integration-name]
 ---
 
 # Create a new integration
@@ -8,6 +7,12 @@ argument-hint: [integration-name]
 ## Description
 
 Create a new integration for the xentom workflow editor by systematically researching, implementing, and integrating a third-party service. The integration will be scaffolded from the template and customized using the selected TypeScript library.
+
+## Additional Description
+
+```
+$2
+```
 
 ## Implementation Process
 

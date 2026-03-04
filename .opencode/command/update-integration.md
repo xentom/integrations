@@ -1,6 +1,5 @@
 ---
 description: Update an existing integration
-argument-hint: [integration-name] [improvements]
 ---
 
 # Update an existing integration

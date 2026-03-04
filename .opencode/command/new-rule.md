@@ -1,6 +1,5 @@
 ---
 description: Create and integrate a new development rule into CLAUDE.md guidelines
-argument-hint: [description]
 ---
 
 # Create a new development rule for CLAUDE.md
