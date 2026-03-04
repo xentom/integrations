@@ -17,13 +17,13 @@ export const query = i.pins.data({
   }),
 })
 
-export const filterType = i.pins.data<'page' | 'database'>({
+export const filterType = i.pins.data<'page' | 'data_source'>({
   displayName: 'Filter Type',
   description: 'Filter results to only pages or databases.',
   control: i.controls.select({
     options: [
       { label: 'Page', value: 'page' },
-      { label: 'Database', value: 'database' },
+      { label: 'Database', value: 'data_source' },
     ],
   }),
 })

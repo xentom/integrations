@@ -1,0 +1,14 @@
+diff --git a/src/transport/protocols/raw.ts b/src/transport/protocols/raw.ts
+index c66645bce2885648611e74b7960d3eed03420fc9..ab1e59f944128abd40c47fdffbff9a751863674b 100644
+--- a/src/transport/protocols/raw.ts
++++ b/src/transport/protocols/raw.ts
+@@ -14,7 +14,8 @@ export class ProtocolRAW extends EventEmitter implements TeamSpeakQuery.QueryPro
+     this.socket = connect({
+       port: config.queryport,
+       host: config.host,
+-      localAddress: config.localAddress
++      localAddress: config.localAddress,
++      family: 4
+     })
+     this.socket.setEncoding("utf8")
+     this.socket.setTimeout(config.readyTimeout)

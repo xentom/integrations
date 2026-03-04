@@ -3,6 +3,7 @@ import * as v from 'valibot'
 
 import {
   type DatabaseObjectResponse,
+  type DataSourceObjectResponse,
   type PageObjectResponse,
 } from '@notionhq/client/build/src/api-endpoints'
 
@@ -67,8 +68,8 @@ export const search = nodes.callable({
     for (const result of response.results) {
       if (result.object === 'page' && 'properties' in result) {
         pages.push(result as PageObjectResponse)
-      } else if (result.object === 'database' && 'title' in result) {
-        databases.push(result as DatabaseObjectResponse)
+      } else if (result.object === 'data_source' && 'title' in result) {
+        databases.push(result as unknown as DatabaseObjectResponse)
       }
     }
 

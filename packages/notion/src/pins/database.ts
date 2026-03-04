@@ -4,9 +4,9 @@ import * as v from 'valibot'
 import {
   type CreateDatabaseParameters,
   type DatabaseObjectResponse,
-  type QueryDatabaseParameters,
-  type QueryDatabaseResponse,
-  type UpdateDatabaseParameters,
+  type QueryDataSourceParameters,
+  type QueryDataSourceResponse,
+  type UpdateDataSourceParameters,
 } from '@notionhq/client/build/src/api-endpoints'
 
 export const item = i.pins.data<DatabaseObjectResponse>({
@@ -19,7 +19,7 @@ export const items = i.pins.data<DatabaseObjectResponse[]>({
   description: 'A list of Notion database objects.',
 })
 
-export const queryResult = i.pins.data<QueryDatabaseResponse>({
+export const queryResult = i.pins.data<QueryDataSourceResponse>({
   displayName: 'Query Result',
   description: 'The result of a database query containing pages.',
 })
@@ -42,14 +42,14 @@ export const title = i.pins.data({
   }),
 })
 
-export const filter = i.pins.data<QueryDatabaseParameters['filter']>({
+export const filter = i.pins.data<QueryDataSourceParameters['filter']>({
   displayName: 'Filter',
   description:
     'A filter object to narrow down query results. See Notion API documentation for filter syntax.',
   control: i.controls.expression(),
 })
 
-export const sorts = i.pins.data<QueryDatabaseParameters['sorts']>({
+export const sorts = i.pins.data<QueryDataSourceParameters['sorts']>({
   displayName: 'Sorts',
   description:
     'An array of sort objects to order query results. See Notion API documentation for sort syntax.',
@@ -57,7 +57,7 @@ export const sorts = i.pins.data<QueryDatabaseParameters['sorts']>({
 })
 
 export const createProperties = i.pins.data<
-  CreateDatabaseParameters['properties']
+  NonNullable<CreateDatabaseParameters['initial_data_source']>['properties']
 >({
   displayName: 'Properties Schema',
   description:
@@ -84,7 +84,7 @@ export const createProperties = i.pins.data<
 })
 
 export const updateProperties = i.pins.data<
-  UpdateDatabaseParameters['properties']
+  UpdateDataSourceParameters['properties']
 >({
   displayName: 'Properties Schema',
   description:

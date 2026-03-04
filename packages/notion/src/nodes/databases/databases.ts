@@ -44,8 +44,8 @@ export const queryDatabase = nodes.callable({
     pages: pins.page.items,
   },
   async run(opts) {
-    const response = await opts.state.client.databases.query({
-      database_id: opts.inputs.id,
+    const response = await opts.state.client.dataSources.query({
+      data_source_id: opts.inputs.id,
       filter: opts.inputs.filter,
       sorts: opts.inputs.sorts,
     })
@@ -78,7 +78,9 @@ export const createDatabase = nodes.callable({
     const response = await opts.state.client.databases.create({
       parent: { type: 'page_id', page_id: opts.inputs.parentPageId },
       title: [{ type: 'text', text: { content: opts.inputs.title } }],
-      properties: opts.inputs.properties,
+      initial_data_source: {
+        properties: opts.inputs.properties,
+      },
     })
 
     return opts.next({
@@ -102,12 +104,22 @@ export const updateDatabase = nodes.callable({
     database: pins.database.item,
   },
   async run(opts) {
-    const response = await opts.state.client.databases.update({
+    if (opts.inputs.title) {
+      await opts.state.client.databases.update({
+        database_id: opts.inputs.id,
+        title: [{ type: 'text', text: { content: opts.inputs.title } }],
+      })
+    }
+
+    if (opts.inputs.properties) {
+      await opts.state.client.dataSources.update({
+        data_source_id: opts.inputs.id,
+        properties: opts.inputs.properties,
+      })
+    }
+
+    const response = await opts.state.client.databases.retrieve({
       database_id: opts.inputs.id,
-      title: opts.inputs.title
-        ? [{ type: 'text', text: { content: opts.inputs.title } }]
-        : undefined,
-      properties: opts.inputs.properties,
     })
 
     return opts.next({
