@@ -55,6 +55,14 @@ export const onWebhook = nodes.trigger({
 
       const body = await parseRequestBody(req, headers)
       const requestId = Bun.randomUUIDv7()
+      const nextOptions: i.TriggerNextOptions = {
+        ctx: {
+          requestId,
+        },
+        deduplication: {
+          id: requestId,
+        },
+      }
 
       if (!opts.inputs.customResponse) {
         void opts.next(
@@ -66,7 +74,7 @@ export const onWebhook = nodes.trigger({
               headers,
             },
           },
-          { requestId },
+          nextOptions,
         )
 
         return
@@ -85,7 +93,7 @@ export const onWebhook = nodes.trigger({
             headers,
           },
         },
-        { requestId },
+        nextOptions,
       )
 
       return await Promise.race([
