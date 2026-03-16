@@ -35,5 +35,8 @@
     "@xentom/integration-framework": "catalog:",
     "octokit": "^5.0.5",
     "valibot": "catalog:"
+  },
+  "devDependencies": {
+    "@types/bun": "catalog:"
   }
 }

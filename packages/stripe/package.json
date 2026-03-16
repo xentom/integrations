@@ -33,5 +33,8 @@
     "@xentom/integration-framework": "catalog:",
     "stripe": "^20.3.1",
     "valibot": "catalog:"
+  },
+  "devDependencies": {
+    "@types/bun": "catalog:"
   }
 }
