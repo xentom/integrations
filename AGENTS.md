@@ -1,533 +1,249 @@
-# Monorepo Structure Guide
+# Xentom Integrations Monorepo
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+## Overview
 
-## Project Overview
+Monorepo containing official integrations for the Xentom workflow editor. Each package under `packages/` is a self-contained integration that connects a third-party service to the Xentom platform.
 
-This is a monorepo for Xentom integrations using:
+**Stack:** Bun, Turbo, TypeScript, Biome, Valibot
 
-- **Build orchestration**: Turbo
-- **Package manager**: Bun (`bun@1.2.18`)
-- **Structure**: Multiple integration packages extending the Xentom platform
+## Commands
 
-## Essential Commands
-
-### Root-level (repository root)
+### Repository root
 
 ```bash
-bun run clean      # Clean all packages and git-ignored files
-bun run lint       # Run Biome across all packages
-bun run typecheck  # Run TypeScript type checking across all packages
-bun run format     # Format code with Biome across all packages
-bun run pack       # Build/pack all integration packages
+bun run lint        # Biome lint across all packages
+bun run typecheck   # TypeScript checking across all packages
+bun run format      # Biome formatting across all packages
+bun run pack        # Build/pack all integrations
+bun run clean       # Clean all build artifacts
 ```
 
-### Package-level (`packages/*/` directories)
+### Per-package (`packages/<name>/`)
 
 ```bash
-bun run dev        # Start development mode using `xentom dev`
-bun run pack       # Build the integration package using `xentom pack`
-bun run publish    # Publish the integration using `xentom publish`
-bun run lint       # Run Biome for the package
-bun run typecheck  # Run TypeScript checking with `tsc --noEmit`
-bun run format     # Format code with Biome
-bun run clean      # Clean build artifacts and dependencies
+bun run lint        # Biome lint for this package
+bun run typecheck   # tsc --noEmit for this package
+bun run format      # Biome format for this package
+bun run dev         # xentom dev (development mode)
+bun run pack        # xentom pack (build)
+bun run publish     # xentom publish
 ```
 
-## 🚨 MANDATORY Quality Checks
+Always use Bun. Never use npm or yarn.
 
-**All integrations MUST pass without errors or warnings:**
+## Quality Gates
 
-- ✅ `bun run lint` - Zero Biome errors and warnings
-- ✅ `bun run typecheck` - Zero TypeScript errors
-- ✅ `bun run format` - No Biome formatting changes required
+Every integration must pass all three checks with zero errors and zero warnings before it is considered complete:
 
----
+1. `bun run typecheck`
+2. `bun run lint`
+3. `bun run format`
 
-# Integration Structure Guide
-
-## Directory Structure
+## Integration Package Structure
 
 ```
-/
-├── src/
-│   ├── index.ts                     # Integration entry point
-│   ├── nodes/                       # Functional nodes grouped by category
-│   │   ├── [category]/
-│   │   │   ├── [subcategory]/
-│   │   │   │   ├── [subcategory].ts
-│   │   │   │   └── index.ts
-│   │   │   ├── [category].ts
-│   │   │   └── index.ts
-│   │   └── index.ts
-│   └── pins/                        # Reusable data types
-│       ├── [category].ts
-│       └── index.ts
+packages/<name>/
 ├── assets/
-│   └── icon.png                     # Integration icon (required)
+│   └── icon.png              # Required integration icon
+├── src/
+│   ├── index.ts              # Entry point: auth, state, lifecycle
+│   ├── pins/
+│   │   ├── index.ts          # Namespace re-exports (export * as category from './category')
+│   │   └── <category>.ts     # Reusable pin definitions per category
+│   ├── nodes/
+│   │   ├── index.ts          # Flat re-exports (export * from './category')
+│   │   └── <category>/
+│   │       ├── index.ts      # Re-exports (export * from './category')
+│   │       └── <category>.ts # Node implementations
+│   └── utils/                # Optional: shared helpers used across nodes or pins
+│       └── <helper>.ts
 ├── package.json
-├── tsconfig.json
-└── biome.json
+└── tsconfig.json
 ```
 
-## Common Code Rules
-
-### Import Management
-
-**✅ REQUIRED Patterns:**
+## Imports
 
 ```typescript
-// Valibot direct import
-
-// Framework import
-import * as i from '@xentom/integration-framework';
-import * as v from 'valibot';
-
-// Inline type specifiers
-import { myFunction, type MyType } from 'package';
-
-// Custom pins import
-import * as pins from '@/pins';
+import * as i from '@xentom/integration-framework'
+import * as v from 'valibot'
+import * as pins from '@/pins'
+import { myFunction, type MyType } from 'some-package'
 ```
 
-**❌ FORBIDDEN Patterns:**
+Forbidden:
+
+- `import type { X } from 'pkg'` — use inline `type` keyword instead
+- `i.v.string()` — import valibot directly as `v`
+
+## Entry Point (`src/index.ts`)
 
 ```typescript
-// WRONG - use v.string()
+import * as i from '@xentom/integration-framework'
+import * as v from 'valibot'
+import { Client } from 'some-sdk'
+import * as nodes from './nodes'
 
-// DO NOT use top-level type imports
-import type { MyType } from 'package'; // WRONG
-
-// DO NOT use framework's Valibot export
-i.v.string();
-```
-
-### Type Safety
-
-**Three-Attempt Rule for Type/Lint Errors:**
-
-1. Fix the underlying issue properly
-2. Try alternative implementation approach
-3. Redesign entire approach if necessary
-
-**❌ ABSOLUTELY FORBIDDEN:**
-
-- `as any`
-- `@ts-ignore`
-- `biome-ignore lint/...`
-- Type bypasses indicate design problems
-
-### Variable Management
-
-**✅ PREFERRED: Direct property access**
-
-```typescript
-const message = await opts.state.client.messages.get(opts.inputs.messageId);
-```
-
-**❌ AVOID: Unnecessary intermediate variables**
-
-```typescript
-const client = opts.state.client; // Unnecessary
-const messageId = opts.inputs.messageId; // Unnecessary
-const message = await client.messages.get(messageId);
-```
-
-### Error Handling
-
-**✅ REQUIRED:** Let the workflow editor handle errors
-**❌ FORBIDDEN:** Unnecessary try-catch blocks that only re-throw
-
-### Documentation
-
-**✅ REQUIRED:** Use node/pin descriptions for documentation
-**❌ FORBIDDEN:** Redundant comments duplicating descriptions
-**✅ ACCEPTABLE:** Comments only for complex business logic
-
-## Node Rules
-
-### Node Structure
-
-**✅ CORRECT Implementation Order:**
-
-```typescript
-import * as i from '@xentom/integration-framework';
-
-// 1. Category metadata
-const nodes = i.nodes.group('Parent Category/Category Name');
-
-// 2. Trigger nodes (event-driven)
-export const onEventName = nodes.trigger({
-  // Implementation...
-});
-
-// 3. Callable nodes (actions)
-export const actionName = nodes.callable({
-  // Implementation...
-});
-
-// 4. Pure nodes (transformations)
-export const transformName = nodes.pure({
-  // Implementation...
-});
-```
-
-### Node Naming
-
-**✅ REQUIRED: Specific, meaningful export names**
-
-```typescript
-export const sendMessage = nodes.callable({...});
-export const updateChannel = nodes.callable({...});
-export const deleteUser = nodes.callable({...});
-```
-
-**❌ FORBIDDEN: Generic export names**
-
-```typescript
-export const send = nodes.callable({...}); // Too generic
-export const update = nodes.callable({...}); // Missing context
-export const delete = nodes.callable({...}); // Ambiguous
-```
-
-### Display Names
-
-**✅ ONLY use `displayName` when:**
-
-- Auto-generation produces incorrect results (e.g., 'API Key' vs 'Api Key')
-- Working around JavaScript keywords
-
-```typescript
-// Required for keyword conflicts
-export const _delete = nodes.callable({
-  group,
-  displayName: 'Delete',
-});
-
-// Omit when auto-generation works
-export const sendMessage = nodes.callable({
-  group,
-  // 'sendMessage' → 'Send Message' automatically
-});
-```
-
-### Category Conventions
-
-**✅ REQUIRED:**
-
-- Singular names: `email`, `user`, `issue`
-- Generic names: `email` not `email-management`
-- Kebab-case directories: `user-management`
-- Title case in paths: `['User Management']`
-
-**❌ FORBIDDEN:**
-
-- Plural names: `emails`, `users`
-- PascalCase directories: `UserManagement`
-
-## Pin Rules
-
-### Pin Definition Structure
-
-**✅ CORRECT Pin Types:**
-
-```typescript
-// Single item pin
-export const item = i.pins.data<Email>({
-  displayName: 'Email',
-});
-
-// Collection pin
-export const items = i.pins.data<Email[]>({
-  displayName: 'Emails',
-});
-
-// Property pin
-export const id = i.pins.data({
-  displayName: 'Email ID',
-  schema: v.string(),
-});
-```
-
-### Pin Extension
-
-**✅ REQUIRED: Use `.with()` method**
-
-```typescript
-subject: pins.email.subject.with({
-  description: 'Email subject line',
-  optional: true,
-});
-```
-
-**❌ FORBIDDEN: Direct property access**
-
-```typescript
-// NEVER access schema directly
-pins.email.subject.schema
-
-// NEVER destructure pins
-{ ...pins.email.subject, optional: true }
-```
-
-### Pin Optionality
-
-**✅ CORRECT: Reusable pins without `optional`**
-
-```typescript
-// Main definition - no optional
-export const title = i.pins.data({
-  description: 'The title',
-  schema: v.pipe(v.string(), v.nonEmpty()),
-});
-
-// Apply optional when extending
-inputs: {
-  title: pins.item.title.with({ optional: true }),
+declare module '@xentom/integration-framework' {
+  interface IntegrationState {
+    client: Client
+  }
 }
-```
-
-**❌ FORBIDDEN: Optional in main definition**
-
-```typescript
-export const title = i.pins.data({
-  schema: v.string(),
-  optional: true, // Breaks reusability
-});
-```
-
-### Input vs Output Pins
-
-**✅ REQUIRED Strategy:**
-
-```typescript
-// INPUTS: Use schemas for validation
-inputs: {
-  email: i.pins.data({
-    schema: v.string(),
-    displayName: 'Email',
-  }),
-}
-
-// OUTPUTS: Use TypeScript types
-outputs: {
-  user: i.pins.data<UserType>({
-    displayName: 'User Data',
-  }),
-}
-```
-
-### Class Serialization
-
-**✅ REQUIRED: Separate input/output pins for classes**
-
-```typescript
-// Base pin
-export const item = i.pins.data({
-  displayName: 'Channel',
-});
-
-// Input pin - deserializes
-export const itemInput = item.with({
-  schema({ state }) {
-    return v.pipe(
-      v.custom<ChannelEntry>((value) => !!value && 'cid' in value),
-      v.transform((value) => new TeamSpeakChannel(state.teamspeak, value)),
-    );
-  },
-});
-
-// Output pin - serializes
-export const itemOutput = item.with({
-  schema: v.pipe(
-    v.custom<TeamSpeakChannel>((value) => value instanceof TeamSpeakChannel),
-    v.transform((value) => value.toJSON() as ChannelEntry),
-  ),
-});
-```
-
-### Pin Naming Standards
-
-**✅ REQUIRED Conventions:**
-
-- Single object: `item`
-- Arrays/lists: `items`
-- Properties: `id`, `name`, `email`
-- Consistent naming across all integrations
-
-## Control Rules
-
-### When to Include Controls
-
-**✅ REQUIRED for user inputs:**
-
-```typescript
-// Text control for strings
-export const title = i.pins.data({
-  schema: v.string(),
-  control: i.controls.text(),
-});
-
-// Expression for all other types except strings and booleans.
-export const issueNumber = i.pins.data({
-  schema: v.number(),
-  control: i.controls.expression(),
-});
-
-// Switch for booleans
-export const isDraft = i.pins.data({
-  schema: v.boolean(),
-  control: i.controls.switch(),
-});
-```
-
-### Select Controls
-
-**✅ Static Options:**
-
-```typescript
-export const status = i.pins.data({
-  control: i.controls.select({
-    options: [
-      { label: 'Active', value: 'active' },
-      { label: 'Inactive', value: 'inactive' },
-    ],
-  }),
-});
-```
-
-**✅ Dynamic Options:**
-
-```typescript
-export const repository = i.pins.data({
-  schema: v.string(),
-  control: i.controls.select({
-    async options(opts) {
-      const repos = await opts.state.api.listRepositories();
-      return repos.data.map((repo) => ({
-        value: repo.fullName,
-        label: repo.name,
-      }));
-    },
-  }),
-});
-```
-
-**✅ Multi-select for Arrays:**
-
-```typescript
-export const assignees = i.pins.data({
-  schema: v.array(v.string()),
-  control: i.controls.select({
-    multiple: true,
-    async options(opts) {
-      const users = await opts.state.api.getUsers();
-      return users.data.map((user) => ({
-        value: user.id,
-        label: user.name,
-      }));
-    },
-  }),
-});
-```
-
-### When to Omit Controls
-
-**✅ ACCEPTABLE to omit for:**
-
-- Complex response objects
-- Computed/derived data
-- When dynamic options aren't feasible
-
-```typescript
-// Complex object - no control needed
-export const apiResponse = i.pins.data<ApiResponseType>({
-  displayName: 'API Response',
-});
-```
-
-## File Export Structure
-
-### Integration Entry (`src/index.ts`)
-
-```typescript
-import * as i from '@xentom/integration-framework';
 
 export default i.integration({
-  // Configuration...
-});
+  nodes,
+  auth: i.auth.token({
+    control: i.controls.text({
+      label: 'API Key',
+      description: 'Your API key from ...',
+      placeholder: 'sk_...',
+    }),
+    schema: v.pipeAsync(
+      v.string(),
+      v.checkAsync(async (token) => {
+        // Validate token with a test API call
+        return true
+      }, 'Invalid API key.'),
+    ),
+  }),
+  start(opts) {
+    opts.state.client = new Client(opts.auth.token)
+  },
+})
 ```
 
-### Node Index Files
+## Pins
 
-**`src/nodes/index.ts`:**
+Pins are reusable data type definitions in `src/pins/`.
 
 ```typescript
-// Flat re-export of all categories
-export * from './category1';
-export * from './category2';
-```
+// src/pins/email.ts
+import * as i from '@xentom/integration-framework'
+import * as v from 'valibot'
 
-**`src/nodes/[category]/index.ts`:**
+// Pin with schema — provides runtime validation
+export const address = i.pins.data({
+  description: 'An email address.',
+  schema: v.pipe(v.string(), v.email()),
+  control: i.controls.text({ placeholder: 'user@example.com' }),
+})
+
+// Pin with type generic — provides compile-time typing, no runtime validation
+export const item = i.pins.data<Email>({
+  description: 'An email object.',
+})
+
+// Collection pin with type generic
+export const items = i.pins.data<Email[]>({
+  description: 'A list of emails.',
+})
+```
 
 ```typescript
-// Re-export subcategories
-export * from './subcategory1';
-export * from './subcategory2';
-
-// Re-export main category nodes
-export * from './category';
+// src/pins/index.ts
+export * as email from './email'
+export * as user from './user'
 ```
 
-### Pin Index Files
+Rules:
 
-**`src/pins/index.ts`:**
+- Pins can have a `schema` (runtime validation), a `<Type>` generic (compile-time typing), or both. Either can be used on inputs or outputs.
+- Never set `optional: true` on pin definitions. Apply it when extending: `pins.email.address.with({ optional: true })`
+- Always use `.with()` to customize pins. Never destructure or access `.schema` directly.
+- Controls: `text()` for strings, `switch()` for booleans, `expression()` for numbers/objects, `select()` for enums.
+- Use `.with({ control: false })` when extending a pin that has a control but you don't need it (e.g., using an `id` pin as an output).
+- Use realistic placeholders: `'user@example.com'` not `'Enter email'`.
+- Naming: `item` for a single object, `items` for arrays, descriptive names for properties (`id`, `name`, `email`).
+
+## Nodes
+
+Nodes are actions, triggers, or transforms in `src/nodes/`.
 
 ```typescript
-// Namespace exports by category
-export * as email from './email';
-export * as user from './user';
+// src/nodes/emails/emails.ts
+import * as i from '@xentom/integration-framework'
+import * as pins from '@/pins'
+
+const nodes = i.nodes.group('Emails')
+
+export const sendEmail = nodes.callable({
+  description: 'Send an email.',
+  inputs: {
+    to: pins.email.address.with({ description: 'Recipient.' }),
+    subject: pins.email.subject,
+    body: pins.email.body.with({ optional: true }),
+  },
+  outputs: {
+    id: pins.email.id.with({ control: false }),
+  },
+  async run(opts) {
+    const response = await opts.state.client.emails.send({
+      to: opts.inputs.to,
+      subject: opts.inputs.subject,
+      body: opts.inputs.body,
+    })
+    return opts.next({ id: response.id })
+  },
+})
 ```
-
-## Placeholder Examples
-
-**✅ REQUIRED: Realistic, context-specific examples**
 
 ```typescript
-email: i.pins.data({
-  placeholder: 'user@example.com',
-}),
+// src/nodes/emails/index.ts
+export * from './emails'
 
-repository: i.pins.data({
-  placeholder: 'owner/repository-name',
-}),
-
-apiUrl: i.pins.data({
-  placeholder: 'https://api.service.com/v1',
-}),
+// src/nodes/index.ts
+export * from './emails'
+export * from './contacts'
 ```
 
-**❌ FORBIDDEN: Generic placeholders**
+Rules:
+
+- Node types: `nodes.callable()` for actions, `nodes.trigger()` for events, `nodes.pure()` for transforms.
+- Export names must be specific: `sendEmail`, `deleteUser`, `listContacts`. Never generic like `send`, `delete`, `get`.
+- Only set `displayName` when auto-generation is wrong (e.g., acronyms like 'API') or for JS keyword conflicts.
+- Categories use singular names: `email` not `emails`, `user` not `users`. Directories use kebab-case.
+- Prefer direct property access: `opts.state.client.emails.send(...)`. Avoid intermediate variables.
+- Let errors propagate. No try-catch unless you need to transform the error.
+- Return via `opts.next({...})`.
+
+## Select Controls with Dynamic Options
 
 ```typescript
-email: i.pins.data({
-  placeholder: 'Enter email', // Too generic
-}),
+export const id = i.pins.data({
+  schema: v.string(),
+  control: i.controls.select({
+    async options({ state, pagination }) {
+      const response = await state.client.items.list({
+        limit: pagination.limit,
+      })
+      return {
+        hasMore: response.hasMore,
+        items: response.data.map((item) => ({
+          value: item.id,
+          label: item.name,
+          suffix: item.id,
+        })),
+      }
+    },
+  }),
+})
 ```
 
-## Key References
+## Type Safety
 
-- Integration framework types: `@node_modules/@xentom/integration-framework/dist/integration.d.ts`
-- Node types: `@node_modules/@xentom/integration-framework/dist/nodes/*.d.ts`
-- Pin types: `@node_modules/@xentom/integration-framework/dist/pins/*.d.ts`
+- Never use `as any`, `@ts-ignore`, or `biome-ignore lint/...`
+- If a type error persists after 3 fix attempts: redesign the approach
+- Use `v.pipe()` for composing validations
+- Use class serialization patterns (separate input/output pins) when pins transport class instances
 
-## Critical Reminders
+## Framework Reference
 
-1. **ALWAYS** use Bun commands, never npm/yarn
-2. **ALWAYS** pass quality checks before committing
-3. **NEVER** use `as any`, `@ts-ignore`, or bypass type safety
-4. **NEVER** include `optional: true` in reusable pin definitions
-5. **ALWAYS** use `.with()` to extend pins, never direct property access
-6. **ALWAYS** use schemas for inputs, types for outputs
-7. **NEVER** use generic node names like `get`, `create`, `delete`
-8. **ALWAYS** properly serialize/deserialize class instances
+Read `node_modules/@xentom/integration-framework/CLAUDE.md` for the full framework API reference.
+
+If specific API details are still unclear, read the relevant `.d.ts` files on demand:
+
+- `node_modules/@xentom/integration-framework/dist/integration.d.ts`
+- `node_modules/@xentom/integration-framework/dist/nodes/*.d.ts`
+- `node_modules/@xentom/integration-framework/dist/pins/*.d.ts`
+- `node_modules/@xentom/integration-framework/dist/controls/*.d.ts`
+
+Refer to existing integrations under `packages/` (e.g., `resend`, `github`, `slack`) as working examples.

@@ -1,0 +1,86 @@
+---
+description: Create a new integration from the template
+---
+
+# Create a new integration
+
+Create a new integration named `$1` for the Xentom workflow editor.
+
+Additional context:
+
+```
+$2
+```
+
+## 1. Research and Library Selection
+
+Search the web for TypeScript libraries for this integration:
+
+- Prefer official SDKs, then well-maintained community libraries
+- Evaluate: maintenance activity, npm downloads, native TypeScript support, documentation quality
+- Document the selection rationale before proceeding
+
+## 2. Scaffold from Template
+
+```bash
+rsync -av --exclude='node_modules' packages/template/ packages/$1/
+```
+
+Edit `packages/$1/package.json`:
+
+- `name` → `@xentom/$1`
+- `displayName` → Human-readable name
+- `description` → What the integration enables in workflows
+- `categories` → e.g. `["Messaging"]`, `["Developer Tools"]`
+- `homepage` → `https://xentom.com/integrations/xentom/$1`
+- `repository.directory` → `packages/$1`
+
+Run `bun install` from the repo root to install workspace dependencies into the new package, then install the selected library from the `packages/$1/` directory:
+
+```bash
+# From repo root
+bun install
+
+# From packages/$1/
+bun add <package-name>
+```
+
+## 3. Learn the Framework
+
+Read `node_modules/@xentom/integration-framework/CLAUDE.md` to understand the full capabilities and API surface of the integration framework.
+
+If specific API details are unclear after reading the reference, read the relevant `.d.ts` files on demand:
+
+- `node_modules/@xentom/integration-framework/dist/integration.d.ts`
+- `node_modules/@xentom/integration-framework/dist/nodes/*.d.ts`
+- `node_modules/@xentom/integration-framework/dist/pins/*.d.ts`
+- `node_modules/@xentom/integration-framework/dist/controls/*.d.ts`
+
+## 4. Study a Real Integration
+
+Pick the existing integration most structurally similar to `$1` (e.g. similar auth method, domain, or node types) from `packages/` and read its source files to see established patterns in action:
+
+- Entry point with auth and state (`src/index.ts`)
+- Pin definitions with schemas, types, and controls (`src/pins/`)
+- Node implementations with groups, inputs, outputs, and `run()` (`src/nodes/`)
+- Index file re-export conventions
+
+## 5. Implement
+
+Follow the rules and patterns from `AGENTS.md` and the examples studied above.
+
+**`src/index.ts`** — Auth, state, lifecycle. Declare `IntegrationState`, configure `i.auth.token()` (or appropriate auth method), initialize the client in `start()`.
+
+**`src/pins/`** — Define all reusable pins first, before implementing nodes. One file per category, namespace re-exports in `index.ts`.
+
+**`src/nodes/`** — Nodes grouped by category in subdirectories. One group per file, flat re-exports in index files. Always reference pins from `src/pins/` via `.with()` instead of defining pins inline in node files.
+
+## 6. Quality Gate
+
+Run all checks from the `packages/$1/` directory. All must pass with zero errors and zero warnings:
+
+```bash
+bun run typecheck
+bun run lint
+bun run format
+```
