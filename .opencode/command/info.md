@@ -10,14 +10,9 @@ Analyze and summarize the integration at `packages/$1/`.
 
 ### 1. Read the Integration Source Files
 
-Read all TypeScript source files in `packages/$1/src/`:
+Start with `packages/$1/package.json` and `packages/$1/src/index.ts` for metadata, auth, and state.
 
-- `src/index.ts` - entry point, auth, state
-- `src/pins/**/*.ts` - pin definitions
-- `src/nodes/**/*.ts` - node implementations
-- Any utility files
-
-Also read `packages/$1/package.json` for metadata and dependencies.
+Then list the `src/pins/` and `src/nodes/` directories to understand the structure before reading individual files selectively. Only read files needed to produce the summary — avoid loading the entire source tree upfront.
 
 ### 2. Generate Summary
 

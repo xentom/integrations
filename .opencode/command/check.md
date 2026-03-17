@@ -36,9 +36,6 @@ Run from the `packages/$1/` directory. Biome writes fixes in-place — no re-run
 
 If `typecheck` or `lint` fails, fix the issues autonomously and re-run the failing check. Repeat until both pass cleanly.
 
-**Rules:**
-- NEVER use `as any`, `@ts-ignore`, or `biome-ignore` to suppress errors
-- If a type error persists after 3 fix attempts, redesign the approach
-- Let the formatter handle style; do not fight Biome's formatting decisions
+Follow all rules from `AGENTS.md` § Type Safety when fixing issues. If a type error persists after 3 fix attempts, redesign the approach. Let the formatter handle style; do not fight Biome's formatting decisions.
 
 Report a summary of all checks and any fixes applied.

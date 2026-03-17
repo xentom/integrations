@@ -30,8 +30,7 @@ Read additional files only if needed to understand dependencies or avoid conflic
 ## 2. Research (if needed)
 
 - Check library docs for new API methods or breaking changes
-- Read `node_modules/@xentom/integration-framework/CLAUDE.md` if framework API questions arise
-- For specific API details not covered in the reference, read the relevant `.d.ts` files on demand
+- Refer to `AGENTS.md` § Framework Reference if framework API questions arise
 
 ## 3. Implement
 

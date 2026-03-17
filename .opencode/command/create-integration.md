@@ -23,7 +23,7 @@ Search the web for TypeScript libraries for this integration:
 ## 2. Scaffold from Template
 
 ```bash
-rsync -av --exclude='node_modules' packages/template/ packages/$1/
+cp -r packages/template/ packages/$1/
 ```
 
 Edit `packages/$1/package.json`:
@@ -45,16 +45,11 @@ bun install
 bun add <package-name>
 ```
 
+Clean up all template placeholder content — replace stub implementations with actual integration code.
+
 ## 3. Learn the Framework
 
-Read `node_modules/@xentom/integration-framework/CLAUDE.md` to understand the full capabilities and API surface of the integration framework.
-
-If specific API details are unclear after reading the reference, read the relevant `.d.ts` files on demand:
-
-- `node_modules/@xentom/integration-framework/dist/integration.d.ts`
-- `node_modules/@xentom/integration-framework/dist/nodes/*.d.ts`
-- `node_modules/@xentom/integration-framework/dist/pins/*.d.ts`
-- `node_modules/@xentom/integration-framework/dist/controls/*.d.ts`
+Refer to `AGENTS.md` § Framework Reference for the full API surface and `.d.ts` file locations.
 
 ## 4. Study a Real Integration
 
