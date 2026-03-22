@@ -1,6 +1,7 @@
 {
   "extends": "@xentom/style-guide/typescript",
   "compilerOptions": {
+    "lib": ["ESNext", "DOM"],
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]

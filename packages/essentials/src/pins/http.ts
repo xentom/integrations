@@ -38,19 +38,6 @@ export const body = i.pins.data({
   }),
 })
 
-export const response = i.pins.data({
-  schema: v.object({
-    status: v.number(),
-    headers: v.record(v.string(), v.string()),
-    body: v.union([v.any(), v.blob(), v.file()]),
-  }),
-})
+export const response = i.pins.data<Response>()
 
-export const request = i.pins.data({
-  schema: v.object({
-    method: v.picklist(HTTP_REQUEST_METHODS),
-    url: v.string(),
-    body: v.union([v.any(), v.blob(), v.file()]),
-    headers: v.record(v.string(), v.string()),
-  }),
-})
+export const request = i.pins.data<Request>()

@@ -5,6 +5,27 @@ import { responses } from '../webhooks.utils'
 
 const nodes = i.nodes.group('Webhooks/Responses')
 
+export const rawWebhookResponse = nodes.callable({
+  displayName: 'Webhook Response (Raw)',
+  description: 'Send a raw response to the webhook request.',
+  inputs: {
+    response: i.pins.data<Response>({
+      control: i.controls.expression<Response>(),
+    }),
+  },
+  run(opts) {
+    if (!opts.ctx.requestId) {
+      throw new Error(
+        'This action can only be called within the context of a webhook trigger.',
+      )
+    }
+
+    responses.emit(opts.ctx.requestId, opts.inputs.response)
+
+    return opts.next()
+  },
+})
+
 export const textWebhookResponse = nodes.callable({
   displayName: 'Webhook Response (Text)',
   description: 'Send a plain text response to the webhook request.',

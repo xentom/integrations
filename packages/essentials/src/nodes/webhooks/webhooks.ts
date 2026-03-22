@@ -2,7 +2,7 @@ import * as i from '@xentom/integration-framework'
 import * as v from 'valibot'
 
 import * as pins from '@/pins'
-import { parseRequestBody, responses } from './webhooks.utils'
+import { responses } from './webhooks.utils'
 
 const nodes = i.nodes.group('Webhooks')
 
@@ -39,21 +39,19 @@ export const onWebhook = nodes.trigger({
       `Webhook url registered: ${opts.webhook.url}?webhook-key=${opts.inputs.webhookKey}`,
     )
 
-    return opts.webhook.subscribe(async (req) => {
-      if (req.method !== opts.inputs.method) {
+    return opts.webhook.subscribe(async (request) => {
+      if (request.method !== opts.inputs.method) {
         return
       }
 
-      const headers = req.headers.toJSON()
       const webhookKey =
-        headers['X-Webhook-Key'] ||
-        new URL(req.url).searchParams.get('webhook-key')
+        request.headers.get('X-Webhook-Key') ||
+        new URL(request.url).searchParams.get('webhook-key')
 
       if (webhookKey !== opts.inputs.webhookKey) {
         return
       }
 
-      const body = await parseRequestBody(req, headers)
       const requestId = Bun.randomUUIDv7()
       const nextOptions: i.TriggerNextOptions = {
         ctx: {
@@ -65,37 +63,15 @@ export const onWebhook = nodes.trigger({
       }
 
       if (!opts.inputs.customResponse) {
-        void opts.next(
-          {
-            request: {
-              url: req.url,
-              method: req.method,
-              body,
-              headers,
-            },
-          },
-          nextOptions,
-        )
-
-        return
+        void opts.next({ request }, nextOptions)
+        return new Response(null, { status: 200 })
       }
 
       const promise = new Promise<Response>((resolve) => {
         responses.once(requestId, resolve)
       })
 
-      void opts.next(
-        {
-          request: {
-            url: req.url,
-            method: req.method,
-            body,
-            headers,
-          },
-        },
-        nextOptions,
-      )
-
+      void opts.next({ request }, nextOptions)
       return await Promise.race([
         promise,
         new Promise<Response>((resolve) => {
