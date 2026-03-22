@@ -217,7 +217,7 @@ export const id = i.pins.data({
 
 ## Framework Reference
 
-Read `node_modules/@xentom/integration-framework/CLAUDE.md` for the full framework API reference. If specific details are still unclear, read the relevant `.d.ts` files on demand:
+Read `node_modules/@xentom/integration-framework/AGENTS.md` for the full framework API reference. If specific details are still unclear, read the relevant `.d.ts` files on demand:
 
 - `node_modules/@xentom/integration-framework/dist/integration.d.ts`
 - `node_modules/@xentom/integration-framework/dist/nodes/*.d.ts`

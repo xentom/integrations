@@ -22,6 +22,7 @@
     "update": "bun update -i -r"
   },
   "devDependencies": {
+    "@xentom/integration-framework": "catalog:",
     "@biomejs/biome": "catalog:",
     "@xentom/style-guide": "*",
     "@types/bun": "catalog:",
@@ -41,7 +42,7 @@
       "tooling/*"
     ],
     "catalog": {
-      "@xentom/integration-framework": "^0.0.18",
+      "@xentom/integration-framework": "^0.0.19",
       "@xentom/style-guide": "*",
       "@types/bun": "^1.3.9",
       "mime": "^4.0.7",
