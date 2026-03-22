@@ -1,20 +1,15 @@
 ---
-description: Update an existing integration
+name: update-integration
+description: Update an existing integration. Use when asked to modify, fix, or add features to an existing integration package.
 ---
 
-# Update an existing integration
+# Update an Existing Integration
 
-Update the integration at `packages/$1/`.
-
-Requested changes:
-
-```
-$2
-```
+Update an existing integration in the Xentom workflow editor. Ask the user which integration to update and what changes to make if not already clear from context.
 
 ## 1. Understand the Request and Read Relevant Files
 
-Start by reading `packages/$1/package.json` and `packages/$1/src/index.ts` to understand the integration's dependencies and state setup.
+Start by reading `packages/<name>/package.json` and `packages/<name>/src/index.ts` to understand the integration's dependencies and state setup.
 
 Then read only the files relevant to the requested changes. For example:
 
@@ -36,11 +31,11 @@ Read additional files only if needed to understand dependencies or avoid conflic
 
 Apply changes following the rules and patterns in `AGENTS.md`.
 
-If adding new features, study the existing integration most structurally similar to `$1` from `packages/` for reference on established patterns.
+If adding new features, study the existing integration most structurally similar from `packages/` for reference on established patterns.
 
 ## 4. Quality Gate
 
-Run all checks from the `packages/$1/` directory. All must pass with zero errors and zero warnings:
+Run all checks from the `packages/<name>/` directory. All must pass with zero errors and zero warnings:
 
 ```bash
 bun run typecheck

@@ -1,16 +1,11 @@
 ---
-description: Create a new integration from the template
+name: create-integration
+description: Create a new integration from the template. Use when asked to scaffold, create, or start a new integration package.
 ---
 
-# Create a new integration
+# Create a New Integration
 
-Create a new integration named `$1` for the Xentom workflow editor.
-
-Additional context:
-
-```
-$2
-```
+Create a new integration for the Xentom workflow editor. Ask the user for the integration name and any additional context about what it should do if not already clear.
 
 ## 1. Research and Library Selection
 
@@ -23,25 +18,25 @@ Search the web for TypeScript libraries for this integration:
 ## 2. Scaffold from Template
 
 ```bash
-cp -r packages/template/ packages/$1/
+cp -r packages/template/ packages/<name>/
 ```
 
-Edit `packages/$1/package.json`:
+Edit `packages/<name>/package.json`:
 
-- `name` → `@xentom/$1`
+- `name` → `@xentom/<name>`
 - `displayName` → Human-readable name
 - `description` → What the integration enables in workflows
 - `categories` → e.g. `["Messaging"]`, `["Developer Tools"]`
-- `homepage` → `https://xentom.com/integrations/xentom/$1`
-- `repository.directory` → `packages/$1`
+- `homepage` → `https://xentom.com/integrations/xentom/<name>`
+- `repository.directory` → `packages/<name>`
 
-Run `bun install` from the repo root to install workspace dependencies into the new package, then install the selected library from the `packages/$1/` directory:
+Run `bun install` from the repo root to install workspace dependencies into the new package, then install the selected library from the `packages/<name>/` directory:
 
 ```bash
 # From repo root
 bun install
 
-# From packages/$1/
+# From packages/<name>/
 bun add <package-name>
 ```
 
@@ -53,7 +48,7 @@ Refer to `AGENTS.md` § Framework Reference for the full API surface and `.d.ts`
 
 ## 4. Study a Real Integration
 
-Pick the existing integration most structurally similar to `$1` (e.g. similar auth method, domain, or node types) from `packages/` and read its source files to see established patterns in action:
+Pick the existing integration most structurally similar to the new one (e.g. similar auth method, domain, or node types) from `packages/` and read its source files to see established patterns in action:
 
 - Entry point with auth and state (`src/index.ts`)
 - Pin definitions with schemas, types, and controls (`src/pins/`)
@@ -72,7 +67,7 @@ Follow the rules and patterns from `AGENTS.md` and the examples studied above.
 
 ## 6. Quality Gate
 
-Run all checks from the `packages/$1/` directory. All must pass with zero errors and zero warnings:
+Run all checks from the `packages/<name>/` directory. All must pass with zero errors and zero warnings:
 
 ```bash
 bun run typecheck

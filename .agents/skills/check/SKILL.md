@@ -1,10 +1,11 @@
 ---
-description: Run quality checks (lint, typecheck, format) for an integration
+name: check
+description: Run quality checks (typecheck, lint, format) for an integration. Use when asked to check, verify, or validate an integration package.
 ---
 
-# Run quality checks
+# Run Quality Checks
 
-Run all mandatory quality checks for the integration at `packages/$1/`.
+Run all mandatory quality checks for a specified integration. Ask the user which integration to check if not already clear from context.
 
 ## Steps
 
@@ -14,7 +15,7 @@ Run all mandatory quality checks for the integration at `packages/$1/`.
 bun run typecheck
 ```
 
-Run from the `packages/$1/` directory. Must produce zero errors.
+Run from the `packages/<name>/` directory. Must produce zero errors.
 
 ### 2. Linting
 
@@ -22,7 +23,7 @@ Run from the `packages/$1/` directory. Must produce zero errors.
 bun run lint
 ```
 
-Run from the `packages/$1/` directory. Must produce zero errors and zero warnings.
+Run from the `packages/<name>/` directory. Must produce zero errors and zero warnings.
 
 ### 3. Formatting
 
@@ -30,7 +31,7 @@ Run from the `packages/$1/` directory. Must produce zero errors and zero warning
 bun run format
 ```
 
-Run from the `packages/$1/` directory. Biome writes fixes in-place — no re-run needed after this step.
+Run from the `packages/<name>/` directory. Biome writes fixes in-place — no re-run needed after this step.
 
 ## On Failure
 

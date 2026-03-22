@@ -1,0 +1,20 @@
+---
+description: Core coding guidelines for the Xentom integrations monorepo
+alwaysApply: true
+---
+
+Read and follow all rules, conventions, and patterns defined in the `AGENTS.md` file at the repository root. It is the canonical source of truth for this codebase and covers:
+
+- Stack and tooling (Bun, Turbo, TypeScript, Biome, Valibot)
+- Available commands (root-level and per-package)
+- Quality gates (typecheck, lint, format — all must pass with zero errors and zero warnings)
+- Package structure and file organization
+- Import conventions and forbidden patterns
+- Entry point patterns (auth, state, lifecycle)
+- Pin definitions and rules
+- Node definitions and rules
+- Select controls with dynamic options
+- Type safety requirements
+- Framework API reference locations
+
+Always use Bun. Never use npm or yarn.
