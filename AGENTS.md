@@ -11,6 +11,7 @@ Monorepo containing official integrations for the Xentom workflow editor. Each p
 bun run lint        # Biome lint across all packages
 bun run typecheck   # TypeScript checking across all packages
 bun run format      # Biome formatting across all packages
+bun run test        # Run tests across all packages
 bun run pack        # Build/pack all integrations
 bun run clean       # Clean all build artifacts
 
@@ -18,6 +19,7 @@ bun run clean       # Clean all build artifacts
 bun run lint        # Biome lint for this package
 bun run typecheck   # tsc --noEmit for this package
 bun run format      # Biome format for this package
+bun run test        # bun test for this package
 bun run dev         # xentom dev (development mode)
 bun run pack        # xentom pack (build)
 bun run publish     # xentom publish
@@ -27,11 +29,12 @@ Always use Bun. Never use npm or yarn.
 
 ## Quality Gates
 
-Every integration must pass all three checks with zero errors and zero warnings:
+Every integration must pass all four checks with zero errors and zero warnings:
 
 1. `bun run typecheck`
 2. `bun run lint`
 3. `bun run format`
+4. `bun run test`
 
 ## Package Structure
 
@@ -42,12 +45,14 @@ packages/<name>/
 │   ├── index.ts              # Entry point: auth, state, lifecycle
 │   ├── pins/
 │   │   ├── index.ts          # Namespace re-exports
-│   │   └── <category>.ts     # Pin definitions per category
+│   │   ├── <category>.ts     # Pin definitions per category
+│   │   └── <category>.test.ts # Tests for pin schemas
 │   ├── nodes/
 │   │   ├── index.ts          # Flat re-exports
 │   │   └── <category>/
 │   │       ├── index.ts
-│   │       └── <category>.ts # Node implementations
+│   │       ├── <category>.ts     # Node implementations
+│   │       └── <category>.test.ts # Tests for nodes
 │   └── utils/                # Optional: shared helpers
 ├── package.json
 └── tsconfig.json
@@ -214,6 +219,90 @@ export const id = i.pins.data({
 - If a type error persists after 3 fix attempts: redesign the approach
 - Use `v.pipe()` for composing validations
 - Use class serialization patterns (separate input/output pins) when pins transport class instances
+
+## Testing
+
+Every integration must have tests. Tests use `bun:test` (built into Bun) and the framework's test helpers.
+
+### Test File Convention
+
+Co-locate test files with source files using the `.test.ts` suffix:
+
+```
+src/nodes/email/email.test.ts    # Tests for email nodes
+src/pins/email.test.ts           # Tests for email pin schemas
+```
+
+### Test Helpers
+
+Import from `@xentom/integration-framework/testing`:
+
+```typescript
+import { run, runAll, subscribe, transform } from '@xentom/integration-framework/testing'
+```
+
+| Helper | Node type | Description |
+|--------|-----------|-------------|
+| `run(node, opts)` | Callable | Executes the node, validates inputs/outputs against pin schemas, captures `next()` |
+| `runAll(node, opts)` | Callable | Same as `run()` but allows multiple `next()` calls (iteration nodes) |
+| `subscribe(node, opts)` | Trigger | Subscribes to the trigger, captures all `next()` calls, provides cleanup |
+| `transform(node, opts)` | Pure | Runs the node, captures mutated outputs |
+
+All helpers require `state` (with mocked clients) and `inputs`. Other options (`ctx`, `variables`, `kv`, `webhook`, `node`) have sensible defaults.
+
+### Typed Mocks
+
+Always type mock functions against the real SDK client types:
+
+```typescript
+import { type Mock, mock } from 'bun:test'
+import { type Resend } from 'resend'
+
+interface MockResend {
+  emails: {
+    send: Mock<Resend['emails']['send']>
+    get: Mock<Resend['emails']['get']>
+  }
+}
+
+function createMockResend(overrides: Partial<MockResend['emails']> = {}): MockResend {
+  return {
+    emails: {
+      send: mock<Resend['emails']['send']>(() =>
+        Promise.resolve({ data: { id: 'email_123' }, error: null, headers: null }),
+      ),
+      get: mock<Resend['emails']['get']>(() =>
+        Promise.resolve({ data: { /* full response shape */ }, error: null, headers: null }),
+      ),
+      ...overrides,
+    },
+  }
+}
+```
+
+Use `as unknown as Client` when passing to `state` (the mock only implements the methods used by the node):
+
+```typescript
+const resend = createMockResend()
+const result = await run(sendEmail, {
+  state: { resend: resend as unknown as Resend },
+  inputs: { from: 'Acme <a@b.com>', to: 'user@example.com', subject: 'Hi', html: '<p>Hi</p>' },
+})
+expect(result.outputs.id).toBe('email_123')
+```
+
+### What to Test
+
+For every node, cover at minimum:
+
+1. **Happy path** — correct inputs produce expected outputs.
+2. **Error propagation** — API errors are thrown (not swallowed).
+3. **Optional fields** — node handles missing optional inputs.
+4. **API call arguments** — the SDK client receives correctly mapped values.
+
+For reusable pins with schemas, test validation of valid and invalid inputs.
+
+Read `node_modules/@xentom/integration-framework/AGENTS.md` for the full testing API reference, including `createKeyValueStore()`, `createWebhook()`, pin schema testing patterns, and detailed typed mock examples.
 
 ## Framework Reference
 

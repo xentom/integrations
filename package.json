@@ -19,6 +19,7 @@
     "build": "turbo run build --",
     "pack": "turbo run pack --",
     "publish": "turbo run publish --",
+    "test": "turbo run test --continue",
     "update": "bun update -i -r"
   },
   "devDependencies": {
@@ -42,7 +43,7 @@
       "tooling/*"
     ],
     "catalog": {
-      "@xentom/integration-framework": "^0.0.19",
+      "@xentom/integration-framework": "^0.0.20",
       "@xentom/style-guide": "*",
       "@types/bun": "^1.3.9",
       "mime": "^4.0.7",
