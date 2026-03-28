@@ -123,25 +123,21 @@ export const scheduledAt = i.pins.data({
 
 export const headers = i.pins.data({
   description: 'Custom email headers as key-value pairs.',
-  control: i.controls.expression({
-    defaultValue: {
-      'X-Custom-Header': 'value',
-    },
-  }),
+  control: i.controls.expression(),
   schema: v.record(v.string(), v.string()),
+  examples: [
+    {
+      title: 'Custom Header',
+      value: {
+        'X-Custom-Header': 'value',
+      },
+    },
+  ],
 })
 
 export const attachments = i.pins.data({
   description: 'File attachments',
-  control: i.controls.expression({
-    defaultValue: [
-      {
-        filename: 'file.pdf',
-        content: 'base64content',
-        contentType: 'application/pdf',
-      },
-    ],
-  }),
+  control: i.controls.expression(),
   schema: v.array(
     v.object({
       content: v.optional(v.string()),
@@ -150,13 +146,23 @@ export const attachments = i.pins.data({
       contentType: v.optional(v.string()),
     }),
   ),
+  examples: [
+    {
+      title: 'PDF Attachment',
+      value: [
+        {
+          filename: 'file.pdf',
+          content: 'base64content',
+          contentType: 'application/pdf',
+        },
+      ],
+    },
+  ],
 })
 
 export const tags = i.pins.data({
   description: 'Custom key/value metadata for email tracking.',
-  control: i.controls.expression({
-    defaultValue: [{ name: 'category', value: 'newsletter' }],
-  }),
+  control: i.controls.expression(),
   schema: v.array(
     v.object({
       name: v.pipe(
@@ -177,6 +183,12 @@ export const tags = i.pins.data({
       ),
     }),
   ),
+  examples: [
+    {
+      title: 'Category',
+      value: [{ name: 'category', value: 'newsletter' }],
+    },
+  ],
 })
 
 export const idempotencyKey = i.pins.data({

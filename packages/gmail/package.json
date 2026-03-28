@@ -1,7 +1,7 @@
 {
   "$schema": "https://assets.xentom.com/schemas/package.json",
   "name": "@xentom/gmail",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "displayName": "Gmail",
   "description": "Gmail integration for the Xentom workflow editor. Send, receive, and manage emails through Gmail's API with powerful workflow automation capabilities.",
   "categories": [
@@ -18,11 +18,12 @@
     "url": "https://github.com/xentom/integrations/issues"
   },
   "type": "module",
-  "icon": "./assets/icon.png",
+  "icon": "./assets/icon.webp",
   "main": "./build/index.js",
   "scripts": {
     "lint": "biome lint .",
     "format": "biome format --write .",
+    "test": "bun test",
     "typecheck": "tsc --noEmit",
     "clean": "git clean -xdf .cache .turbo node_modules build dist",
     "dev": "xentom dev",
