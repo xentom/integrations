@@ -1,0 +1,43 @@
+{
+  "$schema": "https://assets.xentom.com/schemas/package.json",
+  "name": "@xentom/mailchimp",
+  "version": "0.0.1",
+  "displayName": "Mailchimp",
+  "description": "Manage Mailchimp audiences, members, campaigns, tags, segments, and templates in your workflows.",
+  "categories": [
+    "Marketing",
+    "Messaging"
+  ],
+  "homepage": "https://xentom.com/integrations/xentom/mailchimp",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xentom/integrations.git",
+    "directory": "packages/mailchimp"
+  },
+  "bugs": {
+    "url": "https://github.com/xentom/integrations/issues"
+  },
+  "type": "module",
+  "icon": "./assets/icon.webp",
+  "main": "./build/index.js",
+  "scripts": {
+    "lint": "biome lint .",
+    "format": "biome format --write .",
+    "test": "bun test",
+    "typecheck": "tsc --noEmit",
+    "clean": "git clean -xdf .cache .turbo node_modules build dist",
+    "dev": "xentom dev",
+    "build": "xentom build",
+    "pack": "xentom pack",
+    "publish": "xentom publish"
+  },
+  "dependencies": {
+    "@mailchimp/mailchimp_marketing": "^3.0.80",
+    "@xentom/integration-framework": "catalog:",
+    "valibot": "catalog:"
+  },
+  "devDependencies": {
+    "@types/bun": "catalog:",
+    "@types/mailchimp__mailchimp_marketing": "^3.0.20"
+  }
+}
