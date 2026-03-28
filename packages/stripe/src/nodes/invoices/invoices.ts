@@ -26,9 +26,16 @@ export const onInvoice = i.generic(
       async subscribe(opts) {
         function onInvoiceEvent(event: Stripe.Event) {
           // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-          void opts.next({
-            invoice: event.data.object,
-          } as any)
+          void opts.next(
+            {
+              invoice: event.data.object,
+            } as any,
+            {
+              deduplication: event.request?.idempotency_key
+                ? { id: event.request.idempotency_key }
+                : undefined,
+            },
+          )
         }
 
         opts.state.events.on(`invoice.${opts.inputs.eventType}`, onInvoiceEvent)

@@ -25,9 +25,16 @@ export const onPlan = i.generic(
       async subscribe(opts) {
         function onPlanEvent(event: Stripe.Event) {
           // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-          void opts.next({
-            plan: event.data.object,
-          } as any)
+          void opts.next(
+            {
+              plan: event.data.object,
+            } as any,
+            {
+              deduplication: event.request?.idempotency_key
+                ? { id: event.request.idempotency_key }
+                : undefined,
+            },
+          )
         }
 
         opts.state.events.on(`plan.${opts.inputs.eventType}`, onPlanEvent)

@@ -28,9 +28,16 @@ export const onCheckoutSession = i.generic(
       async subscribe(opts) {
         function onCheckoutSessionEvent(event: Stripe.Event) {
           // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-          void opts.next({
-            session: event.data.object,
-          } as any)
+          void opts.next(
+            {
+              session: event.data.object,
+            } as any,
+            {
+              deduplication: event.request?.idempotency_key
+                ? { id: event.request.idempotency_key }
+                : undefined,
+            },
+          )
         }
 
         opts.state.events.on(

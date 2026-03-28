@@ -59,7 +59,7 @@ export default i.integration({
     opts.state.stripe = new Stripe(opts.auth.token)
     opts.state.events = new EventEmitter<StripeEventMap>()
 
-    const endpointSecretKey = `endpoint:${Bun.hash(opts.webhook.url)}:secret`
+    const endpointSecretKey = `endpoint:${Bun.hash(`${opts.webhook.url}:${opts.auth.token}`)}:secret`
     const endpointSecret: string =
       (await opts.kv.get(endpointSecretKey)) ??
       (await opts.state.stripe.webhookEndpoints
@@ -90,6 +90,10 @@ export default i.integration({
 
       // @ts-expect-error -
       opts.state.events.emit(event.type, event)
+
+      return new Response('OK', {
+        status: 200,
+      })
     })
   },
 })

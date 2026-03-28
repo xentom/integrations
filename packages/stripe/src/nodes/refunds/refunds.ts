@@ -25,9 +25,16 @@ export const onRefund = i.generic(
       async subscribe(opts) {
         function onRefundEvent(event: Stripe.Event) {
           // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-          void opts.next({
-            refund: event.data.object,
-          } as any)
+          void opts.next(
+            {
+              refund: event.data.object,
+            } as any,
+            {
+              deduplication: event.request?.idempotency_key
+                ? { id: event.request.idempotency_key }
+                : undefined,
+            },
+          )
         }
 
         opts.state.events.on(`refund.${opts.inputs.eventType}`, onRefundEvent)

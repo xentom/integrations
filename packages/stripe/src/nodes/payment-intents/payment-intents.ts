@@ -29,9 +29,16 @@ export const onPaymentIntent = i.generic(
       async subscribe(opts) {
         function onPaymentIntentEvent(event: Stripe.Event) {
           // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-          void opts.next({
-            paymentIntent: event.data.object,
-          } as any)
+          void opts.next(
+            {
+              paymentIntent: event.data.object,
+            } as any,
+            {
+              deduplication: event.request?.idempotency_key
+                ? { id: event.request.idempotency_key }
+                : undefined,
+            },
+          )
         }
 
         opts.state.events.on(

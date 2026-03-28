@@ -26,9 +26,16 @@ export const onPrice = i.generic(
       async subscribe(opts) {
         function onPriceEvent(event: Stripe.Event) {
           // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-          void opts.next({
-            price: event.data.object,
-          } as any)
+          void opts.next(
+            {
+              price: event.data.object,
+            } as any,
+            {
+              deduplication: event.request?.idempotency_key
+                ? { id: event.request.idempotency_key }
+                : undefined,
+            },
+          )
         }
 
         opts.state.events.on(`price.${opts.inputs.eventType}`, onPriceEvent)

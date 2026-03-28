@@ -28,9 +28,16 @@ export const onSubscription = i.generic(
       async subscribe(opts) {
         function onSubscriptionEvent(event: Stripe.Event) {
           // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-          void opts.next({
-            subscription: event.data.object,
-          } as any)
+          void opts.next(
+            {
+              subscription: event.data.object,
+            } as any,
+            {
+              deduplication: event.request?.idempotency_key
+                ? { id: event.request.idempotency_key }
+                : undefined,
+            },
+          )
         }
 
         opts.state.events.on(

@@ -25,9 +25,16 @@ export const onPayout = i.generic(
       async subscribe(opts) {
         function onPayoutEvent(event: Stripe.Event) {
           // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-          void opts.next({
-            payout: event.data.object,
-          } as any)
+          void opts.next(
+            {
+              payout: event.data.object,
+            } as any,
+            {
+              deduplication: event.request?.idempotency_key
+                ? { id: event.request.idempotency_key }
+                : undefined,
+            },
+          )
         }
 
         opts.state.events.on(`payout.${opts.inputs.eventType}`, onPayoutEvent)

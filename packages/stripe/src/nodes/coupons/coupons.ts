@@ -25,9 +25,16 @@ export const onCoupon = i.generic(
       async subscribe(opts) {
         function onCouponEvent(event: Stripe.Event) {
           // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-          void opts.next({
-            coupon: event.data.object,
-          } as any)
+          void opts.next(
+            {
+              coupon: event.data.object,
+            } as any,
+            {
+              deduplication: event.request?.idempotency_key
+                ? { id: event.request.idempotency_key }
+                : undefined,
+            },
+          )
         }
 
         opts.state.events.on(`coupon.${opts.inputs.eventType}`, onCouponEvent)
