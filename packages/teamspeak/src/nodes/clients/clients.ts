@@ -1,33 +1,66 @@
 import * as i from '@xentom/integration-framework'
 import * as v from 'valibot'
 
-import { type ClientConnectEvent, ReasonIdentifier } from 'ts3-nodejs-library'
+import {
+  type ClientConnectEvent,
+  type ClientDisconnectEvent,
+  type ClientMovedEvent,
+  ReasonIdentifier,
+} from 'ts3-nodejs-library'
 
 import * as pins from '@/pins'
 
 const nodes = i.nodes.group('Clients')
 
-export const onClientConnected = nodes.trigger({
-  outputs: {
-    client: pins.client.item.output,
+export const onClient = nodes.trigger({
+  inputs: {
+    action: pins.client.action,
   },
-  subscribe(opts) {
-    function onClientConnected(event: ClientConnectEvent) {
+  outputs: {
+    client: pins.client.item,
+  },
+  async subscribe(opts) {
+    function onClientEvent({
+      client,
+    }: ClientConnectEvent | ClientDisconnectEvent) {
+      if (!client) return
       void opts.next(
-        {
-          client: event.client,
-        },
+        { client },
         {
           deduplication: {
-            id: event.client.cid,
+            id: client.cid,
           },
         },
       )
     }
 
-    opts.state.teamspeak.on('clientconnect', onClientConnected)
+    opts.state.teamspeak.on(opts.inputs.action as any, onClientEvent)
     return () => {
-      opts.state.teamspeak.off('clientconnect', onClientConnected)
+      opts.state.teamspeak.off(opts.inputs.action, onClientEvent)
+    }
+  },
+})
+
+export const onClientMoved = nodes.trigger({
+  outputs: {
+    client: pins.client.item,
+    channel: pins.channel.item,
+  },
+  subscribe(opts) {
+    function onClientMoved({ client, channel }: ClientMovedEvent) {
+      void opts.next(
+        { client, channel },
+        {
+          deduplication: {
+            id: client.cid,
+          },
+        },
+      )
+    }
+
+    opts.state.teamspeak.on('clientmoved', onClientMoved)
+    return () => {
+      opts.state.teamspeak.off('clientmoved', onClientMoved)
     }
   },
 })
@@ -35,10 +68,10 @@ export const onClientConnected = nodes.trigger({
 export const getClientById = nodes.pure({
   description: 'Get a TeamSpeak client by its id',
   inputs: {
-    id: pins.client.idSelection,
+    id: pins.client.id,
   },
   outputs: {
-    client: pins.client.item.output,
+    client: pins.client.item,
   },
   async run(opts) {
     const client = await opts.state.teamspeak.getClientById(opts.inputs.id)
@@ -53,7 +86,7 @@ export const getClientById = nodes.pure({
 export const listClients = nodes.pure({
   description: 'List all TeamSpeak clients',
   outputs: {
-    clients: pins.client.items.output,
+    clients: pins.client.items,
   },
   async run(opts) {
     opts.outputs.clients = await opts.state.teamspeak.clientList()
@@ -63,7 +96,7 @@ export const listClients = nodes.pure({
 export const kickClient = nodes.callable({
   description: 'Kick a TeamSpeak client',
   inputs: {
-    client: pins.client.item.input,
+    client: pins.client.item,
     reason: i.pins.data({
       description: 'The reason for kicking the client.',
       schema: v.string(),

@@ -91,12 +91,10 @@ export default i.integration({
   },
 
   async stop(opts) {
-    if (!opts.state.teamspeak) return
-
     try {
-      await opts.state.teamspeak.quit()
+      await opts.state.teamspeak?.quit()
     } catch {
-      opts.state.teamspeak.forceQuit()
+      opts.state.teamspeak?.forceQuit()
     }
   },
 })

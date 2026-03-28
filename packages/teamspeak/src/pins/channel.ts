@@ -2,52 +2,23 @@ import * as i from '@xentom/integration-framework'
 import * as v from 'valibot'
 
 import { TeamSpeakChannel } from 'ts3-nodejs-library'
-import { type ChannelEntry } from 'ts3-nodejs-library/lib/types/ResponseTypes'
 
-export const item = {
-  input: i.pins.data({
-    schema({ state }) {
-      return v.pipe(
-        v.custom<ChannelEntry>((value) => {
-          return !!value && typeof value === 'object' && 'cid' in value
-        }),
-        v.transform((data) => new TeamSpeakChannel(state.teamspeak, data)),
-      )
-    },
-  }),
-  output: i.pins.data({
-    schema: v.pipe(
-      v.custom<TeamSpeakChannel>((value) => value instanceof TeamSpeakChannel),
-      v.transform((channel) => channel.toJSON() as ChannelEntry),
-    ),
-  }),
-}
+export const item = i.pins.data({
+  schema: v.pipe(
+    v.custom<TeamSpeakChannel>((i) => i instanceof TeamSpeakChannel),
+  ),
+})
 
-export const items = {
-  output: i.pins.data({
-    schema: v.pipe(
-      v.array(
-        v.custom<TeamSpeakChannel>((value) => {
-          return value instanceof TeamSpeakChannel
-        }),
-      ),
-      v.transform((channels) => {
-        return channels.map((channel) => channel.toJSON() as ChannelEntry)
-      }),
-    ),
-  }),
-}
+export const items = i.pins.data({
+  schema: v.array(
+    v.pipe(v.custom<TeamSpeakChannel>((i) => i instanceof TeamSpeakChannel)),
+  ),
+})
 
 export const id = i.pins.data({
   displayName: 'ID',
   description: 'The ID of a TeamSpeak channel',
   schema: v.string(),
-  control: i.controls.text({
-    placeholder: '1',
-  }),
-})
-
-export const idSelection = id.with({
   control: i.controls.select({
     async options(opts) {
       const channels = await opts.state.teamspeak.channelList()
@@ -104,12 +75,10 @@ export const nameSelection = name.with({
     async options(opts) {
       const channels = await opts.state.teamspeak.channelList()
       return {
-        items: channels.map((channel) => {
-          return {
-            value: channel.name,
-            label: channel.name,
-          }
-        }),
+        items: channels.map((channel) => ({
+          value: channel.name,
+          label: channel.name,
+        })),
       }
     },
   }),

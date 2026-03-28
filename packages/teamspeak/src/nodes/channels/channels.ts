@@ -1,6 +1,11 @@
 import * as i from '@xentom/integration-framework'
 import * as v from 'valibot'
 
+import {
+  type ChannelDeleteEvent,
+  type ChannelEditEvent,
+  type ChannelMoveEvent,
+} from 'ts3-nodejs-library'
 import { type ChannelCreate } from 'ts3-nodejs-library/lib/types/Events'
 
 import * as pins from '@/pins'
@@ -9,8 +14,8 @@ const nodes = i.nodes.group('Channels')
 
 export const onChannelCreated = nodes.trigger({
   outputs: {
-    channel: pins.channel.item.output,
-    invoker: pins.client.item.output,
+    channel: pins.channel.item,
+    invoker: pins.client.item,
   },
   subscribe(opts) {
     function onChannelCreated(event: ChannelCreate) {
@@ -34,14 +39,102 @@ export const onChannelCreated = nodes.trigger({
   },
 })
 
+export const onChannelEdited = nodes.trigger({
+  outputs: {
+    channel: pins.channel.item,
+    invoker: pins.client.item,
+  },
+  subscribe(opts) {
+    function onChannelEdited(event: ChannelEditEvent) {
+      void opts.next(
+        { channel: event.channel, invoker: event.invoker },
+        {
+          deduplication: {
+            id: event.channel.cid,
+          },
+        },
+      )
+    }
+
+    opts.state.teamspeak.on('channeledit', onChannelEdited)
+    return () => {
+      opts.state.teamspeak.off('channeledit', onChannelEdited)
+    }
+  },
+})
+
+export const onChannelMoved = nodes.trigger({
+  outputs: {
+    channel: pins.channel.item,
+    invoker: pins.client.item,
+    order: i.pins.data({
+      schema: v.number(),
+    }),
+    parent: pins.channel.item.with({
+      control: false,
+    }),
+  },
+  subscribe(opts) {
+    function onChannelMoved(event: ChannelMoveEvent) {
+      void opts.next(
+        {
+          channel: event.channel,
+          invoker: event.invoker,
+          order: event.order,
+          parent: event.parent,
+        },
+        {
+          deduplication: {
+            id: event.channel.cid,
+          },
+        },
+      )
+    }
+
+    opts.state.teamspeak.on('channelmoved', onChannelMoved)
+    return () => {
+      opts.state.teamspeak.off('channelmoved', onChannelMoved)
+    }
+  },
+})
+
+export const onChannelDeleted = nodes.trigger({
+  outputs: {
+    id: pins.channel.id.with({
+      control: false,
+    }),
+    invoker: pins.client.item.with({
+      optional: true,
+      control: false,
+    }),
+  },
+  subscribe(opts) {
+    function onChannelDeleted({ cid, invoker }: ChannelDeleteEvent) {
+      void opts.next(
+        { id: cid, invoker },
+        {
+          deduplication: {
+            id: cid,
+          },
+        },
+      )
+    }
+
+    opts.state.teamspeak.on('channeldelete', onChannelDeleted)
+    return () => {
+      opts.state.teamspeak.off('channeldelete', onChannelDeleted)
+    }
+  },
+})
+
 export const getChannelById = nodes.pure({
   displayName: 'Get Channel By ID',
   description: 'Get a TeamSpeak channel by its id',
   inputs: {
-    id: pins.channel.idSelection,
+    id: pins.channel.id,
   },
   outputs: {
-    channel: pins.channel.item.output,
+    channel: pins.channel.item,
   },
   async run(opts) {
     const channel = await opts.state.teamspeak.getChannelById(opts.inputs.id)
@@ -59,7 +152,7 @@ export const getChannelByName = nodes.pure({
     name: pins.channel.nameSelection,
   },
   outputs: {
-    channel: pins.channel.item.output,
+    channel: pins.channel.item,
   },
   async run(opts) {
     const channel = await opts.state.teamspeak.getChannelByName(
@@ -77,7 +170,7 @@ export const getChannelByName = nodes.pure({
 export const listChannels = nodes.pure({
   description: 'List all TeamSpeak channels',
   outputs: {
-    channels: pins.channel.items.output,
+    channels: pins.channel.items,
   },
   async run(opts) {
     opts.outputs.channels = await opts.state.teamspeak.channelList()
@@ -139,7 +232,7 @@ export const createChannel = nodes.callable({
     }),
   },
   outputs: {
-    channel: pins.channel.item.output,
+    channel: pins.channel.item,
   },
   async run(opts) {
     const channel = await opts.state.teamspeak.channelCreate(opts.inputs.name, {
@@ -176,7 +269,7 @@ export const createChannel = nodes.callable({
 export const deleteChannel = nodes.callable({
   description: 'Delete a TeamSpeak channel',
   inputs: {
-    channel: pins.channel.idSelection,
+    channel: pins.channel.item,
     force: i.pins.data({
       description: 'Whether to force the deletion of the channel',
       control: i.controls.switch(),
@@ -185,11 +278,7 @@ export const deleteChannel = nodes.callable({
     }),
   },
   async run(opts) {
-    await opts.state.teamspeak.channelDelete(
-      opts.inputs.channel,
-      opts.inputs.force,
-    )
-
+    await opts.inputs.channel.del(opts.inputs.force)
     return opts.next()
   },
 })
