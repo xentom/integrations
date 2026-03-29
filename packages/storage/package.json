@@ -1,7 +1,7 @@
 {
   "$schema": "https://assets.xentom.com/schemas/package.json",
   "name": "@xentom/storage",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "displayName": "Storage",
   "description": "Persistent key-value storage for workflow data. Store, retrieve, and delete values that persist across workflow runs.",
   "categories": [

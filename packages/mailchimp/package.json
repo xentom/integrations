@@ -1,7 +1,7 @@
 {
   "$schema": "https://assets.xentom.com/schemas/package.json",
   "name": "@xentom/mailchimp",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "displayName": "Mailchimp",
   "description": "Manage Mailchimp audiences, members, campaigns, tags, segments, and templates in your workflows.",
   "categories": [

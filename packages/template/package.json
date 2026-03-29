@@ -1,7 +1,7 @@
 {
   "$schema": "https://assets.xentom.com/schemas/package.json",
   "name": "@xentom/template",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "displayName": "Template",
   "description": "This is a template for creating new integrations in the Xentom ecosystem. It includes basic setup and configuration.",
   "categories": [],

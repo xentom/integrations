@@ -24,7 +24,7 @@
     },
     "packages/essentials": {
       "name": "@xentom/essentials",
-      "version": "0.1.2",
+      "version": "0.1.5",
       "dependencies": {
         "@xentom/integration-framework": "catalog:",
         "mime": "4.1.0",
@@ -179,7 +179,7 @@
   "catalog": {
     "@biomejs/biome": "^2.4.4",
     "@types/bun": "^1.3.9",
-    "@xentom/integration-framework": "^0.0.21",
+    "@xentom/integration-framework": "^0.1.0",
     "@xentom/style-guide": "*",
     "googleapis": "^171.4.0",
     "mime": "^4.0.7",
@@ -301,7 +301,7 @@
 
     "@xentom/google-sheets": ["@xentom/google-sheets@workspace:packages/google-sheets"],
 
-    "@xentom/integration-framework": ["@xentom/integration-framework@0.0.21", "", { "dependencies": { "@standard-schema/spec": "^1.1.0" } }, "sha512-5UFM1gd58mGAiJhHrHHM8OtJtbKI86tIMdSDtM1gg4xj4HGFU3meZcOPboIxBjVXA5XcFjZ1MNnBeySJHiy/iw=="],
+    "@xentom/integration-framework": ["@xentom/integration-framework@0.1.0", "", { "dependencies": { "@standard-schema/spec": "^1.1.0" } }, "sha512-7M3/UDk2p0CBVldIp7JrdrM/0Yxn+Ak6zHSAxscGwcVMqOF8HlCFxWd2fk7xuJbZdGeqTi60Zurk8TZqD2xxfA=="],
 
     "@xentom/mailchimp": ["@xentom/mailchimp@workspace:packages/mailchimp"],
 
