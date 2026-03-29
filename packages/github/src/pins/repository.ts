@@ -56,7 +56,7 @@ export const action = i.pins.data<Action>({
         value: 'unarchived',
       },
     ],
-    defaultValue: 'edited',
+    default: 'edited',
   }),
 })
 

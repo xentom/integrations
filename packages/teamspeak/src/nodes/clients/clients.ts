@@ -93,7 +93,7 @@ export const listClients = nodes.pure({
   },
 })
 
-export const kickClient = nodes.callable({
+export const kickClient = nodes.action({
   description: 'Kick a TeamSpeak client',
   inputs: {
     client: pins.client.item,

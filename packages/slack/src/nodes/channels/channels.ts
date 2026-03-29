@@ -38,7 +38,7 @@ export const onChannelEvent = i.generic(
   },
 )
 
-export const listChannels = nodes.callable({
+export const listChannels = nodes.action({
   description: 'List Slack channels the connected bot can access.',
   outputs: {
     channels: pins.channel.items.with({

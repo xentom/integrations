@@ -31,7 +31,7 @@ export const markdown = i.pins.data({
     v.maxLength(12000, 'Message markdown is too long.'),
   ),
   control: i.controls.text({
-    language: i.TextControlLanguage.Markdown,
+    syntax: i.TextControlSyntax.Markdown,
     placeholder: '# Markdown',
     rows: 3,
   }),

@@ -50,7 +50,7 @@ export const onCharge = i.generic(
   },
 )
 
-export const createCharge = nodes.callable({
+export const createCharge = nodes.action({
   description: 'Create a new charge to charge a payment source.',
   inputs: {
     amount: pins.charge.amount.with({
@@ -113,7 +113,7 @@ export const createCharge = nodes.callable({
   },
 })
 
-export const getCharge = nodes.callable({
+export const getCharge = nodes.action({
   description: 'Retrieve a charge by its ID.',
   inputs: {
     id: pins.charge.id.with({
@@ -134,7 +134,7 @@ export const getCharge = nodes.callable({
   },
 })
 
-export const updateCharge = nodes.callable({
+export const updateCharge = nodes.action({
   description: 'Update an existing charge.',
   inputs: {
     id: pins.charge.id.with({
@@ -171,7 +171,7 @@ export const updateCharge = nodes.callable({
   },
 })
 
-export const captureCharge = nodes.callable({
+export const captureCharge = nodes.action({
   description: 'Capture a previously authorized charge.',
   inputs: {
     id: pins.charge.id.with({
@@ -209,7 +209,7 @@ export const captureCharge = nodes.callable({
   },
 })
 
-export const listCharges = nodes.callable({
+export const listCharges = nodes.action({
   description: 'List all charges in your Stripe account.',
   inputs: {
     limit: pins.common.limit.with({

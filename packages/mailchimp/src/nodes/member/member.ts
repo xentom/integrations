@@ -5,7 +5,7 @@ import { subscriberHash } from '@/utils/hash'
 
 const nodes = i.nodes.group('Members')
 
-export const addMember = nodes.callable({
+export const addMember = nodes.action({
   description: 'Add a new subscriber to a Mailchimp audience.',
   inputs: {
     listId: pins.list.id,
@@ -44,7 +44,7 @@ export const addMember = nodes.callable({
   },
 })
 
-export const getMember = nodes.callable({
+export const getMember = nodes.action({
   description:
     'Get information about a specific member of a Mailchimp audience.',
   inputs: {
@@ -64,7 +64,7 @@ export const getMember = nodes.callable({
   },
 })
 
-export const listMembers = nodes.callable({
+export const listMembers = nodes.action({
   description: 'Get a list of members in a Mailchimp audience.',
   inputs: {
     listId: pins.list.id,
@@ -87,7 +87,7 @@ export const listMembers = nodes.callable({
   },
 })
 
-export const updateMember = nodes.callable({
+export const updateMember = nodes.action({
   description: 'Update information for a specific Mailchimp audience member.',
   inputs: {
     listId: pins.list.id,
@@ -124,7 +124,7 @@ export const updateMember = nodes.callable({
   },
 })
 
-export const archiveMember = nodes.callable({
+export const archiveMember = nodes.action({
   description: 'Archive (unsubscribe) a member from a Mailchimp audience.',
   inputs: {
     listId: pins.list.id,
@@ -140,7 +140,7 @@ export const archiveMember = nodes.callable({
   },
 })
 
-export const deleteMember = nodes.callable({
+export const deleteMember = nodes.action({
   description:
     'Permanently delete a member and all their data from a Mailchimp audience.',
   inputs: {

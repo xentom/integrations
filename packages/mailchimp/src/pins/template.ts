@@ -32,11 +32,16 @@ export const id = i.pins.data({
 export const name = i.pins.data({
   description: 'The name of the template.',
   schema: v.string(),
-  control: i.controls.text({ placeholder: 'Monthly Newsletter Template' }),
+  control: i.controls.text({
+    placeholder: 'Monthly Newsletter Template',
+  }),
 })
 
 export const htmlContent = i.pins.data({
   description: 'The HTML content of the template.',
   schema: v.string(),
-  control: i.controls.text({ language: i.TextControlLanguage.Html, rows: 10 }),
+  control: i.controls.text({
+    syntax: i.TextControlSyntax.Html,
+    rows: 10,
+  }),
 })

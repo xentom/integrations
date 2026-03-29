@@ -4,7 +4,7 @@ import * as pins from '@/pins'
 
 const nodes = i.nodes.group('Templates')
 
-export const listTemplates = nodes.callable({
+export const listTemplates = nodes.action({
   description: 'Get all email templates in the Mailchimp account.',
   inputs: {},
   outputs: {
@@ -16,7 +16,7 @@ export const listTemplates = nodes.callable({
   },
 })
 
-export const getTemplate = nodes.callable({
+export const getTemplate = nodes.action({
   description: 'Get information about a specific Mailchimp email template.',
   inputs: {
     templateId: pins.template.id,
@@ -32,7 +32,7 @@ export const getTemplate = nodes.callable({
   },
 })
 
-export const createTemplate = nodes.callable({
+export const createTemplate = nodes.action({
   description: 'Create a new Mailchimp email template.',
   inputs: {
     name: pins.template.name,
@@ -50,7 +50,7 @@ export const createTemplate = nodes.callable({
   },
 })
 
-export const updateTemplate = nodes.callable({
+export const updateTemplate = nodes.action({
   description: 'Update an existing Mailchimp email template.',
   inputs: {
     templateId: pins.template.id,
@@ -73,7 +73,7 @@ export const updateTemplate = nodes.callable({
   },
 })
 
-export const deleteTemplate = nodes.callable({
+export const deleteTemplate = nodes.action({
   description: 'Delete a Mailchimp email template.',
   inputs: {
     templateId: pins.template.id,

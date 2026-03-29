@@ -15,8 +15,8 @@ export const createResponse = nodes.pure({
     status: i.pins.data({
       description: 'The HTTP status code.',
       schema: v.pipe(v.number(), v.integer()),
-      control: i.controls.expression({
-        defaultValue: 200,
+      control: i.controls.number({
+        default: 200,
       }),
       optional: true,
     }),

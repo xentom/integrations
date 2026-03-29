@@ -12,7 +12,7 @@ export const eventType = i.pins.data({
       { label: 'Updated', value: 'updated' },
       { label: 'Deleted', value: 'deleted' },
     ],
-    defaultValue: 'created',
+    default: 'created',
   } as const),
 })
 
@@ -70,7 +70,7 @@ export const recurring = i.pins.data({
     interval_count: v.optional(v.pipe(v.number(), v.integer(), v.minValue(1))),
   }),
   control: i.controls.expression({
-    defaultValue: {
+    default: {
       interval: 'month' as const,
       interval_count: 1,
     },

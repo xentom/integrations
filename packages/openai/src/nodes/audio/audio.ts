@@ -5,7 +5,7 @@ import * as pins from '@/pins'
 
 const nodes = i.nodes.group('Audio')
 
-export const textToSpeech = nodes.callable({
+export const textToSpeech = nodes.action({
   description: 'Convert text to spoken audio using a text-to-speech model.',
   inputs: {
     input: i.pins.data({
@@ -34,7 +34,7 @@ export const textToSpeech = nodes.callable({
       description:
         'The speed of the generated audio. Between 0.25 and 4.0. Defaults to 1.0.',
       schema: v.pipe(v.number(), v.minValue(0.25), v.maxValue(4.0)),
-      control: i.controls.expression({ defaultValue: 1.0 }),
+      control: i.controls.number({ default: 1.0 }),
       optional: true,
     }),
   },
@@ -62,7 +62,7 @@ export const textToSpeech = nodes.callable({
   },
 })
 
-export const transcribeAudio = nodes.callable({
+export const transcribeAudio = nodes.action({
   description: 'Transcribe spoken audio into text.',
   inputs: {
     file: i.pins.data<File>({
@@ -91,7 +91,7 @@ export const transcribeAudio = nodes.callable({
       description:
         'Sampling temperature between 0 and 1. Higher values produce more varied output.',
       schema: v.pipe(v.number(), v.minValue(0), v.maxValue(1)),
-      control: i.controls.expression({ defaultValue: 0 }),
+      control: i.controls.number({ default: 0 }),
       optional: true,
     }),
   },
@@ -119,7 +119,7 @@ export const transcribeAudio = nodes.callable({
   },
 })
 
-export const translateAudio = nodes.callable({
+export const translateAudio = nodes.action({
   description: 'Translate spoken audio into English text using Whisper.',
   inputs: {
     file: i.pins.data<File>({
@@ -140,7 +140,7 @@ export const translateAudio = nodes.callable({
       description:
         'Sampling temperature between 0 and 1. Higher values produce more varied output.',
       schema: v.pipe(v.number(), v.minValue(0), v.maxValue(1)),
-      control: i.controls.expression({ defaultValue: 0 }),
+      control: i.controls.number({ default: 0 }),
       optional: true,
     }),
   },

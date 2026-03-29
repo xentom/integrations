@@ -19,6 +19,6 @@ export const action = i.pins.data<Action>({
         value: 'requested',
       },
     ],
-    defaultValue: 'completed',
+    default: 'completed',
   }),
 })

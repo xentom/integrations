@@ -108,7 +108,7 @@ const nodes = i.nodes.group('Messages')
 //   },
 // });
 
-export const sendMessage = nodes.callable({
+export const sendMessage = nodes.action({
   description: 'Send an email message through Gmail',
   inputs: {
     to: pins.message.addresses,
@@ -156,7 +156,7 @@ export const sendMessage = nodes.callable({
   },
 })
 
-export const getMessage = nodes.callable({
+export const getMessage = nodes.action({
   description: 'Retrieve a specific Gmail message by ID',
   inputs: {
     id: pins.message.id,
@@ -180,7 +180,7 @@ export const getMessage = nodes.callable({
   },
 })
 
-export const listMessages = nodes.callable({
+export const listMessages = nodes.action({
   description: 'Search and retrieve Gmail messages',
   inputs: {
     query: pins.query.searchQuery.with({
@@ -225,7 +225,7 @@ export const listMessages = nodes.callable({
   },
 })
 
-export const deleteMessage = nodes.callable({
+export const deleteMessage = nodes.action({
   description: 'Permanently delete a Gmail message',
   inputs: {
     id: pins.message.id,

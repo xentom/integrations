@@ -7,7 +7,7 @@ import * as pins from '@/pins'
 
 const nodes = i.nodes.group('Users')
 
-export const getCurrentUser = nodes.callable({
+export const getCurrentUser = nodes.action({
   displayName: 'Get Current User',
   description: 'Retrieve the bot user associated with the integration token',
   outputs: {
@@ -22,7 +22,7 @@ export const getCurrentUser = nodes.callable({
   },
 })
 
-export const getUser = nodes.callable({
+export const getUser = nodes.action({
   description: 'Retrieve a user by their ID',
   inputs: {
     id: pins.user.id,
@@ -41,7 +41,7 @@ export const getUser = nodes.callable({
   },
 })
 
-export const listUsers = nodes.callable({
+export const listUsers = nodes.action({
   description: 'List all users in the workspace',
   inputs: {
     startCursor: i.pins.data({

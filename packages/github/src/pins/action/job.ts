@@ -33,6 +33,6 @@ export const action = i.pins.data<Action>({
         value: 'waiting',
       },
     ],
-    defaultValue: 'completed',
+    default: 'completed',
   }),
 })

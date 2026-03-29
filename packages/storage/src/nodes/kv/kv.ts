@@ -4,7 +4,7 @@ import * as pins from '@/pins'
 
 const nodes = i.nodes.group('Key-Value')
 
-export const getValue = nodes.callable({
+export const getValue = nodes.action({
   description: 'Retrieve a value from persistent storage by its key.',
   inputs: {
     key: pins.storage.key,
@@ -22,7 +22,7 @@ export const getValue = nodes.callable({
   },
 })
 
-export const setValue = nodes.callable({
+export const setValue = nodes.action({
   description:
     'Store a value in persistent storage. Overwrites any existing value.',
   inputs: {
@@ -35,7 +35,7 @@ export const setValue = nodes.callable({
   },
 })
 
-export const deleteValue = nodes.callable({
+export const deleteValue = nodes.action({
   description: 'Remove a value from persistent storage by its key.',
   inputs: {
     key: pins.storage.key,

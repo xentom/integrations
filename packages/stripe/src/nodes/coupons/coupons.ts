@@ -50,7 +50,7 @@ export const onCoupon = i.generic(
   },
 )
 
-export const createCoupon = nodes.callable({
+export const createCoupon = nodes.action({
   description: 'Create a new coupon for discounts.',
   inputs: {
     name: pins.coupon.name.with({
@@ -116,7 +116,7 @@ export const createCoupon = nodes.callable({
   },
 })
 
-export const getCoupon = nodes.callable({
+export const getCoupon = nodes.action({
   description: 'Retrieve a coupon by its ID.',
   inputs: {
     id: pins.coupon.id.with({
@@ -137,7 +137,7 @@ export const getCoupon = nodes.callable({
   },
 })
 
-export const updateCoupon = nodes.callable({
+export const updateCoupon = nodes.action({
   description: 'Update an existing coupon.',
   inputs: {
     id: pins.coupon.id.with({
@@ -169,7 +169,7 @@ export const updateCoupon = nodes.callable({
   },
 })
 
-export const deleteCoupon = nodes.callable({
+export const deleteCoupon = nodes.action({
   description: 'Delete a coupon. Cannot be undone.',
   inputs: {
     id: pins.coupon.id.with({
@@ -190,7 +190,7 @@ export const deleteCoupon = nodes.callable({
   },
 })
 
-export const listCoupons = nodes.callable({
+export const listCoupons = nodes.action({
   description: 'List all coupons in your Stripe account.',
   inputs: {
     limit: pins.common.limit.with({

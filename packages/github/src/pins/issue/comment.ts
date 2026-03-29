@@ -23,7 +23,7 @@ export const action = i.pins.data<Action>({
         value: 'edited',
       },
     ],
-    defaultValue: 'created',
+    default: 'created',
   }),
 })
 

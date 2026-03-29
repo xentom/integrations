@@ -56,7 +56,7 @@ export const onSubscription = i.generic(
   },
 )
 
-export const createSubscription = nodes.callable({
+export const createSubscription = nodes.action({
   description: 'Create a new subscription for a customer.',
   inputs: {
     customerId: pins.customer.id.with({
@@ -103,7 +103,7 @@ export const createSubscription = nodes.callable({
   },
 })
 
-export const getSubscription = nodes.callable({
+export const getSubscription = nodes.action({
   description: 'Retrieve a subscription by its ID.',
   inputs: {
     id: pins.subscription.id.with({
@@ -126,7 +126,7 @@ export const getSubscription = nodes.callable({
   },
 })
 
-export const updateSubscription = nodes.callable({
+export const updateSubscription = nodes.action({
   description: 'Update an existing subscription.',
   inputs: {
     id: pins.subscription.id.with({
@@ -187,7 +187,7 @@ export const updateSubscription = nodes.callable({
   },
 })
 
-export const cancelSubscription = nodes.callable({
+export const cancelSubscription = nodes.action({
   description: 'Cancel a subscription immediately or at period end.',
   inputs: {
     id: pins.subscription.id.with({
@@ -217,7 +217,7 @@ export const cancelSubscription = nodes.callable({
   },
 })
 
-export const listSubscriptions = nodes.callable({
+export const listSubscriptions = nodes.action({
   description: 'List all subscriptions in your Stripe account.',
   inputs: {
     limit: pins.common.limit.with({

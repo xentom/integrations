@@ -177,7 +177,7 @@ export const listChannels = nodes.pure({
   },
 })
 
-export const createChannel = nodes.callable({
+export const createChannel = nodes.action({
   description: 'Create a new TeamSpeak channel',
   inputs: {
     name: pins.channel.name,
@@ -266,13 +266,13 @@ export const createChannel = nodes.callable({
   },
 })
 
-export const deleteChannel = nodes.callable({
+export const deleteChannel = nodes.action({
   description: 'Delete a TeamSpeak channel',
   inputs: {
     channel: pins.channel.item,
     force: i.pins.data({
       description: 'Whether to force the deletion of the channel',
-      control: i.controls.switch(),
+      control: i.controls.boolean(),
       schema: v.boolean(),
       optional: true,
     }),

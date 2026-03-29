@@ -12,7 +12,7 @@ export const completion = i.pins.data<ChatCompletion>({
 export const messages = i.pins.data<ChatCompletionMessageParam[]>({
   description: 'A list of messages representing the conversation history.',
   control: i.controls.expression<ChatCompletionMessageParam[]>({
-    defaultValue: [
+    default: [
       { role: 'user', content: 'Hello!' },
     ] as ChatCompletionMessageParam[],
   }),

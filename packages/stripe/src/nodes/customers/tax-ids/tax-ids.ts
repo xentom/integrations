@@ -56,7 +56,7 @@ export const onCustomerTaxId = i.generic(
   },
 )
 
-export const createCustomerTaxId = nodes.callable({
+export const createCustomerTaxId = nodes.action({
   displayName: 'Create Tax ID',
   description: 'Create a new tax ID for a customer.',
   inputs: {
@@ -91,7 +91,7 @@ export const createCustomerTaxId = nodes.callable({
   },
 })
 
-export const getCustomerTaxId = nodes.callable({
+export const getCustomerTaxId = nodes.action({
   displayName: 'Get Tax ID',
   description: 'Retrieve a specific tax ID for a customer.',
   inputs: {
@@ -121,7 +121,7 @@ export const getCustomerTaxId = nodes.callable({
   },
 })
 
-export const deleteCustomerTaxId = nodes.callable({
+export const deleteCustomerTaxId = nodes.action({
   displayName: 'Delete Tax ID',
   description: 'Delete a tax ID from a customer.',
   inputs: {
@@ -150,7 +150,7 @@ export const deleteCustomerTaxId = nodes.callable({
   },
 })
 
-export const listCustomerTaxIds = nodes.callable({
+export const listCustomerTaxIds = nodes.action({
   displayName: 'List Tax IDs',
   description: 'List all tax IDs for a customer.',
   inputs: {

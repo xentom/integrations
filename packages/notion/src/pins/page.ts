@@ -118,5 +118,5 @@ export const archived = i.pins.data({
   displayName: 'Archived',
   description: 'Whether the page is archived.',
   schema: v.boolean(),
-  control: i.controls.switch(),
+  control: i.controls.boolean(),
 })

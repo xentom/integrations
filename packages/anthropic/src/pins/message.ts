@@ -47,7 +47,7 @@ export const model = i.pins.data({
         })),
       }
     },
-    defaultValue: 'claude-sonnet-4-5',
+    default: 'claude-sonnet-4-5',
   }),
 })
 
@@ -100,7 +100,7 @@ export const thinking = i.pins.data({
   displayName: 'Thinking',
   description: 'Whether to enable thinking mode',
   schema: v.boolean(),
-  control: i.controls.switch(),
+  control: i.controls.boolean(),
 })
 
 export const thinkingBudgetTokens = i.pins.data({

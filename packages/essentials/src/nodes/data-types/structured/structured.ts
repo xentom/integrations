@@ -9,8 +9,8 @@ export const html = nodes.pure({
     value: i.pins.data({
       displayName: false,
       control: i.controls.text({
-        language: i.TextControlLanguage.Html,
-        defaultValue: '<h1>HTML</h1>',
+        syntax: i.TextControlSyntax.Html,
+        default: '<h1>HTML</h1>',
       }),
       schema: v.string(),
     }),
@@ -22,8 +22,8 @@ export const markdown = nodes.pure({
     value: i.pins.data({
       displayName: false,
       control: i.controls.text({
-        language: i.TextControlLanguage.Markdown,
-        defaultValue: '# Markdown',
+        syntax: i.TextControlSyntax.Markdown,
+        default: '# Markdown',
       }),
       schema: v.string(),
     }),

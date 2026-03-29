@@ -12,8 +12,8 @@ export const getModels = nodes.pure({
     limit: i.pins.data({
       optional: true,
       schema: v.number(),
-      control: i.controls.expression({
-        defaultValue: 100,
+      control: i.controls.number({
+        default: 100,
       }),
     }),
     afterId: pins.model.id.with({

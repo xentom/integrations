@@ -50,7 +50,7 @@ export const onRepository = i.generic(
   },
 )
 
-export const getRepository = nodes.callable({
+export const getRepository = nodes.action({
   description: 'Get repository information',
   inputs: {
     name: pins.repository.name,

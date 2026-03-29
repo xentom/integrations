@@ -53,7 +53,7 @@ export const onMessageEvent = i.generic(
   },
 )
 
-export const sendMessage = nodes.callable({
+export const sendMessage = nodes.action({
   description:
     'Send a message to a Slack channel or direct message conversation.',
   inputs: {

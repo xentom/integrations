@@ -18,7 +18,7 @@ export const eventType = i.pins.data({
       { label: 'Sent', value: 'sent' },
       { label: 'Voided', value: 'voided' },
     ],
-    defaultValue: 'created',
+    default: 'created',
   } as const),
 })
 

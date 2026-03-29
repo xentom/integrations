@@ -18,7 +18,7 @@ export const eventType = i.pins.data({
       { label: 'Transaction Created', value: 'transaction.created' },
       { label: 'Transaction Updated', value: 'transaction.updated' },
     ],
-    defaultValue: 'chargeable',
+    default: 'chargeable',
   } as const),
 })
 
@@ -103,7 +103,7 @@ export const usage = i.pins.data({
       { value: 'reusable', label: 'Reusable' },
       { value: 'single_use', label: 'Single Use' },
     ],
-    defaultValue: 'single_use',
+    default: 'single_use',
   }),
 })
 
@@ -130,7 +130,7 @@ export const owner = i.pins.data({
     phone: v.optional(v.string()),
   }),
   control: i.controls.expression({
-    defaultValue: {
+    default: {
       email: 'customer@example.com',
       name: 'John Doe',
     },
@@ -143,7 +143,7 @@ export const redirect = i.pins.data({
     return_url: v.pipe(v.string(), v.url()),
   }),
   control: i.controls.expression({
-    defaultValue: {
+    default: {
       return_url: 'https://example.com/return',
     },
   }),
@@ -273,7 +273,7 @@ export const verificationAmounts = i.pins.data({
     v.pipe(v.number(), v.integer(), v.minValue(1)),
   ]),
   control: i.controls.expression({
-    defaultValue: [32, 45],
+    default: [32, 45],
   }),
 })
 

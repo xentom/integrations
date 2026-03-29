@@ -87,7 +87,7 @@ export const html = i.pins.data({
   displayName: 'HTML',
   description: 'The HTML content of the email.',
   control: i.controls.text({
-    language: i.TextControlLanguage.Html,
+    syntax: i.TextControlSyntax.Html,
     placeholder: '<h1>Hello World</h1>',
     rows: 3,
   }),
@@ -97,7 +97,7 @@ export const html = i.pins.data({
 export const text = i.pins.data({
   description: 'The plain text content of the email.',
   control: i.controls.text({
-    language: i.TextControlLanguage.Plain,
+    syntax: i.TextControlSyntax.Plain,
     placeholder: 'Plain text content',
     rows: 3,
   }),

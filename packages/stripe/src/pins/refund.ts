@@ -14,7 +14,7 @@ export const eventType = i.pins.data({
       { label: 'Updated', value: 'updated' },
       { label: 'Failed', value: 'failed' },
     ],
-    defaultValue: 'created',
+    default: 'created',
   } as const),
 })
 
@@ -77,7 +77,7 @@ export const refundApplicationFee = i.pins.data({
   description:
     'Whether the application fee should be refunded when refunding this charge.',
   schema: v.boolean(),
-  control: i.controls.switch(),
+  control: i.controls.boolean(),
 })
 
 export const reverseTransfer = i.pins.data({
@@ -85,5 +85,5 @@ export const reverseTransfer = i.pins.data({
   description:
     'Whether the transfer should be reversed when refunding this charge.',
   schema: v.boolean(),
-  control: i.controls.switch(),
+  control: i.controls.boolean(),
 })

@@ -4,7 +4,7 @@ import * as pins from '@/pins'
 
 const nodes = i.nodes.group('Contacts')
 
-export const createContact = nodes.callable({
+export const createContact = nodes.action({
   description: 'Create a new contact in Resend.',
   inputs: {
     email: pins.email.address.with({
@@ -44,7 +44,7 @@ export const createContact = nodes.callable({
   },
 })
 
-export const getContact = nodes.callable({
+export const getContact = nodes.action({
   description: 'Retrieve a contact by its ID.',
   inputs: {
     id: pins.contact.id.with({
@@ -80,7 +80,7 @@ export const getContact = nodes.callable({
   },
 })
 
-export const listContacts = nodes.callable({
+export const listContacts = nodes.action({
   description: 'List all contacts in Resend.',
   outputs: {
     contacts: pins.contact.items,
@@ -98,7 +98,7 @@ export const listContacts = nodes.callable({
   },
 })
 
-export const updateContact = nodes.callable({
+export const updateContact = nodes.action({
   description: 'Update an existing contact by its ID.',
   inputs: {
     id: pins.contact.id,
@@ -151,7 +151,7 @@ export const updateContact = nodes.callable({
   },
 })
 
-export const deleteContact = nodes.callable({
+export const deleteContact = nodes.action({
   description: 'Delete a contact by its ID.',
   inputs: {
     id: pins.contact.id,

@@ -7,14 +7,14 @@ import * as pins from '@/pins'
 
 const nodes = i.nodes.group('Chat')
 
-export const createChatCompletion = nodes.callable({
+export const createChatCompletion = nodes.action({
   description: 'Send a conversation to a chat model and receive a completion.',
   inputs: {
     model: i.pins.data({
       description: 'The chat model to use for the completion.',
       schema: v.string(),
       control: i.controls.select<string>({
-        defaultValue: 'gpt-4o',
+        default: 'gpt-4o',
         options(opts) {
           const chatPrefixes = ['gpt-', 'o1', 'o3', 'o4', 'chatgpt-', 'codex-']
           return {
@@ -36,7 +36,7 @@ export const createChatCompletion = nodes.callable({
       description:
         'Sampling temperature between 0 and 2. Higher values produce more random output.',
       schema: v.pipe(v.number(), v.minValue(0), v.maxValue(2)),
-      control: i.controls.expression({ defaultValue: 1 }),
+      control: i.controls.number({ default: 1 }),
       optional: true,
     }),
     max_completion_tokens: i.pins.data({
@@ -44,7 +44,7 @@ export const createChatCompletion = nodes.callable({
       description:
         'The maximum number of tokens to generate in the completion.',
       schema: v.pipe(v.number(), v.integer(), v.minValue(1)),
-      control: i.controls.expression({ defaultValue: 1024 }),
+      control: i.controls.number({ default: 1024 }),
       optional: true,
     }),
     reasoning_effort: i.pins.data({

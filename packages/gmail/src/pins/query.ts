@@ -53,9 +53,8 @@ export const maxResults = i.pins.data({
   displayName: 'Max Results',
   description: 'Maximum number of results to return',
   schema: v.pipe(v.number(), v.integer(), v.minValue(1), v.maxValue(500)),
-  control: i.controls.expression({
-    placeholder: '100',
-    defaultValue: 100,
+  control: i.controls.number({
+    default: 100,
   }),
   examples: [
     {

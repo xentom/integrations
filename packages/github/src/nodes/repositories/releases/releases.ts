@@ -50,7 +50,7 @@ export const onRelease = i.generic(
   },
 )
 
-export const createRelease = nodes.callable({
+export const createRelease = nodes.action({
   description: 'Create a new release',
   inputs: {
     repository: pins.repository.name,
@@ -91,7 +91,7 @@ export const createRelease = nodes.callable({
   },
 })
 
-export const updateRelease = nodes.callable({
+export const updateRelease = nodes.action({
   description: 'Update an existing release',
   inputs: {
     repository: pins.repository.name,
@@ -140,7 +140,7 @@ export const updateRelease = nodes.callable({
   },
 })
 
-export const getRelease = nodes.callable({
+export const getRelease = nodes.action({
   description: 'Get a release by ID',
   inputs: {
     repository: pins.repository.name,
@@ -161,7 +161,7 @@ export const getRelease = nodes.callable({
   },
 })
 
-export const getReleaseByTag = nodes.callable({
+export const getReleaseByTag = nodes.action({
   description: 'Get a release by tag name',
   inputs: {
     repository: pins.repository.name,
@@ -182,7 +182,7 @@ export const getReleaseByTag = nodes.callable({
   },
 })
 
-export const getLatestRelease = nodes.callable({
+export const getLatestRelease = nodes.action({
   description: 'Get the latest non-prerelease, non-draft release',
   inputs: {
     repository: pins.repository.name,
@@ -201,7 +201,7 @@ export const getLatestRelease = nodes.callable({
   },
 })
 
-export const listReleases = nodes.callable({
+export const listReleases = nodes.action({
   description: 'List all releases for a repository',
   inputs: {
     repository: pins.repository.name,
@@ -220,7 +220,7 @@ export const listReleases = nodes.callable({
   },
 })
 
-export const deleteRelease = nodes.callable({
+export const deleteRelease = nodes.action({
   description: 'Delete a release',
   inputs: {
     repository: pins.repository.name,

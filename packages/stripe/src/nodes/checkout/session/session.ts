@@ -56,7 +56,7 @@ export const onCheckoutSession = i.generic(
   },
 )
 
-export const createCheckoutSession = nodes.callable({
+export const createCheckoutSession = nodes.action({
   description: 'Create a new Stripe Checkout session for collecting payments.',
   inputs: {
     mode: pins.checkout.session.mode.with({
@@ -117,7 +117,7 @@ export const createCheckoutSession = nodes.callable({
   },
 })
 
-export const getCheckoutSession = nodes.callable({
+export const getCheckoutSession = nodes.action({
   description: 'Retrieve a Checkout Session by its ID.',
   inputs: {
     id: pins.checkout.session.id.with({
@@ -140,7 +140,7 @@ export const getCheckoutSession = nodes.callable({
   },
 })
 
-export const expireCheckoutSession = nodes.callable({
+export const expireCheckoutSession = nodes.action({
   description: 'Expire an open Checkout Session.',
   inputs: {
     id: pins.checkout.session.id.with({
@@ -163,7 +163,7 @@ export const expireCheckoutSession = nodes.callable({
   },
 })
 
-export const listCheckoutSessions = nodes.callable({
+export const listCheckoutSessions = nodes.action({
   description: 'List all Checkout Sessions in your Stripe account.',
   inputs: {
     limit: pins.common.limit.with({

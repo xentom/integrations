@@ -19,7 +19,7 @@ export const eventType = i.pins.data({
       { label: 'Pending Update Applied', value: 'pending_update_applied' },
       { label: 'Pending Update Expired', value: 'pending_update_expired' },
     ],
-    defaultValue: 'created',
+    default: 'created',
   } as const),
 })
 
@@ -111,7 +111,7 @@ export const cancelAtPeriodEnd = i.pins.data({
   description:
     'If true, the subscription will be canceled at the end of the current billing period.',
   schema: v.boolean(),
-  control: i.controls.switch(),
+  control: i.controls.boolean(),
 })
 
 export const trialPeriodDays = i.pins.data({

@@ -14,11 +14,15 @@ export const items = i.pins.data<MailchimpSegment[]>({
 export const id = i.pins.data({
   description: 'The unique numeric ID of a Mailchimp segment.',
   schema: v.pipe(v.string(), v.transform(Number)),
-  control: i.controls.text({ placeholder: '123456' }),
+  control: i.controls.text({
+    placeholder: '123456',
+  }),
 })
 
 export const name = i.pins.data({
   description: 'The name of the segment.',
   schema: v.string(),
-  control: i.controls.text({ placeholder: 'Active subscribers' }),
+  control: i.controls.text({
+    placeholder: 'Active subscribers',
+  }),
 })

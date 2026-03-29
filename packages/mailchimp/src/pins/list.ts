@@ -33,11 +33,15 @@ export const id = i.pins.data({
 export const name = i.pins.data({
   description: 'The name of the audience.',
   schema: v.string(),
-  control: i.controls.text({ placeholder: 'My Newsletter' }),
+  control: i.controls.text({
+    placeholder: 'My Newsletter',
+  }),
 })
 
 export const permissionReminder = i.pins.data({
   description: 'A reminder for subscribers about why they signed up.',
   schema: v.string(),
-  control: i.controls.text({ placeholder: 'You signed up on our website.' }),
+  control: i.controls.text({
+    placeholder: 'You signed up on our website.',
+  }),
 })

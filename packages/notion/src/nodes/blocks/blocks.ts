@@ -7,7 +7,7 @@ import * as pins from '@/pins'
 
 const nodes = i.nodes.group('Blocks')
 
-export const getBlock = nodes.callable({
+export const getBlock = nodes.action({
   description: 'Retrieve a block by its ID',
   inputs: {
     id: pins.block.id,
@@ -26,7 +26,7 @@ export const getBlock = nodes.callable({
   },
 })
 
-export const listBlockChildren = nodes.callable({
+export const listBlockChildren = nodes.action({
   description: 'Retrieve the children blocks of a block or page',
   inputs: {
     id: pins.block.id.with({
@@ -80,7 +80,7 @@ export const listBlockChildren = nodes.callable({
   },
 })
 
-export const appendBlockChildren = nodes.callable({
+export const appendBlockChildren = nodes.action({
   description: 'Append new blocks as children of a block or page',
   inputs: {
     id: pins.block.id.with({
@@ -118,7 +118,7 @@ export const appendBlockChildren = nodes.callable({
   },
 })
 
-export const updateBlock = nodes.callable({
+export const updateBlock = nodes.action({
   description: 'Update the content of a block',
   inputs: {
     id: pins.block.id,
@@ -139,7 +139,7 @@ export const updateBlock = nodes.callable({
   },
 })
 
-export const deleteBlock = nodes.callable({
+export const deleteBlock = nodes.action({
   description: 'Delete a block (archive it)',
   inputs: {
     id: pins.block.id,

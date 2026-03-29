@@ -37,7 +37,7 @@ export const action = i.pins.data<Action>({
       { label: 'Deleted', value: 'deleted' },
       { label: 'Prereleased', value: 'prereleased' },
     ],
-    defaultValue: 'published',
+    default: 'published',
   }),
 })
 
@@ -87,7 +87,7 @@ export const body = i.pins.data({
   description: 'Release notes describing the changes',
   schema: v.string(),
   control: i.controls.text({
-    language: i.TextControlLanguage.Markdown,
+    syntax: i.TextControlSyntax.Markdown,
     placeholder: 'Highlights, fixes, and known issues',
     rows: 3,
   }),
@@ -96,13 +96,13 @@ export const body = i.pins.data({
 export const draft = i.pins.data({
   description: 'Whether the release is a draft',
   schema: v.boolean(),
-  control: i.controls.switch(),
+  control: i.controls.boolean(),
 })
 
 export const prerelease = i.pins.data({
   description: 'Whether the release is a prerelease',
   schema: v.boolean(),
-  control: i.controls.switch(),
+  control: i.controls.boolean(),
 })
 
 export const targetCommitish = i.pins.data({

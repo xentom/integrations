@@ -7,7 +7,7 @@ import { extractOwnerAndRepo } from '@/utils/options'
 
 const nodes = i.nodes.group('Repositories/Branches')
 
-export const listBranches = nodes.callable({
+export const listBranches = nodes.action({
   description: 'List repository branches',
   inputs: {
     repository: pins.repository.name,
@@ -28,7 +28,7 @@ export const listBranches = nodes.callable({
   },
 })
 
-export const getBranch = nodes.callable({
+export const getBranch = nodes.action({
   description: 'Get details for a branch',
   inputs: {
     repository: pins.repository.name,
@@ -51,7 +51,7 @@ export const getBranch = nodes.callable({
   },
 })
 
-export const createBranch = nodes.callable({
+export const createBranch = nodes.action({
   description: 'Create a new branch from a commit',
   inputs: {
     repository: pins.repository.name,

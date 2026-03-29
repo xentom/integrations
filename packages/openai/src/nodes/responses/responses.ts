@@ -10,12 +10,12 @@ import * as pins from '@/pins'
 
 const nodes = i.nodes.group('Responses')
 
-export const createResponse = nodes.callable({
+export const createResponse = nodes.action({
   inputs: {
     model: i.pins.data({
       schema: z.string().nonempty(),
       control: i.controls.select<string>({
-        defaultValue: 'gpt-4o',
+        default: 'gpt-4o',
         options(opts) {
           return {
             items: opts.state.models
@@ -72,10 +72,10 @@ export const createResponse = nodes.callable({
     }),
     web: i.pins.data({
       schema: z.boolean(),
-      control: i.controls.switch({
+      control: i.controls.boolean({
         label: 'Web Search',
         description: 'Enable web search for the response.',
-        defaultValue: false,
+        default: false,
       }),
     }),
   },
@@ -104,7 +104,7 @@ export const createResponse = nodes.callable({
   },
 })
 
-export const getResponse = nodes.callable({
+export const getResponse = nodes.action({
   inputs: {
     id: pins.response.id,
   },
@@ -118,7 +118,7 @@ export const getResponse = nodes.callable({
   },
 })
 
-export const cancelResponse = nodes.callable({
+export const cancelResponse = nodes.action({
   inputs: {
     id: pins.response.id,
   },
@@ -132,7 +132,7 @@ export const cancelResponse = nodes.callable({
   },
 })
 
-export const deleteResponse = nodes.callable({
+export const deleteResponse = nodes.action({
   inputs: {
     id: pins.response.id,
   },

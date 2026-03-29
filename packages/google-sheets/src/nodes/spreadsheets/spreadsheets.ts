@@ -4,7 +4,7 @@ import * as pins from '@/pins'
 
 const nodes = i.nodes.group('Spreadsheets')
 
-export const getSpreadsheet = nodes.callable({
+export const getSpreadsheet = nodes.action({
   displayName: 'Get Spreadsheet',
   description: 'Retrieve metadata about a Google Spreadsheet',
   inputs: {
@@ -24,7 +24,7 @@ export const getSpreadsheet = nodes.callable({
   },
 })
 
-export const createSpreadsheet = nodes.callable({
+export const createSpreadsheet = nodes.action({
   displayName: 'Create Spreadsheet',
   description: 'Create a new Google Spreadsheet with the given title',
   inputs: {
@@ -52,7 +52,7 @@ export const createSpreadsheet = nodes.callable({
   },
 })
 
-export const deleteSpreadsheet = nodes.callable({
+export const deleteSpreadsheet = nodes.action({
   displayName: 'Delete Spreadsheet',
   description: 'Permanently delete a Google Spreadsheet',
   inputs: {

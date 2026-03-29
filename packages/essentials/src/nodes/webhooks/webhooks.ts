@@ -24,8 +24,8 @@ export const onWebhook = nodes.trigger({
         'If enabled, the webhook waits for a custom response before completing. Use this to return a specific status code or response body. To send a custom response, search for "Webhook Response" in the nodes panel.',
       schema: v.boolean(),
       optional: true,
-      control: i.controls.switch({
-        defaultValue: false,
+      control: i.controls.boolean({
+        default: false,
       }),
     }),
   },

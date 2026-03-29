@@ -4,7 +4,7 @@ import * as pins from '@/pins'
 
 const nodes = i.nodes.group('Contacts/Segments')
 
-export const addContactToSegment = nodes.callable({
+export const addContactToSegment = nodes.action({
   description: 'Add a contact to a segment.',
   inputs: {
     contactId: pins.contact.id.with({
@@ -60,7 +60,7 @@ export const addContactToSegment = nodes.callable({
   },
 })
 
-export const listContactSegments = nodes.callable({
+export const listContactSegments = nodes.action({
   description: 'List all segments a contact belongs to.',
   inputs: {
     contactId: pins.contact.id.with({
@@ -102,7 +102,7 @@ export const listContactSegments = nodes.callable({
   },
 })
 
-export const removeContactFromSegment = nodes.callable({
+export const removeContactFromSegment = nodes.action({
   description: 'Remove a contact from a segment.',
   inputs: {
     contactId: pins.contact.id.with({

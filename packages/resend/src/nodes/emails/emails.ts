@@ -7,7 +7,7 @@ import * as pins from '@/pins'
 
 const nodes = i.nodes.group('Emails')
 
-export const sendEmail = nodes.callable({
+export const sendEmail = nodes.action({
   description: 'Send a simple email using Resend.',
   inputs: {
     from: pins.email.addressWithDisplayName.with({
@@ -107,7 +107,7 @@ export const sendEmail = nodes.callable({
   },
 })
 
-export const getEmail = nodes.callable({
+export const getEmail = nodes.action({
   description: 'Retrieve details of a sent email by its ID.',
   inputs: {
     id: pins.email.id.with({
@@ -129,7 +129,7 @@ export const getEmail = nodes.callable({
   },
 })
 
-export const updateEmail = nodes.callable({
+export const updateEmail = nodes.action({
   description: 'Update a scheduled email by its ID.',
   inputs: {
     id: pins.email.id.with({
@@ -165,7 +165,7 @@ export const updateEmail = nodes.callable({
   },
 })
 
-export const cancelEmail = nodes.callable({
+export const cancelEmail = nodes.action({
   description: 'Cancel a previously sent email by its ID.',
   inputs: {
     id: pins.email.id.with({

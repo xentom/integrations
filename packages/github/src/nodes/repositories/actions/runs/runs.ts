@@ -51,7 +51,7 @@ export const onActionRun = i.generic(
   },
 )
 
-export const listWorkflowRuns = nodes.callable({
+export const listWorkflowRuns = nodes.action({
   description: 'List workflow runs for a repository',
   inputs: {
     repository: pins.repository.name,
@@ -80,7 +80,7 @@ export const listWorkflowRuns = nodes.callable({
   },
 })
 
-export const getWorkflowRun = nodes.callable({
+export const getWorkflowRun = nodes.action({
   description: 'Get a workflow run',
   inputs: {
     repository: pins.repository.name,
@@ -101,7 +101,7 @@ export const getWorkflowRun = nodes.callable({
   },
 })
 
-export const cancelWorkflowRun = nodes.callable({
+export const cancelWorkflowRun = nodes.action({
   description: 'Cancel a running workflow run',
   inputs: {
     repository: pins.repository.name,
@@ -124,7 +124,7 @@ export const cancelWorkflowRun = nodes.callable({
   },
 })
 
-export const rerunWorkflow = nodes.callable({
+export const rerunWorkflow = nodes.action({
   description: 'Request a rerun of a workflow run',
   inputs: {
     repository: pins.repository.name,
@@ -132,7 +132,7 @@ export const rerunWorkflow = nodes.callable({
     enableDebugLogging: i.pins.data({
       description: 'Enable debug logging for the rerun',
       schema: v.boolean(),
-      control: i.controls.switch(),
+      control: i.controls.boolean(),
       optional: true,
     }),
   },

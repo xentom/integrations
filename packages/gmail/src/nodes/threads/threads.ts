@@ -5,7 +5,7 @@ import * as pins from '@/pins'
 
 const nodes = i.nodes.group('Threads')
 
-export const getThread = nodes.callable({
+export const getThread = nodes.action({
   description: 'Retrieve a specific Gmail conversation thread by ID',
   inputs: {
     id: pins.thread.id,
@@ -29,7 +29,7 @@ export const getThread = nodes.callable({
   },
 })
 
-export const listThreads = nodes.callable({
+export const listThreads = nodes.action({
   description: 'Search and retrieve Gmail conversation threads',
   inputs: {
     maxResults: pins.query.maxResults,
@@ -64,7 +64,7 @@ export const listThreads = nodes.callable({
   },
 })
 
-export const modifyThread = nodes.callable({
+export const modifyThread = nodes.action({
   description: 'Add or remove labels from all messages in a thread',
   inputs: {
     id: pins.thread.id,
@@ -98,7 +98,7 @@ export const modifyThread = nodes.callable({
   },
 })
 
-export const deleteThread = nodes.callable({
+export const deleteThread = nodes.action({
   description: 'Permanently delete an entire conversation thread',
   inputs: {
     id: pins.thread.id,

@@ -52,7 +52,7 @@ export const onPullRequest = i.generic(
   },
 )
 
-export const createPullRequest = nodes.callable({
+export const createPullRequest = nodes.action({
   description: 'Create a new pull request',
   inputs: {
     repository: pins.repository.name,
@@ -85,7 +85,7 @@ export const createPullRequest = nodes.callable({
   },
 })
 
-export const updatePullRequest = nodes.callable({
+export const updatePullRequest = nodes.action({
   description: 'Update an existing pull request',
   inputs: {
     repository: pins.repository.name,
@@ -122,7 +122,7 @@ export const updatePullRequest = nodes.callable({
   },
 })
 
-export const getPullRequest = nodes.callable({
+export const getPullRequest = nodes.action({
   description: 'Get details of a specific pull request',
   inputs: {
     repository: pins.repository.name,
@@ -143,7 +143,7 @@ export const getPullRequest = nodes.callable({
   },
 })
 
-export const mergePullRequest = nodes.callable({
+export const mergePullRequest = nodes.action({
   description: 'Merge a pull request',
   inputs: {
     repository: pins.repository.name,
@@ -204,7 +204,7 @@ export const mergePullRequest = nodes.callable({
   },
 })
 
-export const listPullRequests = nodes.callable({
+export const listPullRequests = nodes.action({
   description: 'List pull requests in a repository',
   inputs: {
     repository: pins.repository.name,

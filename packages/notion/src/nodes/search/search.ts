@@ -3,7 +3,6 @@ import * as v from 'valibot'
 
 import {
   type DatabaseObjectResponse,
-  type DataSourceObjectResponse,
   type PageObjectResponse,
 } from '@notionhq/client/build/src/api-endpoints'
 
@@ -11,7 +10,7 @@ import * as pins from '@/pins'
 
 const nodes = i.nodes.group('Search')
 
-export const search = nodes.callable({
+export const search = nodes.action({
   description: 'Search pages and databases by title',
   inputs: {
     query: pins.search.query.with({

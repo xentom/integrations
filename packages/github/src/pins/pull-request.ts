@@ -75,7 +75,7 @@ export const state = i.pins.data({
 export const draft = i.pins.data({
   description: 'Whether the pull request is a draft',
   schema: v.boolean(),
-  control: i.controls.switch(),
+  control: i.controls.boolean(),
 })
 
 export const item = i.pins.data<components['schemas']['pull-request']>({

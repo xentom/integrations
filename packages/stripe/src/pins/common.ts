@@ -37,7 +37,7 @@ export const metadata = i.pins.data({
     'Set of key-value pairs for storing additional information about the object.',
   schema: v.record(v.string(), v.string()),
   control: i.controls.expression({
-    defaultValue: {},
+    default: {},
   }),
 })
 

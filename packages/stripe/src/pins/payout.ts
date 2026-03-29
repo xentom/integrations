@@ -15,7 +15,7 @@ export const eventType = i.pins.data({
       { label: 'Paid', value: 'paid' },
       { label: 'Reconciliation Completed', value: 'reconciliation_completed' },
     ],
-    defaultValue: 'created',
+    default: 'created',
   } as const),
 })
 
@@ -75,7 +75,7 @@ export const method = i.pins.data({
       { value: 'standard', label: 'Standard' },
       { value: 'instant', label: 'Instant' },
     ],
-    defaultValue: 'standard',
+    default: 'standard',
   }),
 })
 

@@ -12,7 +12,7 @@ export const eventType = i.pins.data({
       { label: 'Updated', value: 'updated' },
       { label: 'Deleted', value: 'deleted' },
     ],
-    defaultValue: 'created',
+    default: 'created',
   } as const),
 })
 
@@ -60,14 +60,14 @@ export const metadata = common.metadata.with({
 export const active = i.pins.data({
   description: 'Whether the product is currently available for purchase.',
   schema: v.boolean(),
-  control: i.controls.switch(),
+  control: i.controls.boolean(),
 })
 
 export const images = i.pins.data({
   description: 'A list of up to 8 URLs of images for this product.',
   schema: v.array(v.pipe(v.string(), v.url())),
   control: i.controls.expression({
-    defaultValue: [],
+    default: [],
   }),
 })
 

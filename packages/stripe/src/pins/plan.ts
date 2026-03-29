@@ -14,7 +14,7 @@ export const eventType = i.pins.data({
       { label: 'Updated', value: 'updated' },
       { label: 'Deleted', value: 'deleted' },
     ],
-    defaultValue: 'created',
+    default: 'created',
   } as const),
 })
 
@@ -94,7 +94,7 @@ export const interval = i.pins.data<Stripe.PlanCreateParams.Interval>({
       { value: 'month', label: 'Monthly' },
       { value: 'year', label: 'Yearly' },
     ],
-    defaultValue: 'month',
+    default: 'month',
   }),
 })
 
@@ -123,7 +123,7 @@ export const usageType = i.pins.data<Stripe.PlanCreateParams.UsageType>({
       { value: 'licensed', label: 'Licensed' },
       { value: 'metered', label: 'Metered' },
     ],
-    defaultValue: 'licensed',
+    default: 'licensed',
   }),
 })
 
@@ -137,7 +137,7 @@ export const billingScheme = i.pins.data<Stripe.PlanCreateParams.BillingScheme>(
         { value: 'per_unit', label: 'Per Unit' },
         { value: 'tiered', label: 'Tiered' },
       ],
-      defaultValue: 'per_unit',
+      default: 'per_unit',
     }),
   },
 )
@@ -150,5 +150,5 @@ export const metadata = common.metadata.with({
 export const active = i.pins.data({
   description: 'Whether the plan can be used for new purchases.',
   schema: v.boolean(),
-  control: i.controls.switch(),
+  control: i.controls.boolean(),
 })

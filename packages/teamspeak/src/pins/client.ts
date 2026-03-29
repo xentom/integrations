@@ -16,7 +16,7 @@ export const action = i.pins.data({
         value: 'clientdisconnect',
       },
     ],
-    defaultValue: 'clientconnect',
+    default: 'clientconnect',
   } as const),
 })
 

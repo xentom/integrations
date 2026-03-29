@@ -21,7 +21,7 @@ export const eventType = i.pins.data({
         value: 'deleted',
       },
     ],
-    defaultValue: 'created',
+    default: 'created',
   } as const),
 })
 
@@ -84,7 +84,7 @@ export const address = i.pins.data({
     country: v.optional(v.string()),
   }),
   control: i.controls.expression({
-    defaultValue: {
+    default: {
       line1: '123 Main St',
       city: 'San Francisco',
       state: 'CA',

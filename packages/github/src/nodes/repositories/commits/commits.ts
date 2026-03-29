@@ -38,7 +38,7 @@ export const onPush = nodes.trigger({
   },
 })
 
-export const listCommits = nodes.callable({
+export const listCommits = nodes.action({
   description: 'List recent commits for a repository',
   inputs: {
     repository: pins.repository.name,
@@ -62,7 +62,7 @@ export const listCommits = nodes.callable({
   },
 })
 
-export const getCommit = nodes.callable({
+export const getCommit = nodes.action({
   description: 'Get details for a commit',
   inputs: {
     repository: pins.repository.name,

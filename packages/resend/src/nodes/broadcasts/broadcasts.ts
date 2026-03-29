@@ -11,7 +11,7 @@ import * as pins from '@/pins'
 
 const nodes = i.nodes.group('Broadcasts')
 
-export const createBroadcast = nodes.callable({
+export const createBroadcast = nodes.action({
   description: 'Create a new broadcast.',
   inputs: {
     segmentId: pins.segment.id.with({
@@ -79,7 +79,7 @@ export const createBroadcast = nodes.callable({
   },
 })
 
-export const getBroadcast = nodes.callable({
+export const getBroadcast = nodes.action({
   description: 'Retrieve details of a broadcast by its ID.',
   inputs: {
     id: pins.broadcast.id.with({
@@ -104,7 +104,7 @@ export const getBroadcast = nodes.callable({
   },
 })
 
-export const listBroadcasts = nodes.callable({
+export const listBroadcasts = nodes.action({
   description: 'Retrieve a list of broadcasts.',
   outputs: {
     broadcasts: pins.broadcast.items.with<ListBroadcastsResponseSuccess>({
@@ -124,7 +124,7 @@ export const listBroadcasts = nodes.callable({
   },
 })
 
-export const updateBroadcast = nodes.callable({
+export const updateBroadcast = nodes.action({
   description: 'Update an existing broadcast.',
   inputs: {
     id: pins.broadcast.id.with({
@@ -191,7 +191,7 @@ export const updateBroadcast = nodes.callable({
   },
 })
 
-export const sendBroadcast = nodes.callable({
+export const sendBroadcast = nodes.action({
   description: 'Send a broadcast to its segment.',
   inputs: {
     id: pins.broadcast.id.with({
@@ -228,7 +228,7 @@ export const sendBroadcast = nodes.callable({
   },
 })
 
-export const deleteBroadcast = nodes.callable({
+export const deleteBroadcast = nodes.action({
   description: 'Delete a broadcast by its ID.',
   inputs: {
     id: pins.broadcast.id.with({

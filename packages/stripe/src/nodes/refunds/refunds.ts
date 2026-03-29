@@ -50,7 +50,7 @@ export const onRefund = i.generic(
   },
 )
 
-export const createRefund = nodes.callable({
+export const createRefund = nodes.action({
   description:
     'Create a refund to return funds to a customer. Can refund a charge or a PaymentIntent.',
   inputs: {
@@ -111,7 +111,7 @@ export const createRefund = nodes.callable({
   },
 })
 
-export const getRefund = nodes.callable({
+export const getRefund = nodes.action({
   description: 'Retrieve a refund by its ID.',
   inputs: {
     id: pins.refund.id.with({
@@ -132,7 +132,7 @@ export const getRefund = nodes.callable({
   },
 })
 
-export const updateRefund = nodes.callable({
+export const updateRefund = nodes.action({
   description: 'Update an existing refund.',
   inputs: {
     id: pins.refund.id.with({
@@ -159,7 +159,7 @@ export const updateRefund = nodes.callable({
   },
 })
 
-export const cancelRefund = nodes.callable({
+export const cancelRefund = nodes.action({
   description:
     'Cancel a refund that has not yet been completed. Only refunds with status=requires_action can be canceled.',
   inputs: {
@@ -181,7 +181,7 @@ export const cancelRefund = nodes.callable({
   },
 })
 
-export const listRefunds = nodes.callable({
+export const listRefunds = nodes.action({
   description: 'List all refunds in your Stripe account.',
   inputs: {
     limit: pins.common.limit.with({

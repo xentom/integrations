@@ -53,7 +53,7 @@ export const onCustomer = i.generic(
   },
 )
 
-export const createCustomer = nodes.callable({
+export const createCustomer = nodes.action({
   description: 'Create a new customer in Stripe.',
   inputs: {
     email: pins.customer.email.with({
@@ -102,7 +102,7 @@ export const createCustomer = nodes.callable({
   },
 })
 
-export const getCustomer = nodes.callable({
+export const getCustomer = nodes.action({
   description: 'Retrieve a customer by their ID.',
   inputs: {
     id: pins.customer.id.with({
@@ -127,7 +127,7 @@ export const getCustomer = nodes.callable({
   },
 })
 
-export const updateCustomer = nodes.callable({
+export const updateCustomer = nodes.action({
   description: 'Update an existing customer in Stripe.',
   inputs: {
     id: pins.customer.id.with({
@@ -179,7 +179,7 @@ export const updateCustomer = nodes.callable({
   },
 })
 
-export const deleteCustomer = nodes.callable({
+export const deleteCustomer = nodes.action({
   description: 'Permanently delete a customer from Stripe.',
   inputs: {
     id: pins.customer.id.with({
@@ -200,7 +200,7 @@ export const deleteCustomer = nodes.callable({
   },
 })
 
-export const listCustomers = nodes.callable({
+export const listCustomers = nodes.action({
   description: 'List all customers in your Stripe account.',
   inputs: {
     limit: pins.common.limit.with({

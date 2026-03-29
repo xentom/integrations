@@ -21,7 +21,7 @@
     "prefix": ["acn", "inc"],
     "scope": "javascript,typescript",
     "body": [
-      "export const ${1:nodeName} = i.nodes.callable({",
+      "export const ${1:nodeName} = i.nodes.action({",
       "  inputs: {",
       "    ${2:// Define inputs}",
       "  },",
@@ -91,7 +91,7 @@
     "prefix": ["aswc", "icsw"],
     "scope": "javascript,typescript",
     "body": [
-      "i.controls.switch({",
+      "i.controls.boolean({",
       "  description: '${1:Short Description}',",
       "}),",
     ],

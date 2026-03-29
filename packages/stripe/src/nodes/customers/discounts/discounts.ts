@@ -56,7 +56,7 @@ export const onCustomerDiscount = i.generic(
   },
 )
 
-export const deleteCustomerDiscount = nodes.callable({
+export const deleteCustomerDiscount = nodes.action({
   description: 'Remove the currently applied discount from a customer.',
   inputs: {
     customerId: pins.customer.id.with({
@@ -79,7 +79,7 @@ export const deleteCustomerDiscount = nodes.callable({
   },
 })
 
-export const deleteSubscriptionDiscount = nodes.callable({
+export const deleteSubscriptionDiscount = nodes.action({
   description: 'Remove the currently applied discount from a subscription.',
   inputs: {
     subscriptionId: pins.subscription.id.with({

@@ -50,7 +50,7 @@ export const onSource = i.generic(
   },
 )
 
-export const createSource = nodes.callable({
+export const createSource = nodes.action({
   description:
     'Create a new source object. Sources are used to represent payment instruments.',
   inputs: {
@@ -119,7 +119,7 @@ export const createSource = nodes.callable({
   },
 })
 
-export const getSource = nodes.callable({
+export const getSource = nodes.action({
   description: 'Retrieve a source by its ID.',
   inputs: {
     id: pins.source.id.with({
@@ -140,7 +140,7 @@ export const getSource = nodes.callable({
   },
 })
 
-export const updateSource = nodes.callable({
+export const updateSource = nodes.action({
   description: 'Update an existing source.',
   inputs: {
     id: pins.source.id.with({
@@ -177,7 +177,7 @@ export const updateSource = nodes.callable({
   },
 })
 
-export const listSourceTransactions = nodes.callable({
+export const listSourceTransactions = nodes.action({
   description: 'List transactions that have been created for a source.',
   inputs: {
     sourceId: pins.source.id.with({

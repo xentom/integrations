@@ -48,7 +48,7 @@ export const onPrice = i.generic(
   },
 )
 
-export const createPrice = nodes.callable({
+export const createPrice = nodes.action({
   description: 'Create a new price for a product in Stripe.',
   inputs: {
     productId: pins.product.id.with({
@@ -90,7 +90,7 @@ export const createPrice = nodes.callable({
   },
 })
 
-export const getPrice = nodes.callable({
+export const getPrice = nodes.action({
   description: 'Retrieve a price by its ID.',
   inputs: {
     id: pins.price.id.with({
@@ -111,7 +111,7 @@ export const getPrice = nodes.callable({
   },
 })
 
-export const updatePrice = nodes.callable({
+export const updatePrice = nodes.action({
   description: 'Update an existing price in Stripe.',
   inputs: {
     id: pins.price.id.with({
@@ -120,7 +120,7 @@ export const updatePrice = nodes.callable({
     active: i.pins.data({
       description: 'Whether the price can be used for new purchases.',
       schema: v.boolean(),
-      control: i.controls.switch(),
+      control: i.controls.boolean(),
       optional: true,
     }),
     metadata: pins.price.metadata.with({
@@ -145,7 +145,7 @@ export const updatePrice = nodes.callable({
   },
 })
 
-export const listPrices = nodes.callable({
+export const listPrices = nodes.action({
   description: 'List all prices in your Stripe account.',
   inputs: {
     limit: pins.common.limit.with({
@@ -165,7 +165,7 @@ export const listPrices = nodes.callable({
     active: i.pins.data({
       description: 'Filter by whether the price is active.',
       schema: v.boolean(),
-      control: i.controls.switch(),
+      control: i.controls.boolean(),
       optional: true,
     }),
   },

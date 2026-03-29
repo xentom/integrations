@@ -50,7 +50,7 @@ export const onActionJob = i.generic(
   },
 )
 
-export const listWorkflowJobs = nodes.callable({
+export const listWorkflowJobs = nodes.action({
   description: 'List jobs for a workflow run',
   inputs: {
     repository: pins.repository.name,

@@ -3,12 +3,12 @@ import * as v from 'valibot'
 
 const nodes = i.nodes.group('Flow/Controls')
 
-export const branch = nodes.callable({
+export const branch = nodes.action({
   inputs: {
     condition: i.pins.data({
       schema: v.boolean(),
-      control: i.controls.switch({
-        defaultValue: false,
+      control: i.controls.boolean({
+        default: false,
       }),
     }),
   },
@@ -21,15 +21,14 @@ export const branch = nodes.callable({
   },
 })
 
-export const repeat = nodes.callable({
+export const repeat = nodes.action({
   description: 'Loop for a given number of times',
   inputs: {
     count: i.pins.data({
       description: 'Number of iterations to perform',
       schema: v.number(),
-      control: i.controls.expression({
-        placeholder: 'Enter a number',
-        defaultValue: 1,
+      control: i.controls.number({
+        default: 1,
       }),
     }),
   },
@@ -65,12 +64,12 @@ export const forEach = i.generic(
         description: 'Array to iterate over',
         schema: v.array(v.unknown()),
         control: i.controls.expression({
-          defaultValue: [],
+          default: [],
         }),
       }),
     }
 
-    return nodes.callable({
+    return nodes.action({
       description: 'Loops over a list of elements',
       inputs,
       outputs: {

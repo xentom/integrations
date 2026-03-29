@@ -9,7 +9,7 @@ import * as pins from '@/pins'
 
 const nodes = i.nodes.group('Databases')
 
-export const getDatabase = nodes.callable({
+export const getDatabase = nodes.action({
   description: 'Retrieve a database by its ID',
   inputs: {
     id: pins.database.id,
@@ -28,7 +28,7 @@ export const getDatabase = nodes.callable({
   },
 })
 
-export const queryDatabase = nodes.callable({
+export const queryDatabase = nodes.action({
   description: 'Query a database to retrieve pages matching optional filters',
   inputs: {
     id: pins.database.id,
@@ -59,7 +59,7 @@ export const queryDatabase = nodes.callable({
   },
 })
 
-export const createDatabase = nodes.callable({
+export const createDatabase = nodes.action({
   description: 'Create a new database as a child of a page',
   inputs: {
     parentPageId: pins.page.id.with({
@@ -89,7 +89,7 @@ export const createDatabase = nodes.callable({
   },
 })
 
-export const updateDatabase = nodes.callable({
+export const updateDatabase = nodes.action({
   description: 'Update database title or properties schema',
   inputs: {
     id: pins.database.id,

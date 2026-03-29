@@ -116,7 +116,7 @@ export const action = i.pins.data<Action>({
         value: 'untyped',
       },
     ],
-    defaultValue: 'opened',
+    default: 'opened',
   }),
 })
 

@@ -7,7 +7,7 @@ import * as pins from '@/pins'
 
 const nodes = i.nodes.group('Files')
 
-export const createFile = nodes.callable({
+export const createFile = nodes.action({
   inputs: {
     file: i.pins.data<File>(),
     purpose: i.pins.data<FilePurpose>({
@@ -20,7 +20,7 @@ export const createFile = nodes.callable({
         'evals',
       ]),
       control: i.controls.select({
-        defaultValue: 'user_data',
+        default: 'user_data',
         options: [
           {
             label: 'Assistants',
@@ -71,7 +71,7 @@ export const createFile = nodes.callable({
   },
 })
 
-export const deleteFile = nodes.callable({
+export const deleteFile = nodes.action({
   inputs: {
     fileId: pins.file.id,
   },
@@ -83,13 +83,13 @@ export const deleteFile = nodes.callable({
   },
 })
 
-export const listFiles = nodes.callable({
+export const listFiles = nodes.action({
   inputs: {
     limit: i.pins.data({
       description: 'The maximum number of files to return. Defaults to 10000.',
       schema: z.number().min(1).max(10000),
-      control: i.controls.expression({
-        defaultValue: 10000,
+      control: i.controls.number({
+        default: 10000,
       }),
     }),
     after: pins.file.id.with({
@@ -118,7 +118,7 @@ export const listFiles = nodes.callable({
   },
 })
 
-export const getFile = nodes.callable({
+export const getFile = nodes.action({
   inputs: {
     fileId: pins.file.id,
   },
@@ -133,7 +133,7 @@ export const getFile = nodes.callable({
   },
 })
 
-export const fileContent = nodes.callable({
+export const fileContent = nodes.action({
   inputs: {
     fileId: pins.file.id,
   },
@@ -151,7 +151,7 @@ export const fileContent = nodes.callable({
   },
 })
 
-export const waitForFileProcessing = nodes.callable({
+export const waitForFileProcessing = nodes.action({
   inputs: {
     fileId: pins.file.id,
     pollInterval: i.pins.data({

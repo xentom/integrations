@@ -5,7 +5,7 @@ import * as pins from '../../pins'
 
 const nodes = i.nodes.group('Labels')
 
-export const listLabels = nodes.callable({
+export const listLabels = nodes.action({
   description: 'Retrieve all Gmail labels',
   outputs: {
     labels: pins.label.items,
@@ -21,7 +21,7 @@ export const listLabels = nodes.callable({
   },
 })
 
-export const getLabel = nodes.callable({
+export const getLabel = nodes.action({
   description: 'Retrieve a specific Gmail label by ID',
   inputs: {
     id: pins.label.id,
@@ -41,7 +41,7 @@ export const getLabel = nodes.callable({
   },
 })
 
-export const createLabel = nodes.callable({
+export const createLabel = nodes.action({
   description: 'Create a new Gmail label',
   inputs: {
     name: i.pins.data({
@@ -97,7 +97,7 @@ export const createLabel = nodes.callable({
   },
 })
 
-export const deleteLabel = nodes.callable({
+export const deleteLabel = nodes.action({
   description: 'Delete a Gmail label (cannot delete system labels)',
   inputs: {
     id: pins.label.id,
@@ -110,7 +110,7 @@ export const deleteLabel = nodes.callable({
   },
 })
 
-export const modifyMessageLabels = nodes.callable({
+export const modifyMessageLabels = nodes.action({
   description: 'Add or remove labels from a message',
   inputs: {
     id: pins.message.id,

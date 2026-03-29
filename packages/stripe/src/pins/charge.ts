@@ -16,7 +16,7 @@ export const eventType = i.pins.data({
       { label: 'Succeeded', value: 'succeeded' },
       { label: 'Updated', value: 'updated' },
     ],
-    defaultValue: 'succeeded',
+    default: 'succeeded',
   } as const),
 })
 
@@ -84,7 +84,7 @@ export const capture = i.pins.data({
   description:
     'Whether to immediately capture the charge. If false, the charge is an authorization.',
   schema: v.boolean(),
-  control: i.controls.switch(),
+  control: i.controls.boolean(),
 })
 
 export const statementDescriptor = i.pins.data({

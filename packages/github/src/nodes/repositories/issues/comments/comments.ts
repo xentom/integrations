@@ -50,7 +50,7 @@ export const onIssueComment = i.generic(
   },
 )
 
-export const addIssueComment = nodes.callable({
+export const addIssueComment = nodes.action({
   description: 'Add a comment to an issue',
   inputs: {
     repository: pins.repository.name,
@@ -73,7 +73,7 @@ export const addIssueComment = nodes.callable({
   },
 })
 
-export const listIssueComments = nodes.callable({
+export const listIssueComments = nodes.action({
   description: 'List comments for an issue',
   inputs: {
     repository: pins.repository.name,

@@ -6,7 +6,7 @@ import * as pins from '@/pins'
 
 const nodes = i.nodes.group('Values')
 
-export const getValues = nodes.callable({
+export const getValues = nodes.action({
   displayName: 'Get Values',
   description: 'Read values from a specified range in a Google Sheet',
   inputs: {
@@ -33,7 +33,7 @@ export const getValues = nodes.callable({
   },
 })
 
-export const updateValues = nodes.callable({
+export const updateValues = nodes.action({
   displayName: 'Update Values',
   description: 'Write values to a specified range in a Google Sheet',
   inputs: {
@@ -63,7 +63,7 @@ export const updateValues = nodes.callable({
   },
 })
 
-export const appendValues = nodes.callable({
+export const appendValues = nodes.action({
   displayName: 'Append Values',
   description:
     'Append values to the end of a specified range in a Google Sheet',
@@ -94,7 +94,7 @@ export const appendValues = nodes.callable({
   },
 })
 
-export const clearValues = nodes.callable({
+export const clearValues = nodes.action({
   displayName: 'Clear Values',
   description: 'Clear values from a specified range in a Google Sheet',
   inputs: {

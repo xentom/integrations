@@ -57,6 +57,6 @@ export const lastName = i.pins.data({
 
 export const unsubscribed = i.pins.data({
   description: 'Whether the contact is unsubscribed.',
-  control: i.controls.switch(),
+  control: i.controls.boolean(),
   schema: v.boolean(),
 })

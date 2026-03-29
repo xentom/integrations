@@ -7,7 +7,7 @@ import * as pins from '@/pins'
 
 const nodes = i.nodes.group('Flow')
 
-export const branch = nodes.callable({
+export const branch = nodes.action({
   inputs: {
     condition: i.pins.data({
       schema: v.pipe(v.string(), v.minLength(1)),

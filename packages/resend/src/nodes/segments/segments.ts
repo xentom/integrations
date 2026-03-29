@@ -4,7 +4,7 @@ import * as pins from '@/pins'
 
 const nodes = i.nodes.group('Segments')
 
-export const createSegment = nodes.callable({
+export const createSegment = nodes.action({
   description: 'Create a new segment in Resend.',
   inputs: {
     name: pins.segment.name.with({
@@ -32,7 +32,7 @@ export const createSegment = nodes.callable({
   },
 })
 
-export const listSegments = nodes.callable({
+export const listSegments = nodes.action({
   description: 'List all segments in Resend.',
   outputs: {
     segments: pins.segment.items.with({
@@ -52,7 +52,7 @@ export const listSegments = nodes.callable({
   },
 })
 
-export const getSegment = nodes.callable({
+export const getSegment = nodes.action({
   description: 'Get a specific segment by ID.',
   inputs: {
     id: pins.segment.id.with({
@@ -77,7 +77,7 @@ export const getSegment = nodes.callable({
   },
 })
 
-export const deleteSegment = nodes.callable({
+export const deleteSegment = nodes.action({
   description: 'Delete a segment by ID.',
   inputs: {
     id: pins.segment.id.with({

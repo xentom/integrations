@@ -19,7 +19,7 @@ export const onCustomerSource = i.generic(
             { label: 'Deleted', value: 'deleted' },
             { label: 'Expiring', value: 'expiring' },
           ],
-          defaultValue: 'created',
+          default: 'created',
         } as const),
       }),
     }
@@ -66,7 +66,7 @@ export const onCustomerSource = i.generic(
   },
 )
 
-export const createCustomerSource = nodes.callable({
+export const createCustomerSource = nodes.action({
   description: 'Attach a payment source to a customer.',
   inputs: {
     customerId: pins.customer.id.with({
@@ -100,7 +100,7 @@ export const createCustomerSource = nodes.callable({
   },
 })
 
-export const getCustomerSource = nodes.callable({
+export const getCustomerSource = nodes.action({
   description: 'Retrieve a specific source attached to a customer.',
   inputs: {
     customerId: pins.customer.id.with({
@@ -127,7 +127,7 @@ export const getCustomerSource = nodes.callable({
   },
 })
 
-export const updateCustomerSource = nodes.callable({
+export const updateCustomerSource = nodes.action({
   description: 'Update a source attached to a customer (card details, etc.).',
   inputs: {
     customerId: pins.customer.id.with({
@@ -206,7 +206,7 @@ export const updateCustomerSource = nodes.callable({
   },
 })
 
-export const deleteCustomerSource = nodes.callable({
+export const deleteCustomerSource = nodes.action({
   description: 'Delete a source attached to a customer.',
   inputs: {
     customerId: pins.customer.id.with({
@@ -235,7 +235,7 @@ export const deleteCustomerSource = nodes.callable({
   },
 })
 
-export const verifyCustomerBankAccount = nodes.callable({
+export const verifyCustomerBankAccount = nodes.action({
   description:
     'Verify a bank account with micro-deposit amounts for ACH payments.',
   inputs: {
@@ -269,7 +269,7 @@ export const verifyCustomerBankAccount = nodes.callable({
   },
 })
 
-export const listCustomerSources = nodes.callable({
+export const listCustomerSources = nodes.action({
   description: 'List all sources attached to a customer.',
   inputs: {
     customerId: pins.customer.id.with({

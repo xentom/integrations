@@ -51,7 +51,7 @@ export const onInvoice = i.generic(
   },
 )
 
-export const createInvoice = nodes.callable({
+export const createInvoice = nodes.action({
   description: 'Create a new invoice for a customer.',
   inputs: {
     customerId: pins.customer.id.with({
@@ -99,7 +99,7 @@ export const createInvoice = nodes.callable({
   },
 })
 
-export const getInvoice = nodes.callable({
+export const getInvoice = nodes.action({
   description: 'Retrieve an invoice by its ID.',
   inputs: {
     id: pins.invoice.id.with({
@@ -120,7 +120,7 @@ export const getInvoice = nodes.callable({
   },
 })
 
-export const updateInvoice = nodes.callable({
+export const updateInvoice = nodes.action({
   description: 'Update an existing draft invoice.',
   inputs: {
     id: pins.invoice.id.with({
@@ -157,7 +157,7 @@ export const updateInvoice = nodes.callable({
   },
 })
 
-export const finalizeInvoice = nodes.callable({
+export const finalizeInvoice = nodes.action({
   description: 'Finalize a draft invoice to make it ready for payment.',
   inputs: {
     id: pins.invoice.id.with({
@@ -180,7 +180,7 @@ export const finalizeInvoice = nodes.callable({
   },
 })
 
-export const payInvoice = nodes.callable({
+export const payInvoice = nodes.action({
   description: 'Pay an open invoice.',
   inputs: {
     id: pins.invoice.id.with({
@@ -201,7 +201,7 @@ export const payInvoice = nodes.callable({
   },
 })
 
-export const sendInvoice = nodes.callable({
+export const sendInvoice = nodes.action({
   description: 'Send an invoice to the customer by email.',
   inputs: {
     id: pins.invoice.id.with({
@@ -222,7 +222,7 @@ export const sendInvoice = nodes.callable({
   },
 })
 
-export const voidInvoice = nodes.callable({
+export const voidInvoice = nodes.action({
   description: 'Void an invoice. This marks it as uncollectable.',
   inputs: {
     id: pins.invoice.id.with({
@@ -243,7 +243,7 @@ export const voidInvoice = nodes.callable({
   },
 })
 
-export const listInvoices = nodes.callable({
+export const listInvoices = nodes.action({
   description: 'List all invoices in your Stripe account.',
   inputs: {
     limit: pins.common.limit.with({

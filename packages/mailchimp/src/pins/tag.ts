@@ -4,7 +4,9 @@ import * as v from 'valibot'
 export const name = i.pins.data({
   description: 'The name of the tag.',
   schema: v.string(),
-  control: i.controls.text({ placeholder: 'VIP' }),
+  control: i.controls.text({
+    placeholder: 'VIP',
+  }),
 })
 
 export const status = i.pins.data({

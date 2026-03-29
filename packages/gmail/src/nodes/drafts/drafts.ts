@@ -5,7 +5,7 @@ import * as pins from '../../pins'
 
 const nodes = i.nodes.group('Drafts')
 
-export const createDraft = nodes.callable({
+export const createDraft = nodes.action({
   description: 'Create a new draft email in Gmail',
   inputs: {
     to: pins.message.addresses,
@@ -55,7 +55,7 @@ export const createDraft = nodes.callable({
   },
 })
 
-export const sendDraft = nodes.callable({
+export const sendDraft = nodes.action({
   description: 'Send an existing draft email',
   inputs: {
     id: pins.draft.id,
@@ -77,7 +77,7 @@ export const sendDraft = nodes.callable({
   },
 })
 
-export const getDraft = nodes.callable({
+export const getDraft = nodes.action({
   description: 'Retrieve a specific draft by ID',
   inputs: {
     id: pins.draft.id,
@@ -97,7 +97,7 @@ export const getDraft = nodes.callable({
   },
 })
 
-export const listDrafts = nodes.callable({
+export const listDrafts = nodes.action({
   description: 'Retrieve all draft emails',
   inputs: {
     maxResults: pins.query.maxResults.with({
@@ -128,7 +128,7 @@ export const listDrafts = nodes.callable({
   },
 })
 
-export const deleteDraft = nodes.callable({
+export const deleteDraft = nodes.action({
   description: 'Delete a draft email',
   inputs: {
     id: pins.draft.id,

@@ -10,7 +10,7 @@ import * as pins from '@/pins'
 
 const nodes = i.nodes.group('Domains')
 
-export const createDomain = nodes.callable({
+export const createDomain = nodes.action({
   description: 'Create a new domain for sending emails.',
   inputs: {
     name: pins.domain.name.with({
@@ -47,7 +47,7 @@ export const createDomain = nodes.callable({
   },
 })
 
-export const getDomain = nodes.callable({
+export const getDomain = nodes.action({
   description: 'Retrieve details of a domain by its ID.',
   inputs: {
     id: pins.domain.id.with({
@@ -72,7 +72,7 @@ export const getDomain = nodes.callable({
   },
 })
 
-export const listDomains = nodes.callable({
+export const listDomains = nodes.action({
   description: 'Retrieve a list of domains.',
   outputs: {
     domains: pins.domain.items.with<ListDomainsResponseSuccess>({
@@ -92,7 +92,7 @@ export const listDomains = nodes.callable({
   },
 })
 
-export const verifyDomain = nodes.callable({
+export const verifyDomain = nodes.action({
   description: 'Verify a domain by checking its DNS records.',
   inputs: {
     id: pins.domain.id.with({
@@ -118,7 +118,7 @@ export const verifyDomain = nodes.callable({
   },
 })
 
-export const deleteDomain = nodes.callable({
+export const deleteDomain = nodes.action({
   description: 'Delete a domain by its ID.',
   inputs: {
     id: pins.domain.id.with({

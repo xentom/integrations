@@ -3,7 +3,7 @@ import * as v from 'valibot'
 
 const nodes = i.nodes.group('Debug')
 
-export const log = nodes.callable({
+export const log = nodes.action({
   inputs: {
     message: i.pins.data({
       schema: v.any(),
@@ -18,12 +18,12 @@ export const log = nodes.callable({
   },
 })
 
-export const error = nodes.callable({
+export const error = nodes.action({
   inputs: {
     message: i.pins.data({
       schema: v.string(),
       control: i.controls.text({
-        defaultValue: 'This is an error message',
+        default: 'This is an error message',
       }),
     }),
   },
@@ -32,14 +32,13 @@ export const error = nodes.callable({
   },
 })
 
-export const evaluate = nodes.callable({
+export const evaluate = nodes.action({
   inputs: {
     code: i.pins.data({
       displayName: false,
       control: i.controls.text({
-        language: i.TextControlLanguage.JavaScript,
-        defaultValue: 'return Math.random();',
-        placeholder: 'return Math.random();',
+        syntax: i.TextControlSyntax.JavaScript,
+        default: 'return Math.random();',
       }),
       schema: v.string(),
     }),

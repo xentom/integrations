@@ -47,7 +47,7 @@ export const onPlan = i.generic(
   },
 )
 
-export const createPlan = nodes.callable({
+export const createPlan = nodes.action({
   description:
     'Create a new plan for recurring billing. Plans define the base price, currency, and billing cycle.',
   inputs: {
@@ -118,7 +118,7 @@ export const createPlan = nodes.callable({
   },
 })
 
-export const getPlan = nodes.callable({
+export const getPlan = nodes.action({
   description: 'Retrieve a plan by its ID.',
   inputs: {
     id: pins.plan.id.with({
@@ -139,7 +139,7 @@ export const getPlan = nodes.callable({
   },
 })
 
-export const updatePlan = nodes.callable({
+export const updatePlan = nodes.action({
   description: 'Update an existing plan.',
   inputs: {
     id: pins.plan.id.with({
@@ -181,7 +181,7 @@ export const updatePlan = nodes.callable({
   },
 })
 
-export const deletePlan = nodes.callable({
+export const deletePlan = nodes.action({
   description: 'Delete a plan. Existing subscriptions will remain unaffected.',
   inputs: {
     id: pins.plan.id.with({
@@ -202,7 +202,7 @@ export const deletePlan = nodes.callable({
   },
 })
 
-export const listPlans = nodes.callable({
+export const listPlans = nodes.action({
   description: 'List all plans in your Stripe account.',
   inputs: {
     limit: pins.common.limit.with({

@@ -8,6 +8,6 @@ export const eventType = i.pins.data({
       { label: 'Updated', value: 'updated' },
       { label: 'Deleted', value: 'deleted' },
     ],
-    defaultValue: 'created',
+    default: 'created',
   } as const),
 })

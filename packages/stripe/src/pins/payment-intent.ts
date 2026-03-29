@@ -20,7 +20,7 @@ export const eventType = i.pins.data({
       },
       { label: 'Partially Funded', value: 'partially_funded' },
     ],
-    defaultValue: 'succeeded',
+    default: 'succeeded',
   } as const),
 })
 

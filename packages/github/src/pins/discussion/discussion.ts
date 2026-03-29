@@ -88,6 +88,6 @@ export const action = i.pins.data<Action>({
         value: 'unpinned',
       },
     ],
-    defaultValue: 'created',
+    default: 'created',
   }),
 })

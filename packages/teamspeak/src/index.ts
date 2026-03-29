@@ -21,8 +21,8 @@ export default i.integration({
       schema: v.pipe(v.string(), v.ip()),
       control: i.controls.text({
         label: 'Server IP',
-        placeholder: 'Enter the IP address of your TeamSpeak server',
-        defaultValue: '127.0.0.1',
+        description: 'Enter the IP address of your TeamSpeak server',
+        default: '127.0.0.1',
       }),
     }),
 
@@ -30,8 +30,8 @@ export default i.integration({
       schema: v.pipe(v.string(), v.transform(Number), v.integer()),
       control: i.controls.text({
         label: 'Server Port',
-        placeholder: 'Enter the port of your TeamSpeak server',
-        defaultValue: '9987',
+        description: 'Enter the port of your TeamSpeak server',
+        default: '9987',
       }),
     }),
 
@@ -39,8 +39,8 @@ export default i.integration({
       schema: v.pipe(v.string(), v.transform(Number), v.integer()),
       control: i.controls.text({
         label: 'Server Query Port',
-        placeholder: 'Enter the query port of your TeamSpeak server',
-        defaultValue: '10011',
+        description: 'Enter the query port of your TeamSpeak server',
+        default: '10011',
       }),
     }),
 
@@ -48,8 +48,8 @@ export default i.integration({
       schema: v.string(),
       control: i.controls.text({
         label: 'Server Query Username',
-        placeholder: 'Enter the query username of your TeamSpeak server',
-        defaultValue: 'serveradmin',
+        description: 'Enter the query username of your TeamSpeak server',
+        default: 'serveradmin',
       }),
     }),
 
@@ -57,7 +57,7 @@ export default i.integration({
       schema: v.string(),
       control: i.controls.text({
         label: 'Server Query Password',
-        placeholder: 'Enter the query password of your TeamSpeak server',
+        description: 'Enter the query password of your TeamSpeak server',
         sensitive: true,
       }),
     }),
@@ -66,8 +66,8 @@ export default i.integration({
       schema: v.string(),
       control: i.controls.text({
         label: 'Nickname',
-        placeholder: 'Enter the nickname of your bot',
-        defaultValue: 'TeamSpeak Bot',
+        description: 'Enter the nickname of your bot',
+        default: 'TeamSpeak Bot',
       }),
     }),
   },

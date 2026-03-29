@@ -7,7 +7,7 @@ import * as pins from '@/pins'
 
 const nodes = i.nodes.group('Pages')
 
-export const getPage = nodes.callable({
+export const getPage = nodes.action({
   description: 'Retrieve a page by its ID',
   inputs: {
     id: pins.page.id,
@@ -26,7 +26,7 @@ export const getPage = nodes.callable({
   },
 })
 
-export const createPageInDatabase = nodes.callable({
+export const createPageInDatabase = nodes.action({
   displayName: 'Create Page in Database',
   description: 'Create a new page inside a database with property values',
   inputs: {
@@ -66,7 +66,7 @@ export const createPageInDatabase = nodes.callable({
   },
 })
 
-export const createPageUnderPage = nodes.callable({
+export const createPageUnderPage = nodes.action({
   displayName: 'Create Page Under Page',
   description: 'Create a new page as a child of another page',
   inputs: {
@@ -115,7 +115,7 @@ export const createPageUnderPage = nodes.callable({
   },
 })
 
-export const updatePage = nodes.callable({
+export const updatePage = nodes.action({
   description: 'Update page properties, icon, or cover',
   inputs: {
     id: pins.page.id,
@@ -146,7 +146,7 @@ export const updatePage = nodes.callable({
   },
 })
 
-export const archivePage = nodes.callable({
+export const archivePage = nodes.action({
   description: 'Archive (soft delete) a page',
   inputs: {
     id: pins.page.id,
@@ -166,7 +166,7 @@ export const archivePage = nodes.callable({
   },
 })
 
-export const restorePage = nodes.callable({
+export const restorePage = nodes.action({
   description: 'Restore an archived page',
   inputs: {
     id: pins.page.id,
@@ -186,7 +186,7 @@ export const restorePage = nodes.callable({
   },
 })
 
-export const getPageProperty = nodes.callable({
+export const getPageProperty = nodes.action({
   description: 'Retrieve a specific property value from a page',
   inputs: {
     pageId: pins.page.id.with({

@@ -5,7 +5,7 @@ import { subscriberHash } from '@/utils/hash'
 
 const nodes = i.nodes.group('Tags')
 
-export const getMemberTags = nodes.callable({
+export const getMemberTags = nodes.action({
   description: 'Get all tags applied to a Mailchimp audience member.',
   inputs: {
     listId: pins.list.id,
@@ -25,7 +25,7 @@ export const getMemberTags = nodes.callable({
   },
 })
 
-export const addMemberTags = nodes.callable({
+export const addMemberTags = nodes.action({
   description: 'Add tags to a Mailchimp audience member.',
   inputs: {
     listId: pins.list.id,
@@ -47,7 +47,7 @@ export const addMemberTags = nodes.callable({
   },
 })
 
-export const removeMemberTags = nodes.callable({
+export const removeMemberTags = nodes.action({
   description: 'Remove tags from a Mailchimp audience member.',
   inputs: {
     listId: pins.list.id,

@@ -8,8 +8,8 @@ export const onInterval = nodes.trigger({
     ms: i.pins.data({
       displayName: 'Milliseconds',
       schema: v.number(),
-      control: i.controls.expression({
-        defaultValue: 1000,
+      control: i.controls.number({
+        default: 1000,
       }),
     }),
   },
@@ -24,13 +24,13 @@ export const onInterval = nodes.trigger({
   },
 })
 
-export const sleep = nodes.callable({
+export const sleep = nodes.action({
   inputs: {
     duration: i.pins.data({
       schema: v.number(),
-      control: i.controls.expression({
-        defaultValue: 1000,
+      control: i.controls.number({
         description: 'Duration to sleep in milliseconds',
+        default: 1000,
       }),
     }),
   },

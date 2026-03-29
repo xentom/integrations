@@ -20,7 +20,7 @@ export const speechModel = i.pins.data({
   description: 'The text-to-speech model to use.',
   schema: v.string(),
   control: i.controls.select({
-    defaultValue: 'gpt-4o-mini-tts',
+    default: 'gpt-4o-mini-tts',
     options: [
       {
         value: 'gpt-4o-mini-tts',
@@ -46,7 +46,7 @@ export const voice = i.pins.data({
   description: 'The voice to use for speech synthesis.',
   schema: v.string(),
   control: i.controls.select({
-    defaultValue: 'alloy',
+    default: 'alloy',
     options: [
       { value: 'alloy', label: 'Alloy' },
       { value: 'ash', label: 'Ash' },
@@ -67,7 +67,7 @@ export const transcriptionModel = i.pins.data({
   description: 'The speech-to-text model to use.',
   schema: v.string(),
   control: i.controls.select({
-    defaultValue: 'gpt-4o-transcribe',
+    default: 'gpt-4o-transcribe',
     options: [
       {
         value: 'gpt-4o-transcribe',
@@ -93,7 +93,7 @@ export const speechFormat = i.pins.data({
   description: 'The audio format of the generated speech.',
   schema: v.string(),
   control: i.controls.select({
-    defaultValue: 'mp3',
+    default: 'mp3',
     options: [
       { value: 'mp3', label: 'MP3' },
       { value: 'opus', label: 'Opus' },

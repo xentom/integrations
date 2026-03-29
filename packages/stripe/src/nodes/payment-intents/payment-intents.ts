@@ -57,7 +57,7 @@ export const onPaymentIntent = i.generic(
   },
 )
 
-export const createPaymentIntent = nodes.callable({
+export const createPaymentIntent = nodes.action({
   description: 'Create a new payment intent for collecting a payment.',
   inputs: {
     amount: pins.paymentIntent.amount.with({
@@ -114,7 +114,7 @@ export const createPaymentIntent = nodes.callable({
   },
 })
 
-export const getPaymentIntent = nodes.callable({
+export const getPaymentIntent = nodes.action({
   description: 'Retrieve a payment intent by its ID.',
   inputs: {
     id: pins.paymentIntent.id.with({
@@ -137,7 +137,7 @@ export const getPaymentIntent = nodes.callable({
   },
 })
 
-export const updatePaymentIntent = nodes.callable({
+export const updatePaymentIntent = nodes.action({
   description: 'Update an existing payment intent.',
   inputs: {
     id: pins.paymentIntent.id.with({
@@ -187,7 +187,7 @@ export const updatePaymentIntent = nodes.callable({
   },
 })
 
-export const confirmPaymentIntent = nodes.callable({
+export const confirmPaymentIntent = nodes.action({
   description: 'Confirm a payment intent to begin the payment process.',
   inputs: {
     id: pins.paymentIntent.id.with({
@@ -222,7 +222,7 @@ export const confirmPaymentIntent = nodes.callable({
   },
 })
 
-export const cancelPaymentIntent = nodes.callable({
+export const cancelPaymentIntent = nodes.action({
   description: 'Cancel a payment intent.',
   inputs: {
     id: pins.paymentIntent.id.with({
@@ -267,7 +267,7 @@ export const cancelPaymentIntent = nodes.callable({
   },
 })
 
-export const listPaymentIntents = nodes.callable({
+export const listPaymentIntents = nodes.action({
   description: 'List all payment intents in your Stripe account.',
   inputs: {
     limit: pins.common.limit.with({

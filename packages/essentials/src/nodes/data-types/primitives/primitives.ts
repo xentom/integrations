@@ -7,11 +7,9 @@ export const number = nodes.pure({
   outputs: {
     number: i.pins.data({
       displayName: false,
-      control: i.controls.expression({
-        placeholder: 'Enter a number',
-        defaultValue: 0,
+      control: i.controls.number({
+        default: 0,
       }),
-      schema: v.number(),
     }),
   },
 })
@@ -21,8 +19,7 @@ export const string = nodes.pure({
     string: i.pins.data({
       displayName: false,
       control: i.controls.text({
-        placeholder: 'Enter a string',
-        defaultValue: '',
+        default: '',
       }),
       schema: v.string(),
     }),
@@ -33,10 +30,33 @@ export const boolean = nodes.pure({
   outputs: {
     boolean: i.pins.data({
       displayName: false,
-      control: i.controls.switch({
-        defaultValue: true,
+      control: i.controls.boolean({
+        default: true,
       }),
       schema: v.boolean(),
+    }),
+  },
+})
+
+export const object = nodes.pure({
+  outputs: {
+    object: i.pins.data({
+      displayName: false,
+      control: i.controls.object({
+        default: {},
+      }),
+    }),
+  },
+})
+
+export const array = nodes.pure({
+  outputs: {
+    array: i.pins.data({
+      displayName: false,
+      control: i.controls.object({
+        default: [],
+      }),
+      schema: v.array(v.any()),
     }),
   },
 })

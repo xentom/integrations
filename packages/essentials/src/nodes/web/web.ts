@@ -4,7 +4,7 @@ import * as pins from '@/pins'
 
 const nodes = i.nodes.group('Web')
 
-export const fetch = nodes.callable({
+export const fetch = nodes.action({
   description:
     'Make an HTTP request to a specified URL and return the response.',
   inputs: {

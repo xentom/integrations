@@ -50,7 +50,7 @@ export const onProduct = i.generic(
   },
 )
 
-export const createProduct = nodes.callable({
+export const createProduct = nodes.action({
   description: 'Create a new product in Stripe.',
   inputs: {
     name: pins.product.name.with({
@@ -98,7 +98,7 @@ export const createProduct = nodes.callable({
   },
 })
 
-export const getProduct = nodes.callable({
+export const getProduct = nodes.action({
   description: 'Retrieve a product by its ID.',
   inputs: {
     id: pins.product.id.with({
@@ -123,7 +123,7 @@ export const getProduct = nodes.callable({
   },
 })
 
-export const updateProduct = nodes.callable({
+export const updateProduct = nodes.action({
   description: 'Update an existing product in Stripe.',
   inputs: {
     id: pins.product.id.with({
@@ -175,7 +175,7 @@ export const updateProduct = nodes.callable({
   },
 })
 
-export const deleteProduct = nodes.callable({
+export const deleteProduct = nodes.action({
   description:
     'Delete a product from Stripe. Products can only be deleted if they have no prices.',
   inputs: {
@@ -197,7 +197,7 @@ export const deleteProduct = nodes.callable({
   },
 })
 
-export const listProducts = nodes.callable({
+export const listProducts = nodes.action({
   description: 'List all products in your Stripe account.',
   inputs: {
     limit: pins.common.limit.with({

@@ -87,7 +87,7 @@ export const onNewSheet = nodes.trigger({
   },
 })
 
-export const addSheet = nodes.callable({
+export const addSheet = nodes.action({
   displayName: 'Add Sheet',
   description: 'Add a new sheet to an existing Google Spreadsheet',
   inputs: {
@@ -137,7 +137,7 @@ export const addSheet = nodes.callable({
   },
 })
 
-export const renameSheet = nodes.callable({
+export const renameSheet = nodes.action({
   displayName: 'Rename Sheet',
   description: 'Rename an existing sheet in a Google Spreadsheet',
   inputs: {
@@ -191,7 +191,7 @@ export const renameSheet = nodes.callable({
   },
 })
 
-export const deleteSheet = nodes.callable({
+export const deleteSheet = nodes.action({
   displayName: 'Delete Sheet',
   description: 'Delete a sheet from a Google Spreadsheet',
   inputs: {

@@ -127,7 +127,7 @@ export const type = i.pins.data<ChannelType>({
       { value: ChannelType.SEMI_PERMANENT, label: 'Semi-Permanent' },
       { value: ChannelType.PERMANENT, label: 'Permanent' },
     ],
-    defaultValue: ChannelType.PERMANENT,
+    default: ChannelType.PERMANENT,
   }),
 })
 
@@ -144,7 +144,7 @@ export const codec = i.pins.data({
       { value: 4, label: 'Opus Voice' },
       { value: 5, label: 'Opus Music' },
     ],
-    defaultValue: 4,
+    default: 4,
   }),
 })
 
@@ -152,9 +152,8 @@ export const codecQuality = i.pins.data({
   displayName: 'Codec Quality',
   description: 'Audio quality setting for the codec (0-10)',
   schema: v.pipe(v.number(), v.minValue(0), v.maxValue(10)),
-  control: i.controls.expression({
+  control: i.controls.number({
     placeholder: '6',
-    defaultValue: 6,
   }),
 })
 
@@ -162,8 +161,8 @@ export const maxClients = i.pins.data({
   displayName: 'Max Clients',
   description: 'Maximum number of clients allowed in the channel',
   schema: v.pipe(v.number(), v.minValue(-1)),
-  control: i.controls.expression({
-    defaultValue: -1,
+  control: i.controls.number({
+    default: -1,
   }),
 })
 
@@ -178,9 +177,8 @@ export const order = i.pins.data({
   displayName: 'Order',
   description: 'Sort order of the channel',
   schema: v.number(),
-  control: i.controls.expression({
+  control: i.controls.number({
     placeholder: '0',
-    defaultValue: 0,
   }),
 })
 
@@ -188,9 +186,8 @@ export const neededTalkPower = i.pins.data({
   displayName: 'Needed Talk Power',
   description: 'Required talk power to speak in the channel',
   schema: v.pipe(v.number(), v.minValue(0)),
-  control: i.controls.expression({
+  control: i.controls.number({
     placeholder: '0',
-    defaultValue: 0,
   }),
 })
 
@@ -208,8 +205,8 @@ export const flagDefault = i.pins.data({
   displayName: 'Default Channel',
   description: 'Whether this is the default channel',
   schema: v.boolean(),
-  control: i.controls.switch({
-    defaultValue: false,
+  control: i.controls.boolean({
+    default: false,
   }),
 })
 
@@ -217,19 +214,19 @@ export const flagMaxClientsUnlimited = i.pins.data({
   displayName: 'Unlimited Max Clients',
   description: 'Whether max clients is unlimited',
   schema: v.boolean(),
-  control: i.controls.switch(),
+  control: i.controls.boolean(),
 })
 
 export const flagMaxFamilyClientsInherited = i.pins.data({
   displayName: 'Inherit Max Family Clients',
   description: 'Whether max family clients is inherited',
   schema: v.boolean(),
-  control: i.controls.switch(),
+  control: i.controls.boolean(),
 })
 
 export const codecIsUnencrypted = i.pins.data({
   displayName: 'Unencrypted Codec',
   description: 'Whether the codec is unencrypted',
   schema: v.boolean(),
-  control: i.controls.switch(),
+  control: i.controls.boolean(),
 })

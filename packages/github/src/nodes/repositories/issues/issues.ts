@@ -50,7 +50,7 @@ export const onIssue = i.generic(
   },
 )
 
-export const getIssue = nodes.callable({
+export const getIssue = nodes.action({
   description: 'Get details of a specific issue',
   inputs: {
     repository: pins.repository.name,
@@ -71,7 +71,7 @@ export const getIssue = nodes.callable({
   },
 })
 
-export const createIssue = nodes.callable({
+export const createIssue = nodes.action({
   description: 'Create a new issue in a repository',
   inputs: {
     repository: pins.repository.name,
@@ -104,7 +104,7 @@ export const createIssue = nodes.callable({
   },
 })
 
-export const updateIssue = nodes.callable({
+export const updateIssue = nodes.action({
   description: 'Update an existing issue',
   inputs: {
     repository: pins.repository.name,
@@ -145,7 +145,7 @@ export const updateIssue = nodes.callable({
   },
 })
 
-export const listIssues = nodes.callable({
+export const listIssues = nodes.action({
   description: 'List issues in a repository',
   inputs: {
     repository: pins.repository.name,

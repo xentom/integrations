@@ -4,7 +4,7 @@ import * as pins from '@/pins'
 
 const nodes = i.nodes.group('Campaigns')
 
-export const listCampaigns = nodes.callable({
+export const listCampaigns = nodes.action({
   description: 'Get all campaigns in the Mailchimp account.',
   inputs: {},
   outputs: {
@@ -18,7 +18,7 @@ export const listCampaigns = nodes.callable({
   },
 })
 
-export const getCampaign = nodes.callable({
+export const getCampaign = nodes.action({
   description: 'Get information about a specific Mailchimp campaign.',
   inputs: {
     campaignId: pins.campaign.id,
@@ -34,7 +34,7 @@ export const getCampaign = nodes.callable({
   },
 })
 
-export const createCampaign = nodes.callable({
+export const createCampaign = nodes.action({
   description: 'Create a new Mailchimp campaign.',
   inputs: {
     type: pins.campaign.type,
@@ -77,7 +77,7 @@ export const createCampaign = nodes.callable({
   },
 })
 
-export const updateCampaign = nodes.callable({
+export const updateCampaign = nodes.action({
   description: 'Update settings for a Mailchimp campaign.',
   inputs: {
     campaignId: pins.campaign.id,
@@ -106,7 +106,7 @@ export const updateCampaign = nodes.callable({
   },
 })
 
-export const sendCampaign = nodes.callable({
+export const sendCampaign = nodes.action({
   description: 'Send a Mailchimp campaign immediately.',
   inputs: {
     campaignId: pins.campaign.id,
@@ -118,7 +118,7 @@ export const sendCampaign = nodes.callable({
   },
 })
 
-export const scheduleCampaign = nodes.callable({
+export const scheduleCampaign = nodes.action({
   description: 'Schedule a Mailchimp campaign for delivery at a specific time.',
   inputs: {
     campaignId: pins.campaign.id,
@@ -133,7 +133,7 @@ export const scheduleCampaign = nodes.callable({
   },
 })
 
-export const deleteCampaign = nodes.callable({
+export const deleteCampaign = nodes.action({
   description: 'Delete a Mailchimp campaign.',
   inputs: {
     campaignId: pins.campaign.id,

@@ -12,7 +12,7 @@ export const eventType = i.pins.data({
       { label: 'Updated', value: 'updated' },
       { label: 'Deleted', value: 'deleted' },
     ],
-    defaultValue: 'created',
+    default: 'created',
   } as const),
 })
 
@@ -71,7 +71,7 @@ export const duration = i.pins.data({
       { value: 'once', label: 'Once' },
       { value: 'repeating', label: 'Repeating' },
     ],
-    defaultValue: 'once',
+    default: 'once',
   }),
 })
 

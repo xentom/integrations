@@ -12,7 +12,7 @@ export const eventType = i.pins.data({
       { label: 'Async Payment Failed', value: 'async_payment_failed' },
       { label: 'Expired', value: 'expired' },
     ],
-    defaultValue: 'completed',
+    default: 'completed',
   } as const),
 })
 
@@ -71,7 +71,7 @@ export const lineItems = i.pins.data({
     }),
   ),
   control: i.controls.expression({
-    defaultValue: [{ price: 'price_...', quantity: 1 }],
+    default: [{ price: 'price_...', quantity: 1 }],
   }),
 })
 
@@ -83,5 +83,5 @@ export const metadata = common.metadata.with({
 export const allowPromotionCodes = i.pins.data({
   description: 'Enables user redeemable promotion codes.',
   schema: v.boolean(),
-  control: i.controls.switch(),
+  control: i.controls.boolean(),
 })

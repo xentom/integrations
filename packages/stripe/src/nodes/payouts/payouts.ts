@@ -50,7 +50,7 @@ export const onPayout = i.generic(
   },
 )
 
-export const createPayout = nodes.callable({
+export const createPayout = nodes.action({
   description: 'Create a payout to send funds to your bank account or card.',
   inputs: {
     amount: pins.payout.amount.with({
@@ -108,7 +108,7 @@ export const createPayout = nodes.callable({
   },
 })
 
-export const getPayout = nodes.callable({
+export const getPayout = nodes.action({
   description: 'Retrieve a payout by its ID.',
   inputs: {
     id: pins.payout.id.with({
@@ -129,7 +129,7 @@ export const getPayout = nodes.callable({
   },
 })
 
-export const updatePayout = nodes.callable({
+export const updatePayout = nodes.action({
   description: 'Update an existing payout.',
   inputs: {
     id: pins.payout.id.with({
@@ -156,7 +156,7 @@ export const updatePayout = nodes.callable({
   },
 })
 
-export const cancelPayout = nodes.callable({
+export const cancelPayout = nodes.action({
   description: 'Cancel a payout. Only pending payouts can be canceled.',
   inputs: {
     id: pins.payout.id.with({
@@ -177,7 +177,7 @@ export const cancelPayout = nodes.callable({
   },
 })
 
-export const reversePayout = nodes.callable({
+export const reversePayout = nodes.action({
   description:
     'Reverse a paid payout. Only payouts for connected accounts are reversible.',
   inputs: {
@@ -205,7 +205,7 @@ export const reversePayout = nodes.callable({
   },
 })
 
-export const listPayouts = nodes.callable({
+export const listPayouts = nodes.action({
   description: 'List all payouts in your Stripe account.',
   inputs: {
     limit: pins.common.limit.with({

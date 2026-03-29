@@ -5,7 +5,7 @@ import { responses } from '../webhooks.utils'
 
 const nodes = i.nodes.group('Webhooks/Responses')
 
-export const rawWebhookResponse = nodes.callable({
+export const rawWebhookResponse = nodes.action({
   displayName: 'Webhook Response (Raw)',
   description: 'Send a raw response to the webhook request.',
   inputs: {
@@ -26,13 +26,13 @@ export const rawWebhookResponse = nodes.callable({
   },
 })
 
-export const textWebhookResponse = nodes.callable({
+export const textWebhookResponse = nodes.action({
   displayName: 'Webhook Response (Text)',
   description: 'Send a plain text response to the webhook request.',
   inputs: {
     text: i.pins.data({
       control: i.controls.text({
-        defaultValue: 'OK',
+        default: 'OK',
       }),
     }),
   },
@@ -56,13 +56,13 @@ export const textWebhookResponse = nodes.callable({
   },
 })
 
-export const jsonWebhookResponse = nodes.callable({
+export const jsonWebhookResponse = nodes.action({
   displayName: 'Webhook Response (JSON)',
   description: 'Send a JSON response to the webhook request.',
   inputs: {
     body: i.pins.data({
-      control: i.controls.expression({
-        defaultValue: '{\n  "message": "OK"\n}',
+      control: i.controls.object({
+        default: '{\n  "message": "OK"\n}',
       }),
     }),
   },
@@ -79,7 +79,7 @@ export const jsonWebhookResponse = nodes.callable({
   },
 })
 
-export const redirectWebhookResponse = nodes.callable({
+export const redirectWebhookResponse = nodes.action({
   displayName: 'Webhook Response (Redirect)',
   description: 'Redirect the webhook request to a specified URL.',
   inputs: {

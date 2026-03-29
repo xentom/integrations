@@ -4,7 +4,7 @@ import * as pins from '@/pins'
 
 const nodes = i.nodes.group('Lists')
 
-export const getAllLists = nodes.callable({
+export const getAllLists = nodes.action({
   description: 'Get all audiences (lists) in the Mailchimp account.',
   inputs: {},
   outputs: {
@@ -19,7 +19,7 @@ export const getAllLists = nodes.callable({
   },
 })
 
-export const getList = nodes.callable({
+export const getList = nodes.action({
   description: 'Get information about a specific Mailchimp audience.',
   inputs: {
     listId: pins.list.id,
@@ -33,7 +33,7 @@ export const getList = nodes.callable({
   },
 })
 
-export const createList = nodes.callable({
+export const createList = nodes.action({
   description: 'Create a new Mailchimp audience (list).',
   inputs: {
     name: pins.list.name,
@@ -70,7 +70,7 @@ export const createList = nodes.callable({
   },
 })
 
-export const updateList = nodes.callable({
+export const updateList = nodes.action({
   description: 'Update settings for a Mailchimp audience.',
   inputs: {
     listId: pins.list.id,
@@ -93,7 +93,7 @@ export const updateList = nodes.callable({
   },
 })
 
-export const deleteList = nodes.callable({
+export const deleteList = nodes.action({
   description: 'Delete a Mailchimp audience. This action is permanent.',
   inputs: {
     listId: pins.list.id,

@@ -46,42 +46,58 @@ export const type = i.pins.data({
 export const subject = i.pins.data({
   description: 'The subject line for the campaign.',
   schema: v.string(),
-  control: i.controls.text({ placeholder: 'Your monthly newsletter' }),
+  control: i.controls.text({
+    placeholder: 'Your monthly newsletter',
+  }),
 })
 
 export const title = i.pins.data({
   description: 'The internal title of the campaign.',
   schema: v.string(),
-  control: i.controls.text({ placeholder: 'October Newsletter' }),
+  control: i.controls.text({
+    placeholder: 'October Newsletter',
+  }),
 })
 
 export const fromName = i.pins.data({
   description: "The 'From' name for the campaign.",
   schema: v.string(),
-  control: i.controls.text({ placeholder: 'Acme Corp' }),
+  control: i.controls.text({
+    placeholder: 'Acme Corp',
+  }),
 })
 
 export const replyTo = i.pins.data({
   description: 'The reply-to email address for the campaign.',
   schema: v.pipe(v.string(), v.email()),
-  control: i.controls.text({ placeholder: 'hello@acme.com' }),
+  control: i.controls.text({
+    placeholder: 'hello@acme.com',
+  }),
 })
 
 export const htmlContent = i.pins.data({
   description: 'The HTML content of the campaign.',
   schema: v.string(),
-  control: i.controls.text({ language: i.TextControlLanguage.Html, rows: 10 }),
+  control: i.controls.text({
+    syntax: i.TextControlSyntax.Html,
+    rows: 10,
+  }),
 })
 
 export const plainText = i.pins.data({
   description: 'The plain-text content of the campaign.',
   schema: v.string(),
-  control: i.controls.text({ language: i.TextControlLanguage.Plain, rows: 10 }),
+  control: i.controls.text({
+    syntax: i.TextControlSyntax.Plain,
+    rows: 10,
+  }),
 })
 
 export const scheduleTime = i.pins.data({
   description:
     'The UTC date and time to schedule the campaign (ISO 8601 format).',
   schema: v.string(),
-  control: i.controls.text({ placeholder: '2025-01-01T12:00:00Z' }),
+  control: i.controls.text({
+    placeholder: '2025-01-01T12:00:00Z',
+  }),
 })

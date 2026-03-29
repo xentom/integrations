@@ -5,7 +5,7 @@ import * as pins from '@/pins'
 
 const nodes = i.nodes.group('Messages')
 
-export const createMessage = nodes.callable({
+export const createMessage = nodes.action({
   description:
     'Send a message to Claude and receive a response. Supports text generation, multi-turn conversations, and various model parameters.',
   inputs: {
@@ -70,7 +70,7 @@ export const createMessage = nodes.callable({
   },
 })
 
-export const countMessageTokens = nodes.callable({
+export const countMessageTokens = nodes.action({
   description:
     'Count the number of tokens in a message without creating it. Useful for estimating costs.',
   inputs: {
