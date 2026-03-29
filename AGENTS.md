@@ -40,7 +40,7 @@ Every integration must pass all four checks with zero errors and zero warnings:
 
 ```
 packages/<name>/
-├── assets/icon.png           # Required integration icon
+├── assets/icon.webp          # Required integration icon
 ├── src/
 │   ├── index.ts              # Entry point: auth, state, lifecycle
 │   ├── pins/
