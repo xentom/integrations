@@ -1,0 +1,41 @@
+{
+  "$schema": "https://assets.xentom.com/schemas/package.json",
+  "name": "@xentom/google-gemini",
+  "version": "0.1.0",
+  "displayName": "Google Gemini",
+  "description": "Integrate Google Gemini to generate text, analyze multimodal content, and manage files using Google's latest AI models.",
+  "categories": [
+    "AI"
+  ],
+  "homepage": "https://xentom.com/integrations/xentom/google-gemini",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xentom/integrations.git",
+    "directory": "packages/google-gemini"
+  },
+  "bugs": {
+    "url": "https://github.com/xentom/integrations/issues"
+  },
+  "type": "module",
+  "icon": "./assets/icon.webp",
+  "main": "./build/index.js",
+  "scripts": {
+    "lint": "biome lint .",
+    "format": "biome format --write .",
+    "test": "bun test",
+    "typecheck": "tsc --noEmit",
+    "clean": "git clean -xdf .cache .turbo node_modules build dist",
+    "dev": "xentom dev",
+    "build": "xentom build",
+    "pack": "xentom pack",
+    "publish": "xentom publish"
+  },
+  "dependencies": {
+    "@google/genai": "^1.47.0",
+    "@xentom/integration-framework": "catalog:",
+    "valibot": "catalog:"
+  },
+  "devDependencies": {
+    "@types/bun": "catalog:"
+  }
+}

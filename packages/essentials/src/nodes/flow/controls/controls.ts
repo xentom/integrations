@@ -33,7 +33,7 @@ export const repeat = nodes.action({
     }),
   },
   outputs: {
-    completed: i.pins.exec({
+    [i.DefaultExecPinName]: i.pins.exec({
       description: 'Triggered when the loop completes',
     }),
     loop: i.pins.exec({
@@ -53,7 +53,7 @@ export const repeat = nodes.action({
       await opts.next('loop', { index: i })
     }
 
-    return opts.next('completed')
+    return opts.next(i.DefaultExecPinName)
   },
 })
 
@@ -73,7 +73,7 @@ export const forEach = i.generic(
       description: 'Loops over a list of elements',
       inputs,
       outputs: {
-        completed: i.pins.exec({
+        [i.DefaultExecPinName]: i.pins.exec({
           description: 'Triggered when the loop completes',
         }),
         loop: i.pins.exec({
@@ -102,7 +102,7 @@ export const forEach = i.generic(
           } as any)
         }
 
-        return opts.next('completed')
+        return opts.next(i.DefaultExecPinName)
       },
     })
   },

@@ -1,0 +1,38 @@
+{
+  "$schema": "https://assets.xentom.com/schemas/package.json",
+  "name": "@xentom/discord",
+  "version": "0.1.0",
+  "displayName": "Discord",
+  "description": "Connect Discord to your workflows. Send messages, moderate members, react to events, and manage channels and roles.",
+  "categories": [
+    "Messaging"
+  ],
+  "homepage": "https://xentom.com/integrations/xentom/discord",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xentom/integrations.git",
+    "directory": "packages/discord"
+  },
+  "bugs": {
+    "url": "https://github.com/xentom/integrations/issues"
+  },
+  "type": "module",
+  "icon": "./assets/icon.webp",
+  "main": "./build/index.js",
+  "scripts": {
+    "lint": "biome lint .",
+    "format": "biome format --write .",
+    "test": "bun test",
+    "typecheck": "tsc --noEmit",
+    "clean": "git clean -xdf .cache .turbo node_modules build dist",
+    "dev": "xentom dev",
+    "build": "xentom build",
+    "pack": "xentom pack",
+    "publish": "xentom publish"
+  },
+  "dependencies": {
+    "@xentom/integration-framework": "catalog:",
+    "discord.js": "^14.18.0",
+    "valibot": "catalog:"
+  }
+}

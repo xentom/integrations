@@ -1,0 +1,38 @@
+{
+  "$schema": "https://assets.xentom.com/schemas/package.json",
+  "name": "@xentom/trello",
+  "version": "0.1.0",
+  "displayName": "Trello",
+  "description": "Connect Trello to your workflows. Create and manage boards, lists, and cards.",
+  "categories": [
+    "Productivity"
+  ],
+  "homepage": "https://xentom.com/integrations/xentom/trello",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xentom/integrations.git",
+    "directory": "packages/trello"
+  },
+  "bugs": {
+    "url": "https://github.com/xentom/integrations/issues"
+  },
+  "type": "module",
+  "icon": "./assets/icon.webp",
+  "main": "./build/index.js",
+  "scripts": {
+    "lint": "biome lint .",
+    "format": "biome format --write .",
+    "test": "bun test",
+    "typecheck": "tsc --noEmit",
+    "clean": "git clean -xdf .cache .turbo node_modules build dist",
+    "dev": "xentom dev",
+    "build": "xentom build",
+    "pack": "xentom pack",
+    "publish": "xentom publish"
+  },
+  "dependencies": {
+    "@xentom/integration-framework": "catalog:",
+    "trello.js": "^1.2.8",
+    "valibot": "catalog:"
+  }
+}
